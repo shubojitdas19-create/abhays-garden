@@ -1,159 +1,257 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
-import { ArrowRight, ArrowUpRight, Leaf, ShieldCheck, Star, Truck } from 'lucide-react'
-import { HeroProductCard } from './hero-product-card'
+import { ArrowRight, Asterisk, Check, Droplets, Star, Sun } from 'lucide-react'
+import { useCart } from './cart-context'
+import { formatINR, products } from './products'
+import { RooftopStamp } from './rooftop-stamp'
 
-const categories = [
-  { name: 'Indoor Plants', count: 120, image: '/images/cat-indoor.png', alt: 'Snake plant in terracotta pot' },
-  { name: 'Flowering', count: 64, image: '/images/cat-flowering.png', alt: 'Pink bougainvillea in terracotta pot' },
-  { name: 'Succulents', count: 48, image: '/images/cat-succulents.png', alt: 'Succulents in small ceramic pots' },
-  { name: 'Herbs & Edibles', count: 36, image: '/images/cat-herbs.png', alt: 'Basil, tulsi and mint in terracotta pots' },
+const stageImages: Record<string, string> = {
+  monstera: '/images/stage-monstera.png',
+  'peace-lily': '/images/stage-peace-lily.png',
+  areca: '/images/stage-areca.png',
+}
+
+const featured = products.filter((p) => p.id in stageImages)
+
+const promises = [
+  'Free delivery over ₹999',
+  '7-day healthy arrival guarantee',
+  'Packed in coir, not plastic',
+  'Hand-watered on our rooftop',
+  'Free care call with every plant',
 ]
 
-const perks = [
-  { icon: Truck, title: 'Free delivery', text: 'On orders over ₹999' },
-  { icon: ShieldCheck, title: '7-day guarantee', text: 'Arrives healthy, or we replace' },
-  { icon: Leaf, title: 'Homegrown', text: 'Raised on our own rooftop' },
-]
+const careLabel = { 1: 'Easy care', 2: 'Some care', 3: 'Green thumb' } as const
 
 export function Hero() {
+  const { addItem } = useCart()
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [sizeIndex, setSizeIndex] = useState(1)
+  const [addedId, setAddedId] = useState<string | null>(null)
+
+  const plant = featured[activeIndex]
+  const size = plant.sizes[sizeIndex]
+
+  function selectPlant(index: number) {
+    setActiveIndex(index)
+    setSizeIndex(1)
+    setAddedId(null)
+  }
+
+  function handleAdd() {
+    addItem()
+    setAddedId(plant.id)
+    window.setTimeout(() => setAddedId(null), 1800)
+  }
+
   return (
-    <section aria-labelledby="hero-heading" className="relative overflow-hidden">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 pt-8 pb-10 sm:px-6 lg:grid-cols-12 lg:gap-12 lg:px-8 lg:pt-14 lg:pb-16">
-        <div className="flex flex-col justify-center lg:col-span-6 xl:col-span-5">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-secondary-foreground">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60" />
-              <span className="relative inline-flex size-2 rounded-full bg-accent" />
-            </span>
-            New season arrivals now in stock
-          </div>
+    <section aria-labelledby="hero-heading" className="relative overflow-hidden bg-primary text-primary-foreground">
+      <div className="mx-auto grid max-w-7xl gap-x-12 px-4 pt-10 pb-14 sm:px-6 lg:grid-cols-12 lg:px-8 lg:pt-16 lg:pb-20">
+        <div className="lg:col-span-6 lg:row-start-1">
+          <p className="flex items-center gap-3 text-xs font-semibold tracking-[0.2em] text-sun uppercase">
+            <span className="h-px w-8 bg-sun" aria-hidden="true" />
+            The Rooftop Edit — Autumn
+          </p>
 
           <h1
             id="hero-heading"
-            className="mt-5 font-serif text-4xl leading-[1.05] font-medium tracking-tight text-balance sm:text-5xl lg:text-6xl xl:text-7xl"
+            className="mt-6 font-serif text-[2.9rem] leading-[0.95] font-normal tracking-tight sm:text-6xl lg:text-[3.75rem] xl:text-[4.25rem]"
           >
-            Shop plants grown with <em className="font-normal text-primary italic">love,</em> delivered to your door.
+            Grown on our roof.
+            <span className="block text-sun italic">Ready for your home.</span>
           </h1>
 
-          <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground text-pretty sm:text-lg">
-            Healthy, nursery-fresh plants from our rooftop to your home. Hand-picked, carefully packed and backed by our plant care team.
+          <p className="mt-6 max-w-md text-base leading-relaxed text-primary-foreground/75 text-pretty sm:text-lg">
+            Every plant here was potted, watered and cared for by hand on our rooftop. Choose one below and it ships straight from our roof to your door.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-4">
             <a
-              href="#"
-              className="group inline-flex h-13 items-center justify-center gap-2 rounded-full bg-primary px-7 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-colors hover:bg-primary/90"
+              href="#bestsellers-heading"
+              className="group inline-flex h-13 items-center gap-2 rounded-full bg-primary-foreground px-7 text-base font-semibold text-primary transition-colors hover:bg-sun hover:text-forest-deep"
             >
-              Shop All Plants
+              Shop all plants
               <ArrowRight className="size-4.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </a>
             <a
               href="#"
-              className="inline-flex h-13 items-center justify-center rounded-full border border-foreground/15 bg-card px-7 text-base font-semibold transition-colors hover:border-primary hover:text-primary"
+              className="text-base font-semibold underline decoration-sun decoration-2 underline-offset-[6px] transition-colors hover:text-sun"
             >
-              Find Your Perfect Plant
+              Not sure? Take the plant quiz
             </a>
           </div>
+        </div>
 
-          <div className="mt-8 flex items-center gap-4">
-            <div className="flex -space-x-2" aria-hidden="true">
-              {['bg-secondary', 'bg-accent/80', 'bg-primary', 'bg-muted'].map((bg, i) => (
-                <span
-                  key={bg}
-                  className={`flex size-9 items-center justify-center rounded-full border-2 border-background text-xs font-semibold ${bg} ${i === 2 ? 'text-primary-foreground' : 'text-foreground'}`}
-                >
-                  {['RS', 'PK', 'AM', 'NJ'][i]}
-                </span>
+        <div className="relative mt-12 pb-24 sm:pb-16 lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1 lg:mt-0 lg:pb-0 lg:pl-6">
+          <div className="relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-t-full rounded-b-3xl bg-forest-deep ring-1 ring-primary-foreground/15 lg:max-w-none">
+            {featured.map((p, i) => (
+              <Image
+                key={p.id}
+                src={stageImages[p.id]}
+                alt={i === activeIndex ? `${p.name} in a terracotta pot on our rooftop` : ''}
+                fill
+                priority={i === 0}
+                sizes="(min-width: 1024px) 45vw, (min-width: 640px) 28rem, 100vw"
+                className={`object-cover object-[center_70%] transition-[opacity,transform] duration-700 ease-out ${
+                  i === activeIndex ? 'scale-100 opacity-100' : 'scale-105 opacity-0'
+                }`}
+              />
+            ))}
+          </div>
+
+          <RooftopStamp className="absolute top-4 right-0 z-10 size-24 shadow-xl shadow-black/20 sm:right-4 lg:top-8 lg:-right-2 lg:size-28" />
+
+          <PlantTag
+            key={plant.id}
+            plant={plant}
+            sizeIndex={sizeIndex}
+            onSizeChange={setSizeIndex}
+            onAdd={handleAdd}
+            added={addedId === plant.id}
+            price={size.price}
+            mrp={size.mrp}
+          />
+        </div>
+
+        <div className="mt-6 lg:col-span-6 lg:row-start-2 lg:mt-12">
+          <p className="text-xs font-semibold tracking-[0.2em] text-primary-foreground/60 uppercase">On the roof this week</p>
+          <ul className="mt-3 divide-y divide-primary-foreground/15 border-y border-primary-foreground/15">
+            {featured.map((p, i) => {
+              const active = i === activeIndex
+              return (
+                <li key={p.id}>
+                  <button
+                    type="button"
+                    onClick={() => selectPlant(i)}
+                    aria-pressed={active}
+                    className={`group flex w-full items-center gap-4 py-3.5 text-left transition-colors sm:gap-6 ${
+                      active ? 'text-primary-foreground' : 'text-primary-foreground/55 hover:text-primary-foreground'
+                    }`}
+                  >
+                    <span className={`w-6 font-sans text-xs tabular-nums ${active ? 'text-sun' : ''}`}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="flex-1">
+                      <span className="block font-serif text-xl sm:text-2xl">{p.name}</span>
+                      <span className="block text-xs italic opacity-75">{p.botanical}</span>
+                    </span>
+                    <span className="text-sm tabular-nums">from {formatINR(p.sizes[0].price)}</span>
+                    <ArrowRight
+                      className={`size-4 transition-all ${active ? 'translate-x-0 text-sun opacity-100' : '-translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100'}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      </div>
+
+      <div className="border-t border-primary-foreground/15 bg-forest-deep py-4">
+        <div className="flex w-max motion-safe:animate-marquee motion-reduce:flex-wrap">
+          {[0, 1].map((copy) => (
+            <ul key={copy} className="flex shrink-0 items-center" aria-hidden={copy === 1}>
+              {promises.map((text) => (
+                <li key={text} className="flex items-center gap-6 pr-6 text-sm font-medium whitespace-nowrap text-primary-foreground/85">
+                  {text}
+                  <Asterisk className="size-4 text-sun" aria-hidden="true" />
+                </li>
               ))}
-            </div>
-            <div>
-              <div className="flex items-center gap-0.5" aria-label="Rated 4.9 out of 5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="size-4 fill-accent text-accent" aria-hidden="true" />
-                ))}
-                <span className="ml-1.5 text-sm font-semibold">4.9</span>
-              </div>
-              <p className="text-sm text-muted-foreground">Loved by 5,000+ plant parents</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative lg:col-span-6 xl:col-span-7">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted sm:aspect-[5/4] lg:aspect-auto lg:h-full lg:min-h-[560px]">
-            <Image
-              src="/images/hero-rooftop.png"
-              alt="Rows of healthy potted plants at Abhay's rooftop nursery in golden hour light"
-              fill
-              priority
-              sizes="(min-width: 1280px) 58vw, (min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 via-transparent to-transparent" aria-hidden="true" />
-
-            <div className="absolute top-4 right-4 flex flex-col items-center justify-center rounded-full bg-accent text-accent-foreground size-20 sm:size-24 shadow-lg">
-              <span className="text-[10px] font-semibold uppercase tracking-wider sm:text-xs">Up to</span>
-              <span className="font-serif text-2xl leading-none font-semibold sm:text-3xl">25%</span>
-              <span className="text-[10px] font-semibold uppercase tracking-wider sm:text-xs">Off</span>
-            </div>
-
-            <div className="absolute inset-x-3 bottom-3 sm:inset-x-auto sm:bottom-5 sm:left-5">
-              <HeroProductCard />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="font-serif text-2xl font-medium tracking-tight sm:text-3xl">Shop by category</h2>
-          <a href="#" className="group inline-flex items-center gap-1 text-sm font-semibold text-primary">
-            View all
-            <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-          </a>
-        </div>
-        <ul className="no-scrollbar -mx-4 mt-5 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-4 sm:gap-4 sm:overflow-visible sm:px-0">
-          {categories.map((cat) => (
-            <li key={cat.name} className="w-[42%] shrink-0 snap-start sm:w-auto">
-              <a href="#" className="group block">
-                <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
-                  <Image
-                    src={cat.image}
-                    alt={cat.alt}
-                    fill
-                    sizes="(min-width: 640px) 25vw, 42vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="mt-3 flex items-center justify-between gap-2">
-                  <div>
-                    <h3 className="text-sm font-semibold sm:text-base">{cat.name}</h3>
-                    <p className="text-xs text-muted-foreground sm:text-sm">{cat.count} plants</p>
-                  </div>
-                  <span className="hidden size-8 items-center justify-center rounded-full border border-border transition-colors group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground sm:flex">
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </span>
-                </div>
-              </a>
-            </li>
+            </ul>
           ))}
-        </ul>
-      </div>
-
-      <div className="mx-auto mt-10 max-w-7xl px-4 pb-12 sm:px-6 lg:mt-14 lg:px-8 lg:pb-16">
-        <ul className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-3">
-          {perks.map(({ icon: Icon, title, text }) => (
-            <li key={title} className="flex items-center gap-4 bg-card px-5 py-4 sm:py-5">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
-                <Icon className="size-5" aria-hidden="true" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold">{title}</p>
-                <p className="text-sm text-muted-foreground">{text}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        </div>
       </div>
     </section>
+  )
+}
+
+type PlantTagProps = {
+  plant: (typeof featured)[number]
+  sizeIndex: number
+  onSizeChange: (i: number) => void
+  onAdd: () => void
+  added: boolean
+  price: number
+  mrp?: number
+}
+
+function PlantTag({ plant, sizeIndex, onSizeChange, onAdd, added, price, mrp }: PlantTagProps) {
+  return (
+    <div className="absolute bottom-0 left-2 w-[82%] max-w-[19rem] origin-top -rotate-2 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 sm:left-6 lg:bottom-10 lg:-left-10">
+      <span className="absolute -top-10 left-9 h-12 w-px bg-primary-foreground/50" aria-hidden="true" />
+      <div className="relative rounded-2xl bg-card p-5 text-card-foreground shadow-2xl shadow-black/30">
+        <span className="absolute top-3 left-7 size-3.5 rounded-full bg-primary ring-4 ring-muted" aria-hidden="true" />
+        <div className="flex items-start justify-between gap-3 pl-8">
+          <span className="text-[11px] font-semibold tracking-[0.18em] text-muted-foreground uppercase">No. {plant.tag}</span>
+          <span className="flex items-center gap-1 text-xs font-semibold">
+            <Star className="size-3.5 fill-accent text-accent" aria-hidden="true" />
+            {plant.rating}
+            <span className="font-normal text-muted-foreground">({plant.reviews})</span>
+          </span>
+        </div>
+
+        <h2 className="mt-3 font-serif text-2xl leading-tight font-medium">{plant.name}</h2>
+        <p className="text-sm text-muted-foreground italic">{plant.botanical}</p>
+
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-secondary-foreground">
+          <span className="flex items-center gap-1">
+            <Sun className="size-3.5" aria-hidden="true" />
+            {plant.light}
+          </span>
+          <span className="flex items-center gap-1">
+            <Droplets className="size-3.5" aria-hidden="true" />
+            {careLabel[plant.care]}
+          </span>
+        </div>
+
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-dashed border-border pt-4">
+          <div role="radiogroup" aria-label="Pot size" className="flex gap-1.5">
+            {plant.sizes.map((s, i) => (
+              <button
+                key={s.label}
+                type="button"
+                role="radio"
+                aria-checked={i === sizeIndex}
+                onClick={() => onSizeChange(i)}
+                className={`size-8 rounded-full text-xs font-semibold transition-colors ${
+                  i === sizeIndex ? 'bg-primary text-primary-foreground' : 'border border-border hover:border-primary'
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-right">
+            <span className="font-serif text-2xl font-semibold tabular-nums">{formatINR(price)}</span>
+            {mrp && (
+              <span className="ml-1.5 text-xs text-muted-foreground line-through">
+                <span className="sr-only">was </span>
+                {formatINR(mrp)}
+              </span>
+            )}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={onAdd}
+          className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-accent text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent/90"
+        >
+          {added ? (
+            <>
+              <Check className="size-4" aria-hidden="true" /> Added to cart
+            </>
+          ) : (
+            'Add to cart'
+          )}
+        </button>
+        <span className="sr-only" aria-live="polite">
+          {added ? `${plant.name} added to cart` : ''}
+        </span>
+      </div>
+    </div>
   )
 }

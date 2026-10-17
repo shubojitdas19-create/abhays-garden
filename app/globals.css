@@ -32,6 +32,15 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-sun: var(--sun);
+  --color-forest-deep: var(--forest-deep);
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 /* Botanical palette: cream base, deep forest green, terracotta accent */
@@ -56,6 +65,8 @@
   --input: oklch(0.89 0.018 95);
   --ring: oklch(0.36 0.07 155);
   --radius: 0.75rem;
+  --sun: oklch(0.86 0.1 78);
+  --forest-deep: oklch(0.29 0.055 155);
 }
 
 @layer base {
