@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Filter as FilterIcon, ArrowDownUp, X, Check } from 'lucide-react'
 import { SiteHeader } from '@/components/store/layout/site-header'
-import { HomeFooter } from '@/components/store/layout/home-footer'
 import { CartProvider } from '@/components/store/cart-context'
 import { ProductCard } from '@/components/store/product-card'
 import { products, filters } from '@/components/store/products'
@@ -50,8 +49,7 @@ export default function ShopPage() {
     <CartProvider>
       <SiteHeader />
       
-      {/* Reduced py-8/12 to pt-6 pb-6 / lg:pt-8 lg:pb-8 for much tighter spacing */}
-      <main className="mx-auto w-full max-w-[100rem] px-4 pt-6 pb-8 sm:px-6 lg:px-10 xl:px-14 lg:pt-10 lg:pb-12">
+      <main className="mx-auto w-full max-w-[100rem] px-4 pt-6 pb-20 sm:px-6 lg:px-10 xl:px-14 lg:pt-10 lg:pb-12">
         
         <div className="mb-6 flex items-end justify-between border-b border-gray-200 pb-5 sm:mb-8">
           <div>
@@ -158,11 +156,6 @@ export default function ShopPage() {
 
         </div>
       </main>
-
-      {/* Wrapping Footer so mobile nav doesn't cover the copyright section */}
-      <div className="pb-[56px] lg:pb-0">
-        <HomeFooter />
-      </div>
 
       {/* MOBILE BOTTOM NAVIGATION BAR */}
       <div className="fixed bottom-0 left-0 right-0 z-40 flex h-14 w-full border-t border-gray-200 bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.05)] lg:hidden">
