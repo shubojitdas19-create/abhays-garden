@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { Check, Plus, Star } from 'lucide-react'
-import { useCart } from './cart-context'
+import { useCart } from '@/components/store/cart-context'
 
 export function HeroProductCard() {
   const { addItem } = useCart()
