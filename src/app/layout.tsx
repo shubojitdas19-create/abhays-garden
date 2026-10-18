@@ -11,14 +11,7 @@ export const metadata: Metadata = {
   description:
     'Shop healthy, homegrown indoor plants, flowering plants, succulents and herbs from our rooftop nursery. Delivered to your door with a 7-day plant guarantee.',
   generator: 'v0.app',
-  icons: {
-    icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-    ],
-    apple: '/apple-icon.png',
-  },
+  // The 'icons' block has been removed so Next.js automatically uses your favicon.ico
 }
 
 export const viewport: Viewport = {

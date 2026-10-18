@@ -6,6 +6,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { ProductCard } from '@/components/store/product-card'   
 import { filters, products, type Filter } from '@/components/store/products'
 import { useInView } from '@/hooks/use-in-view'
+import Link from 'next/link'
 
 export function Bestsellers() {
   const [active, setActive] = useState<Filter>('all')
@@ -136,12 +137,12 @@ export function Bestsellers() {
             </div>
           </div>
           
-          <a
-            href="#"
+          <Link
+            href="/shop"
             className="group inline-flex h-12 min-w-[220px] items-center justify-center gap-2 rounded-full border-2 border-[#1A3325] bg-transparent px-8 text-sm font-bold text-[#1A3325] transition-all hover:bg-[#1A3325] hover:text-white sm:h-14 sm:text-base"
           >
             Explore all bestsellers
-          </a>
+          </Link>
         </div>
       </div>
     </section>
