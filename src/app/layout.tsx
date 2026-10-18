@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Fraunces, Inter } from 'next/font/google'
+import { ConditionalFooter } from '@/components/store/layout/conditional-footer'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -26,8 +27,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
-      <body className="antialiased">
-        {children}
+      <body className="flex min-h-screen flex-col antialiased">
+        <div className="flex-1">
+          {children}
+        </div>
+        
+        {/* This will automatically render the SiteFooter on all pages except '/' */}
+        <ConditionalFooter />
+        
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
