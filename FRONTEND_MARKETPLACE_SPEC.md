@@ -4,7 +4,6 @@
 > This specification is the single source of truth for generating the entire frontend for **Abhay's Roof Garden Collective**.  
 > It is structured so that you can copy each section's **"Vercel / v0 AI Prompt"** directly into [v0.app](https://v0.app) or an AI coding assistant to generate pixel-perfect, production-grade Next.js pages without confusion.
 
----
 
 ## 🎯 1. CORE ARCHITECTURAL CONSTRAINTS
 
