@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { FooterSitemap, footerPolicyLinks } from './footer-sitemap'
 import { 
   MapPin, 
   Phone, 
@@ -195,8 +197,10 @@ export function HomeFooter() {
                 </button>
               </div>
             </div>
+            <div className="pt-4">
+              <FooterSitemap />
+            </div>
           </div>
-
         </div>
 
         {/* Copyright & Legal */}
@@ -204,12 +208,15 @@ export function HomeFooter() {
           <p className="text-xs text-white/50">
             © {new Date().getFullYear()} Abhay's Roof Garden. All rights reserved.
           </p>
-          <div className="flex gap-4 text-xs text-white/50">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-          </div>
+          <nav aria-label="Policies" className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-white/50">
+            {footerPolicyLinks.map((link) => (
+              <Link key={link.href} href={link.href} className="transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E5A849]">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
           <p className="text-xs font-medium text-white/70">
-            Designed & Developed by <a href="#" className="font-bold text-[#E5A849] hover:underline">Sj Digital Studio</a>
+            Designed & Developed by <span className="font-bold text-[#E5A849]">Sj Digital Studio</span>
           </p>
         </div>
       </div>
