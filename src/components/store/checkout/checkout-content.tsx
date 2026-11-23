@@ -7,20 +7,11 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, ArrowRight, Check, ChevronRight, CreditCard, Leaf, LockKeyhole, MapPin, PackageCheck, ShieldCheck, Truck, WalletCards } from 'lucide-react'
 import { useCart } from '@/components/store/cart-context'
 import { useCartStore } from '@/lib/store/cart-store'
+import { readSavedAddresses, saveCustomerOrder, saveSavedAddresses, type CustomerOrder, type ShippingAddress } from '@/lib/store/customer-data'
 
 type DeliveryMethod = 'standard' | 'express'
 type PaymentMethod = 'cod' | 'upi' | 'card'
-type CustomerDetails = {
-  fullName: string
-  phone: string
-  email: string
-  address: string
-  apartment: string
-  city: string
-  state: string
-  postalCode: string
-  instructions: string
-}
+type CustomerDetails = ShippingAddress
 
 const emptyDetails: CustomerDetails = {
   fullName: '', phone: '', email: '', address: '', apartment: '', city: '', state: 'West Bengal', postalCode: '', instructions: '',
@@ -145,7 +136,7 @@ function DeliveryPaymentStep({ delivery, setDelivery, payment, setPayment, onBac
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
       <section className="rounded-3xl border border-[#e5e8df] bg-white p-4 sm:p-6" aria-labelledby="delivery-method-heading">
         <div className="flex items-start gap-3"><span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#edf1e9] text-[#315a38]"><Truck className="size-4" aria-hidden="true" /></span><div><h2 id="delivery-method-heading" className="font-serif text-xl font-semibold text-[#1A3325]">Choose delivery</h2><p className="mt-1 text-xs leading-5 text-[#778078]">Every plant travels in breathable, nursery-safe packaging.</p></div></div>
-        <fieldset className="mt-5 flex flex-col gap-3"><legend className="sr-only">Delivery method</legend><ChoiceCard name="delivery" value="standard" checked={delivery === 'standard'} onChange={() => setDelivery('standard')} title="Standard Nursery Transit" description="Carefully packed · 2–4 business days" price="Free" icon={PackageCheck} /><ChoiceCard name="delivery" value="express" checked={delivery === 'express'} onChange={() => setDelivery('express')} title="Express Local Courier" description="Same day / next day in eligible areas" price="₹149" icon={Truck} /></fieldset>
+        <fieldset className="mt-5 flex flex-col gap-3"><legend className="sr-only">Delivery method</legend><ChoiceCard name="delivery" value="standard" checked={delivery === 'standard'} onChange={() => setDelivery('standard')} title="Standard Nursery Transit" description="Carefully packed · 2–5 business days" price="Free" icon={PackageCheck} /><ChoiceCard name="delivery" value="express" checked={delivery === 'express'} onChange={() => setDelivery('express')} title="Express Local Courier" description="Same day / next day in eligible areas" price="₹149" icon={Truck} /></fieldset>
       </section>
 
       <section className="rounded-3xl border border-[#e5e8df] bg-white p-4 sm:p-6" aria-labelledby="payment-method-heading">
@@ -186,17 +177,36 @@ function OrderSummary({ delivery, onDeliveryChange }: { delivery: DeliveryMethod
 
 export function CheckoutContent() {
   const router = useRouter()
-  const { items, subtotalPrice, discountAmount } = useCart()
+  const { items, subtotalPrice, discountAmount, clearCart } = useCart()
   const [isHydrated, setIsHydrated] = useState(false)
   const [step, setStep] = useState<1 | 2>(1)
   const [details, setDetails] = useState<CustomerDetails>(emptyDetails)
   const [delivery, setDelivery] = useState<DeliveryMethod>('standard')
   const [payment, setPayment] = useState<PaymentMethod>('cod')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   useEffect(() => {
-    const unsubscribe = useCartStore.persist.onFinishHydration(() => setIsHydrated(true))
-    if (useCartStore.persist.hasHydrated()) setIsHydrated(true)
+    function finishHydration() {
+      const savedAddress = readSavedAddresses().find((address) => address.isDefault) ?? readSavedAddresses()[0]
+      if (savedAddress) {
+        setDetails({
+          fullName: savedAddress.fullName,
+          phone: savedAddress.phone.replace(/\D/g, '').slice(-10),
+          email: savedAddress.email,
+          address: savedAddress.address,
+          apartment: savedAddress.apartment,
+          city: savedAddress.city,
+          state: savedAddress.state,
+          postalCode: savedAddress.postalCode,
+          instructions: savedAddress.instructions,
+        })
+      }
+      setIsHydrated(true)
+    }
+
+    const unsubscribe = useCartStore.persist.onFinishHydration(finishHydration)
+    if (useCartStore.persist.hasHydrated()) finishHydration()
     return unsubscribe
   }, [])
 
@@ -208,9 +218,44 @@ export function CheckoutContent() {
   function handlePlaceOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (isSubmitting || items.length === 0) return
+    setSubmitError('')
     setIsSubmitting(true)
     window.setTimeout(() => {
-      router.push('/order-success/ARG-8291')
+      const now = new Date()
+      const estimatedDelivery = new Date(now)
+      estimatedDelivery.setDate(estimatedDelivery.getDate() + (delivery === 'express' ? 1 : 4))
+      const orderId = `ARG-${Date.now().toString().slice(-8)}`
+      const totalAmount = Math.max(0, subtotalPrice - discountAmount) + (delivery === 'express' ? 149 : 0)
+      const order: CustomerOrder = {
+        id: orderId,
+        date: now.toISOString(),
+        items: items.map((item) => ({ ...item })),
+        totalAmount,
+        deliveryAddress: { ...details },
+        status: 'Freshly picked by grower',
+        trackingStage: 1,
+        deliveryMethod: delivery,
+        paymentMethod: payment,
+        estimatedDelivery: estimatedDelivery.toISOString(),
+      }
+
+      if (!saveCustomerOrder(order)) {
+        setSubmitError('We could not save this demo order in browser storage. Please check your browser settings and try again.')
+        setIsSubmitting(false)
+        return
+      }
+
+      const savedAddresses = readSavedAddresses()
+      const defaultAddress = savedAddresses.find((address) => address.isDefault) ?? savedAddresses[0]
+      const nextAddress = {
+        ...details,
+        id: defaultAddress?.id ?? `address-${Date.now()}`,
+        label: defaultAddress?.label ?? 'Home',
+        isDefault: true,
+      }
+      saveSavedAddresses([nextAddress, ...savedAddresses.filter((address) => address.id !== nextAddress.id).map((address) => ({ ...address, isDefault: false }))])
+      clearCart()
+      router.push(`/order-success/${encodeURIComponent(orderId)}`)
     }, 1000)
   }
 
@@ -227,6 +272,7 @@ export function CheckoutContent() {
           <div className="mt-3 flex flex-col gap-3 border-b border-[#e3e0d7] pb-5 sm:mt-5 sm:flex-row sm:items-end sm:justify-between sm:pb-6"><div><p className="text-[10px] font-bold uppercase tracking-[0.17em] text-[#a65f2b]">Abhay&apos;s Roof Garden Collective</p><h1 className="mt-1 font-serif text-3xl font-semibold tracking-tight text-[#1A3325] sm:text-4xl">Secure checkout</h1></div><div className="w-full sm:w-[340px]"><StepIndicator currentStep={step} /></div></div>
           <div className="mt-5 grid grid-cols-1 items-start gap-5 lg:mt-7 lg:grid-cols-[minmax(0,1fr)_390px] lg:gap-8">
             <div className="order-1 min-w-0 lg:order-1">
+              {submitError && <p className="mb-4 rounded-2xl border border-[#e7d9c9] bg-[#fffaf3] px-4 py-3 text-sm leading-5 text-[#705843]" role="alert">{submitError}</p>}
               {step === 1 ? <DetailsStep details={details} setDetails={setDetails} onContinue={handleDetailsSubmit} /> : <DeliveryPaymentStep delivery={delivery} setDelivery={setDelivery} payment={payment} setPayment={setPayment} onBack={() => setStep(1)} isSubmitting={isSubmitting} total={Math.max(0, subtotalPrice - discountAmount) + (delivery === 'express' ? 149 : 0)} onSubmit={handlePlaceOrder} />}
               <p className="mt-4 flex items-center justify-center gap-2 text-[11px] text-[#778078]"><LockKeyhole className="size-3.5" aria-hidden="true" /> Your details are protected with secure checkout.</p>
             </div>

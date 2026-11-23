@@ -27,8 +27,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
-      <body className="flex min-h-screen flex-col antialiased">
-        <div className="flex-1">
+      <body className="flex min-h-screen w-full max-w-full flex-col overflow-x-clip antialiased">
+        <div className="w-full max-w-full flex-1 overflow-x-clip">
           {children}
         </div>
         

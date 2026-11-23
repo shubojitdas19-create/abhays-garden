@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Heart, Menu, Search, ShoppingBag, User, X } from 'lucide-react'
 import { CartDrawer } from '@/components/store/layout/cart-drawer'
+import { AuthModal } from '@/components/store/account/auth-modal'
 import { useCart } from '@/components/store/cart-context'
 
 const navLinks = [
@@ -17,7 +18,16 @@ const navLinks = [
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
+  const [authOpen, setAuthOpen] = useState(false)
   const { count, isCartOpen, toggleCart } = useCart()
+  const [countPopped, setCountPopped] = useState(false)
+
+  useEffect(() => {
+    if (count === 0) return
+    setCountPopped(true)
+    const timeout = window.setTimeout(() => setCountPopped(false), 480)
+    return () => window.clearTimeout(timeout)
+  }, [count])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -122,8 +132,8 @@ export function SiteHeader() {
           <Link href="/wishlist" className="hidden size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted hover:text-[#1A3325] sm:inline-flex" aria-label="Wishlist">
             <Heart className="size-5" aria-hidden="true" />
           </Link>
-          <button type="button" className="hidden size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted hover:text-[#1A3325] sm:inline-flex" aria-label="Account">
-            <User className="size-5" />
+          <button type="button" onClick={() => setAuthOpen(true)} className="hidden size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted hover:text-[#1A3325] sm:inline-flex" aria-label="Open account sign-in" aria-haspopup="dialog">
+            <User className="size-5" aria-hidden="true" />
           </button>
           
           <button
@@ -136,7 +146,7 @@ export function SiteHeader() {
           >
             <ShoppingBag className="size-5" />
             <span
-              className="absolute right-0.5 top-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-[#E5A849] px-1 text-[10px] font-bold leading-4.5 text-white shadow-sm"
+              className={`absolute right-0.5 top-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-[#E5A849] px-1 text-[10px] font-bold leading-4.5 text-white shadow-sm ${countPopped ? 'animate-cart-pop' : ''}`}
               aria-hidden="true"
             >
               {count}
@@ -186,9 +196,9 @@ export function SiteHeader() {
               </li>
             ))}
             <li className="flex gap-3 py-4 sm:hidden">
-              <Link href="/account" className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-medium">
+              <button type="button" onClick={() => { setMenuOpen(false); setAuthOpen(true) }} className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-medium" aria-haspopup="dialog">
                 <User className="size-4" aria-hidden="true" /> Account
-              </Link>
+              </button>
               <Link href="/wishlist" className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-medium">
                 <Heart className="size-4" aria-hidden="true" /> Wishlist
               </Link>
@@ -198,6 +208,7 @@ export function SiteHeader() {
       )}
       </header>
       <CartDrawer />
+      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </>
   )
 }

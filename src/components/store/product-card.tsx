@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Check, Droplets, Heart, ShoppingBag, Star, Sun } from 'lucide-react'
+import { Check, Droplets, Heart, Leaf, ShoppingBag, Star, Sun } from 'lucide-react'
 import { useCart } from './cart-context'
 import { formatINR, type Product } from './products'
 
@@ -13,6 +13,7 @@ export function ProductCard({ product }: { product: Product }) {
   const { addItem, wishlist, toggleWishlist } = useCart()
   const [sizeIndex, setSizeIndex] = useState(1)
   const [added, setAdded] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
   const saved = wishlist.includes(product.id)
   const size = product.sizes[sizeIndex]
 
@@ -33,12 +34,14 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="group flex h-full flex-col">
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#e9dcc8]">
+        {!imageLoaded && <div className="absolute inset-0 animate-sage-shimmer bg-gradient-to-r from-[#e5eadf] via-[#f4f5ef] to-[#e5eadf] bg-[length:200%_100%]" aria-hidden="true" />}
         <Image
           src={product.image}
           alt={product.name}
           fill
           sizes="(min-width: 1024px) 22vw, (min-width: 640px) 33vw, 50vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          onLoad={() => setImageLoaded(true)}
+          className={`object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.035] ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
 
         <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-md bg-card/90 py-1 pr-2 pl-1.5 font-mono text-[10px] font-medium tracking-wider text-foreground/70 backdrop-blur-sm">
@@ -78,6 +81,9 @@ export function ProductCard({ product }: { product: Product }) {
           <div className="min-w-0">
             <h3 className="truncate font-serif text-lg leading-tight font-medium sm:text-xl"><Link href={`/shop/${product.slug}`} className="rounded-sm transition-colors hover:text-[#527358] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#527358]">{product.name}</Link></h3>
             <p className="mt-0.5 truncate text-xs text-muted-foreground italic sm:text-sm">{product.botanical}</p>
+            <Link href={`/nurseries/${product.nursery.slug}`} className="mt-1 inline-flex max-w-full items-center gap-1 truncate rounded-sm text-[11px] font-medium text-[#527358] transition-colors hover:text-[#1A3325] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#527358] sm:text-xs" aria-label={`Visit ${product.nursery.name}, grower of ${product.name}`}>
+              <Leaf className="size-3 shrink-0" aria-hidden="true" /><span className="truncate">Grown by {product.nursery.name}</span>
+            </Link>
           </div>
           <span className="flex shrink-0 items-center gap-1 pt-1 text-xs font-semibold sm:text-sm">
             <Star className="size-3.5 fill-accent text-accent" aria-hidden="true" />
@@ -111,7 +117,7 @@ export function ProductCard({ product }: { product: Product }) {
                 key={s.label}
                 className={`flex size-7 cursor-pointer items-center justify-center rounded-full border text-[11px] font-semibold transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring ${
                   i === sizeIndex
-                    ? 'border-foreground bg-foreground text-background'
+                    ? 'border-foreground bg-foreground text-background animate-pill-pop'
                     : 'border-border text-foreground hover:border-foreground/40'
                 }`}
               >

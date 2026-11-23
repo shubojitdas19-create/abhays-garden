@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent, type FormEvent } from 'react'
 import Image from 'next/image'
-import { Check, CheckCircle2, ImagePlus, Leaf, Plus, Sprout, X } from 'lucide-react'
+import { ArrowRight, Check, CheckCircle2, ImagePlus, Sprout, X } from 'lucide-react'
 
 const nurseryTypes = [
   'Commercial ground nursery',
@@ -173,19 +173,19 @@ export function GrowerApplicationForm() {
         </div>
 
         <button type="submit" className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#1A3325] px-6 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#294735] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">
-          Send my application <Plus className="size-4" aria-hidden="true" />
+          Review my application <ArrowRight className="size-4" aria-hidden="true" />
         </button>
-        <p className="mt-3 text-center text-[11px] leading-5 text-[#778078]">By applying, you agree to be contacted about joining the collective.</p>
+        <p className="mt-3 text-center text-[11px] leading-5 text-[#778078]">Use the WhatsApp option on the next screen to contact our team. This preview does not transmit your details.</p>
       </form>
 
       <dialog ref={confirmationRef} onClose={() => setApplicationReceived(false)} aria-labelledby="application-success-heading" className="m-auto w-[calc(100%-2rem)] max-w-md rounded-[1.75rem] border border-[#e5e8df] bg-[#fbfaf6] p-0 text-[#1A3325] shadow-2xl backdrop:bg-[#0f291e]/65">
         <div className="p-6 text-center sm:p-8">
           <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-[#e8efe6] text-[#365440]"><CheckCircle2 className="size-7" aria-hidden="true" /></span>
-          <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#a65f2b]">Application received</p>
+          <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#a65f2b]">Application preview</p>
           <h3 id="application-success-heading" className="mt-2 font-serif text-2xl font-semibold">Thank you{applicantName ? `, ${applicantName.split(' ')[0]}` : ''}.</h3>
-          <p className="mt-3 text-sm leading-6 text-[#68786b]">Our curator will review your application and arrange a nursery visit within 48 hours. We&apos;re excited to learn about what you grow.</p>
-          <div className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-[#edf2ea] px-4 py-3 text-xs font-medium text-[#365440]"><Leaf className="size-4" aria-hidden="true" /> A new growing story starts here.</div>
-          <button type="button" onClick={closeConfirmation} className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#1A3325] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#294735] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">Back to the page</button>
+          <p className="mt-3 text-sm leading-6 text-[#68786b]">Your details haven&apos;t been sent from this preview. To apply, contact our nursery team on WhatsApp and share your information with them.</p>
+          <a href="https://wa.me/919476433880?text=Hello%2C%20I%27d%20like%20to%20apply%20to%20join%20as%20a%20grower." target="_blank" rel="noreferrer" className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#1A3325] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#294735] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">Continue on WhatsApp <Sprout className="size-4" aria-hidden="true" /></a>
+          <button type="button" onClick={closeConfirmation} className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#dfe4dc] bg-white px-5 text-sm font-semibold text-[#365440] transition-colors hover:bg-[#f4f6f1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">Back to the page</button>
         </div>
       </dialog>
     </>

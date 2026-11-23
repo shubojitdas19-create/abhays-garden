@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BadgeCheck, ChevronRight, MapPin, PackageCheck, ShieldCheck, Sprout, Star } from 'lucide-react'
 import { CartProvider } from '@/components/store/cart-context'
+import { NurseryBannerActions } from '@/components/store/nursery-banner-actions'
 import { NurseryCatalog } from '@/components/store/nursery-catalog'
 import { SiteHeader } from '@/components/store/layout/site-header'
 import { nurseries, products } from '@/components/store/products'
@@ -52,7 +53,8 @@ export default async function NurseryPage({ params }: NurseryPageProps) {
         <section className="relative isolate flex min-h-[18rem] items-end overflow-hidden rounded-[1.75rem] bg-[#1A3325] p-6 sm:min-h-[23rem] sm:rounded-[2rem] sm:p-10 lg:p-14" aria-labelledby="nursery-heading">
           <Image src={nursery.image} alt="" fill priority sizes="100vw" className="-z-20 object-cover" />
           <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#0f291e]/90 via-[#0f291e]/30 to-transparent" aria-hidden="true" />
-          <div className="max-w-3xl text-white">
+          <NurseryBannerActions nursery={nursery} />
+          <div className="max-w-3xl pb-14 text-white sm:pb-16">
             <div className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold backdrop-blur-sm"><BadgeCheck className="size-4" aria-hidden="true" /> Verified local grower</div>
             <h1 id="nursery-heading" className="font-serif text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">{nursery.name}</h1>
             <p className="mt-2 font-serif text-lg italic text-white/80 sm:text-xl">{nursery.tagline}</p>

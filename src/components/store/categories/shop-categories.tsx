@@ -54,7 +54,7 @@ export function ShopCategories() {
               style={{ transitionDelay: `${index * 75}ms` }}
             >
               <a href="#" className="group block">
-                <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-muted shadow-sm transition-shadow hover:shadow-md">
+                <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-muted shadow-sm transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-1.5 group-hover:shadow-lg">
                   <Image
                     src={cat.image}
                     alt={cat.alt}

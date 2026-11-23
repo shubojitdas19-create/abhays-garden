@@ -4,9 +4,9 @@ import {
   ArrowDown,
   ArrowRight,
   BadgeCheck,
-  Boxes,
   HandCoins,
   MapPin,
+  MessageCircle,
   PackageCheck,
   Sprout,
   Truck,
@@ -137,10 +137,13 @@ export function SellPage() {
           <div className="lg:sticky lg:top-28 lg:self-start">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a65f2b]">Your next growing season</p>
             <h2 id="application-heading" className="mt-2 font-serif text-3xl font-semibold leading-tight text-[#1A3325] sm:text-4xl">Let&apos;s get to know your nursery.</h2>
-            <p className="mt-4 text-sm leading-7 text-[#68786b]">Share a little about you and what you grow. Our team will review your application and get back to you about the next steps.</p>
-            <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#dfe6dc] bg-white/70 p-4">
-              <Boxes className="mt-0.5 size-5 shrink-0 text-[#527358]" aria-hidden="true" />
-              <p className="text-xs leading-5 text-[#68786b]">Your details are used for this demo application only and aren&apos;t sent to a server.</p>
+            <p className="mt-4 text-sm leading-7 text-[#68786b]">Tell us about your nursery and the plants you grow. A few details help our team understand whether the collective is a good fit.</p>
+            <div className="mt-6 rounded-2xl bg-[#1A3325] p-5 text-white shadow-[0_18px_40px_-28px_rgba(26,51,37,0.7)]">
+              <span className="flex size-10 items-center justify-center rounded-xl bg-white/10 text-[#e5a849]"><MessageCircle className="size-5" aria-hidden="true" /></span>
+              <p className="mt-4 font-serif text-xl font-semibold">Prefer to talk first?</p>
+              <p className="mt-2 text-sm leading-6 text-white/75">Chat with our nursery team about the grower collective, fees, and onboarding before you apply.</p>
+              <a href="https://wa.me/919476433880?text=Hello%2C%20I%27d%20like%20to%20learn%20about%20joining%20as%20a%20grower." target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#e5a849] px-4 text-sm font-semibold text-[#1A3325] transition-colors hover:bg-[#f0bd69] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-fit">Chat with our team <ArrowRight className="size-4" aria-hidden="true" /></a>
+              <p className="mt-3 border-t border-white/15 pt-3 text-[11px] leading-5 text-white/60">The online application is a preview and does not send or save your details yet.</p>
             </div>
           </div>
           <GrowerApplicationForm />

@@ -87,7 +87,7 @@ export function CustomerReviews() {
           {reviews.map((r, index) => (
             <figure 
               key={r.id} 
-              className="group flex w-[85vw] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-700 ease-out hover:shadow-xl sm:w-auto sm:border-transparent sm:shadow-sm"
+              className="group flex w-[85vw] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl sm:w-auto sm:border-transparent sm:shadow-sm"
               style={{ 
                 transitionDelay: `${(index + 1) * 100}ms`,
                 opacity: isInView ? 1 : 0,
