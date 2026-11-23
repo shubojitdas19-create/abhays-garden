@@ -15,7 +15,7 @@ export function ConditionalFooter() {
   const needsMobileFooterClearance = pathname === '/shop' || pathname.startsWith('/shop/')
 
   return (
-    <div className={needsMobileFooterClearance ? 'pb-[56px] lg:pb-0' : 'pb-0'}>
+    <div className={`bg-[#0F291E] ${needsMobileFooterClearance ? 'pb-[56px] lg:pb-0' : ''}`}>
       <SiteFooter />
     </div>
   )
