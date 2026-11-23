@@ -20,7 +20,10 @@ type CartStore = {
   subtotalPrice: number
   shippingFee: number
   isCartOpen: boolean
+  couponCode: string | null
   addItem: (item: CartItemInput) => void
+  applyCouponCode: (code: string) => boolean
+  clearCouponCode: () => void
   removeItem: (productId: string, size: string, pot: string) => void
   updateQuantity: (productId: string, size: string, pot: string, quantity: number) => void
   clearCart: () => void
@@ -67,6 +70,14 @@ export const useCartStore = create<CartStore>()(
       subtotalPrice: 0,
       shippingFee: 99,
       isCartOpen: false,
+      couponCode: null,
+      applyCouponCode: (code) => {
+        const normalized = code.trim().toUpperCase()
+        if (normalized !== 'ROOFTOP10' && normalized !== 'FIRSTPLANT') return false
+        set({ couponCode: normalized })
+        return true
+      },
+      clearCouponCode: () => set({ couponCode: null }),
       addItem: (item) => {
         if (!item.productId || !item.productName || !item.size || !item.pot || !item.image || !item.nurseryName) return
         if (!Number.isFinite(item.price) || item.price < 0) return
@@ -96,18 +107,20 @@ export const useCartStore = create<CartStore>()(
             : state.items.filter((item) => !itemMatches(item, productId, size, pot))
           return withItems(items)
         }),
-      clearCart: () => set(withItems([])),
+      clearCart: () => set({ ...withItems([]), couponCode: null }),
       toggleCart: () => set((state) => ({ isCartOpen: !state.isCartOpen })),
     }),
     {
       name: 'abhays-garden-cart',
       storage: createJSONStorage(() => localStorage),
       skipHydration: true,
-      partialize: (state) => ({ items: state.items }) as CartStore,
+      partialize: (state) => ({ items: state.items, couponCode: state.couponCode }) as CartStore,
       merge: (persistedState, currentState) => {
-        const persistedItems = (persistedState as Pick<CartStore, 'items'> | undefined)?.items
-        const items = Array.isArray(persistedItems) ? persistedItems.filter(isCartItem) : []
-        return { ...currentState, ...withItems(items) }
+        const persisted = persistedState as Partial<Pick<CartStore, 'items' | 'couponCode'>> | undefined
+        const items = Array.isArray(persisted?.items) ? persisted.items.filter(isCartItem) : []
+        const savedCode = persisted?.couponCode
+        const couponCode = items.length > 0 && (savedCode === 'ROOFTOP10' || savedCode === 'FIRSTPLANT') ? savedCode : null
+        return { ...currentState, ...withItems(items), couponCode }
       },
     },
   ),

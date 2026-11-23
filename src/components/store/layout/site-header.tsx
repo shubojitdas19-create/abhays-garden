@@ -29,7 +29,8 @@ export function SiteHeader() {
   }, [menuOpen])
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/95 backdrop-blur-md">
+    <>
+      <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/95 backdrop-blur-md">
       
       {/* Expanded Max-Width for Full Screen Desktop Support */}
       <div className="relative mx-auto flex h-16 w-full max-w-[100rem] items-center gap-4 px-4 sm:px-6 lg:h-20 lg:px-10 xl:px-14">
@@ -195,7 +196,8 @@ export function SiteHeader() {
           </ul>
         </nav>
       )}
+      </header>
       <CartDrawer />
-    </header>
+    </>
   )
 }

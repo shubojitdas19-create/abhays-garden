@@ -1,25 +1,17 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
-import { LockKeyhole, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
+import { ShoppingBag, X } from 'lucide-react'
 import { useCart } from '@/components/store/cart-context'
+import { CartItemsList } from '@/components/store/cart/cart-items-list'
+import { CartOrderSummary } from '@/components/store/cart/cart-order-summary'
 
 const FREE_DELIVERY_THRESHOLD = 999
 const formatPrice = (value: number) => `₹${value.toLocaleString('en-IN')}`
 
 export function CartDrawer() {
-  const {
-    items,
-    count,
-    subtotalPrice,
-    shippingFee,
-    isCartOpen,
-    toggleCart,
-    updateQuantity,
-    removeItem,
-  } = useCart()
+  const { items, count, subtotalPrice, isCartOpen, toggleCart } = useCart()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -42,18 +34,12 @@ export function CartDrawer() {
 
   if (!isCartOpen) return null
 
-  const groupedItems = items.reduce<Record<string, typeof items>>((groups, item) => {
-    ;(groups[item.nurseryName] ??= []).push(item)
-    return groups
-  }, {})
   const amountToFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD - subtotalPrice)
   const deliveryProgress = Math.min(100, (subtotalPrice / FREE_DELIVERY_THRESHOLD) * 100)
 
   return (
-    <div className="fixed inset-0 z-[70] flex justify-end" onMouseDown={(event) => {
-      if (event.target === event.currentTarget) toggleCart()
-    }}>
-      <div className="absolute inset-0 bg-[#13251c]/45 backdrop-blur-[2px]" aria-hidden="true" />
+    <div className="fixed inset-0 z-[70] flex justify-end">
+      <button type="button" className="absolute inset-0 cursor-default bg-[#13251c]/45 backdrop-blur-[2px]" onClick={toggleCart} aria-label="Close cart drawer" />
       <section
         id="cart-drawer"
         role="dialog"
@@ -86,7 +72,7 @@ export function CartDrawer() {
           <>
             <div className="border-b border-[#e7e4dc] px-5 py-4 sm:px-7">
               <div className="flex items-center justify-between gap-3 text-sm">
-                <p className="text-[#34483a]">{amountToFreeDelivery > 0 ? <>Add <strong>{formatPrice(amountToFreeDelivery)}</strong> more for free delivery</> : <strong className="text-[#1A3325]">You unlocked free delivery</strong>}</p>
+                <p className="text-[#34483a]">{amountToFreeDelivery > 0 ? <>Add <strong>{formatPrice(amountToFreeDelivery)}</strong> more to unlock free eco-packaging &amp; delivery</> : <strong className="text-[#1A3325]">You unlocked free eco-packaging &amp; delivery</strong>}</p>
                 <span className="shrink-0 font-semibold text-[#1A3325]">{Math.round(deliveryProgress)}%</span>
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#e5e8df]" role="progressbar" aria-label="Free delivery progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(deliveryProgress)}>
@@ -95,54 +81,12 @@ export function CartDrawer() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-7">
-              <div className="flex flex-col gap-7">
-                {Object.entries(groupedItems).map(([nursery, nurseryItems], groupIndex) => (
-                  <section key={nursery} aria-label={`Items from ${nursery}`}>
-                    <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-[#68786b]">Shipment {groupIndex + 1} · From {nursery}</p>
-                    <ul className="flex flex-col gap-4">
-                      {nurseryItems.map((item) => (
-                        <li key={`${item.productId}-${item.size}-${item.pot}`} className="flex gap-3 border-b border-[#e7e4dc] pb-4 last:border-0 last:pb-0">
-                          <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-[#edf1e9]">
-                            <Image src={item.image} alt={item.productName} fill sizes="80px" className="object-cover" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="min-w-0">
-                                <h3 className="truncate text-sm font-semibold text-[#1A3325]">{item.productName}</h3>
-                                <p className="mt-1 text-xs text-[#68786b]">Size: {item.size} · Pot: {item.pot}</p>
-                              </div>
-                              <button type="button" onClick={() => removeItem(item.productId, item.size, item.pot)} aria-label={`Remove ${item.productName}`} className="rounded-full p-1.5 text-[#879187] transition-colors hover:bg-[#f0eee7] hover:text-[#9b4938]">
-                                <Trash2 className="size-4" />
-                              </button>
-                            </div>
-                            <div className="mt-3 flex items-center justify-between">
-                              <div className="inline-flex items-center rounded-full border border-[#e3e2d9] bg-white">
-                                <button type="button" onClick={() => updateQuantity(item.productId, item.size, item.pot, item.quantity - 1)} aria-label={`Decrease ${item.productName} quantity`} className="inline-flex size-8 items-center justify-center rounded-full text-[#1A3325] hover:bg-[#f0eee7]"><Minus className="size-3.5" /></button>
-                                <span className="min-w-6 text-center text-xs font-semibold" aria-label={`Quantity ${item.quantity}`}>{item.quantity}</span>
-                                <button type="button" onClick={() => updateQuantity(item.productId, item.size, item.pot, item.quantity + 1)} aria-label={`Increase ${item.productName} quantity`} className="inline-flex size-8 items-center justify-center rounded-full text-[#1A3325] hover:bg-[#f0eee7]"><Plus className="size-3.5" /></button>
-                              </div>
-                              <span className="text-sm font-bold text-[#1A3325]">{formatPrice(item.price * item.quantity)}</span>
-                            </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ))}
-              </div>
+              <CartItemsList items={items} />
             </div>
 
-            <footer className="border-t border-[#e7e4dc] bg-white px-5 py-5 sm:px-7">
-              <div className="flex flex-col gap-2.5 text-sm">
-                <div className="flex justify-between text-[#5c6b60]"><span>Subtotal</span><span>{formatPrice(subtotalPrice)}</span></div>
-                <div className="flex justify-between text-[#5c6b60]"><span>Eco-packaging</span><span className="font-semibold text-[#527358]">Free</span></div>
-                <div className="flex justify-between text-[#5c6b60]"><span>Estimated delivery</span><span>{shippingFee === 0 ? 'Free' : formatPrice(shippingFee)}</span></div>
-                <div className="mt-2 flex justify-between border-t border-[#e7e4dc] pt-3 text-base font-bold text-[#1A3325]"><span>Total</span><span>{formatPrice(subtotalPrice + shippingFee)}</span></div>
-              </div>
-              <Link href="/checkout" onClick={toggleCart} className="mt-4 flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#1A3325] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#294735]">
-                <LockKeyhole className="size-4" aria-hidden="true" /> Proceed to checkout
-              </Link>
-              <p className="mt-2 text-center text-xs text-[#68786b]">100% safe checkout</p>
+            <footer className="max-h-[52vh] overflow-y-auto border-t border-[#e7e4dc] bg-white px-5 py-4 sm:px-7">
+              <CartOrderSummary compact />
+              <Link href="/cart" onClick={toggleCart} className="mt-3 flex min-h-10 items-center justify-center rounded-full text-sm font-semibold text-[#1A3325] underline decoration-[#a7b4a7] underline-offset-4 hover:text-[#527358]">View full cart</Link>
             </footer>
           </>
         )}

@@ -17,6 +17,14 @@ export function useCart() {
   const items = useCartStore((state) => state.items)
   const subtotalPrice = useCartStore((state) => state.subtotalPrice)
   const shippingFee = useCartStore((state) => state.shippingFee)
+  const couponCode = useCartStore((state) => state.couponCode)
+  const discountAmount = couponCode === 'ROOFTOP10'
+    ? Math.min(subtotalPrice, Math.round(subtotalPrice * 0.1))
+    : couponCode === 'FIRSTPLANT'
+      ? Math.min(subtotalPrice, 100)
+      : 0
+  const applyCouponCode = useCartStore((state) => state.applyCouponCode)
+  const clearCouponCode = useCartStore((state) => state.clearCouponCode)
   const isCartOpen = useCartStore((state) => state.isCartOpen)
   const removeItem = useCartStore((state) => state.removeItem)
   const updateQuantity = useCartStore((state) => state.updateQuantity)
@@ -29,6 +37,10 @@ export function useCart() {
     totalItemsCount: count,
     subtotalPrice,
     shippingFee,
+    couponCode,
+    discountAmount,
+    applyCouponCode,
+    clearCouponCode,
     isCartOpen,
     addItem,
     removeItem,
