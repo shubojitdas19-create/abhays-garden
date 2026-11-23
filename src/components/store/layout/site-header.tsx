@@ -20,6 +20,14 @@ export function SiteHeader() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const [authOpen, setAuthOpen] = useState(false)
   const { count, isCartOpen, toggleCart } = useCart()
+  const [countPopped, setCountPopped] = useState(false)
+
+  useEffect(() => {
+    if (count === 0) return
+    setCountPopped(true)
+    const timeout = window.setTimeout(() => setCountPopped(false), 480)
+    return () => window.clearTimeout(timeout)
+  }, [count])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -138,7 +146,7 @@ export function SiteHeader() {
           >
             <ShoppingBag className="size-5" />
             <span
-              className="absolute right-0.5 top-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-[#E5A849] px-1 text-[10px] font-bold leading-4.5 text-white shadow-sm"
+              className={`absolute right-0.5 top-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-[#E5A849] px-1 text-[10px] font-bold leading-4.5 text-white shadow-sm ${countPopped ? 'animate-cart-pop' : ''}`}
               aria-hidden="true"
             >
               {count}

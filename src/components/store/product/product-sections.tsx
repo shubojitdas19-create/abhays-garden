@@ -69,7 +69,7 @@ export function PlantGuarantee() {
       </div>
       <div className="flex shrink-0 flex-col gap-2 sm:items-end">
         <Link href="/guarantee" className="min-h-10 content-center text-sm font-semibold text-[#1A3325] underline decoration-[#a65f2b]/50 underline-offset-4">Read the full guarantee</Link>
-        <a href={`https://wa.me/919476433880?text=${whatsappText}`} target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[#527358]/25 bg-white px-4 text-sm font-semibold text-[#1A3325] transition-colors hover:bg-[#e8eee4]">
+        <a href={`https://wa.me/919476433880?text=${whatsappText}`} target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[#527358]/25 bg-white px-4 text-sm font-semibold text-[#1A3325] transition-colors hover:bg-[#e8eee4] motion-safe:animate-[whatsapp-pulse_2.4s_ease-in-out_infinite]">
           <PackageCheck className="size-4" aria-hidden="true" /> WhatsApp support
         </a>
       </div>
