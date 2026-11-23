@@ -4,13 +4,26 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Check, Plus, Star } from 'lucide-react'
 import { useCart } from '@/components/store/cart-context'
+import { products } from '@/components/store/products'
 
 export function HeroProductCard() {
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
 
   function handleAdd() {
-    addItem()
+    const product = products.find((item) => item.id === 'monstera')
+    const size = product?.sizes.find((item) => item.label === 'M')
+    if (!product || !size) return
+
+    addItem({
+      productId: product.id,
+      productName: product.name,
+      size: size.label,
+      pot: 'Standard Eco Nursery Pot',
+      price: size.price,
+      image: product.image,
+      nurseryName: product.nursery.name,
+    })
     setAdded(true)
     setTimeout(() => setAdded(false), 1600)
   }

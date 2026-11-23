@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Check, Droplets, Heart, ShoppingBag, Star, Sun } from 'lucide-react'
 import { useCart } from './cart-context'
 import { formatINR, type Product } from './products'
@@ -9,14 +10,22 @@ import { formatINR, type Product } from './products'
 const careLabel = { 1: 'Easy care', 2: 'Moderate care', 3: 'Needs attention' } as const
 
 export function ProductCard({ product }: { product: Product }) {
-  const { addItem } = useCart()
+  const { addItem, wishlist, toggleWishlist } = useCart()
   const [sizeIndex, setSizeIndex] = useState(1)
   const [added, setAdded] = useState(false)
-  const [saved, setSaved] = useState(false)
+  const saved = wishlist.includes(product.id)
   const size = product.sizes[sizeIndex]
 
   function handleAdd() {
-    addItem()
+    addItem({
+      productId: product.id,
+      productName: product.name,
+      size: size.label,
+      pot: 'Standard Eco Nursery Pot',
+      price: size.price,
+      image: product.image,
+      nurseryName: product.nursery.name,
+    })
     setAdded(true)
     setTimeout(() => setAdded(false), 1600)
   }
@@ -26,7 +35,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#e9dcc8]">
         <Image
           src={product.image}
-          alt={product.alt}
+          alt={product.name}
           fill
           sizes="(min-width: 1024px) 22vw, (min-width: 640px) 33vw, 50vw"
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -40,7 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
 
         <button
           type="button"
-          onClick={() => setSaved((s) => !s)}
+          onClick={() => toggleWishlist(product.id)}
           aria-pressed={saved}
           aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
           className="absolute top-2.5 right-2.5 flex size-9 items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card"
@@ -67,7 +76,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="flex flex-1 flex-col pt-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h3 className="truncate font-serif text-lg leading-tight font-medium sm:text-xl">{product.name}</h3>
+            <h3 className="truncate font-serif text-lg leading-tight font-medium sm:text-xl"><Link href={`/shop/${product.slug}`} className="rounded-sm transition-colors hover:text-[#527358] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#527358]">{product.name}</Link></h3>
             <p className="mt-0.5 truncate text-xs text-muted-foreground italic sm:text-sm">{product.botanical}</p>
           </div>
           <span className="flex shrink-0 items-center gap-1 pt-1 text-xs font-semibold sm:text-sm">
@@ -80,11 +89,11 @@ export function ProductCard({ product }: { product: Product }) {
         <ul className="mt-3 flex flex-wrap gap-1.5 text-[11px] font-medium text-secondary-foreground sm:text-xs">
           <li className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1">
             <Sun className="size-3" aria-hidden="true" />
-            {product.light}
+            {product.careSummary.light}
           </li>
           <li className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1">
             <Droplets className="size-3" aria-hidden="true" />
-            {careLabel[product.care]}
+            {careLabel[product.careSummary.difficulty]}
           </li>
         </ul>
 

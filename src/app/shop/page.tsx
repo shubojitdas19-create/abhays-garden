@@ -5,7 +5,7 @@ import { Filter as FilterIcon, ArrowDownUp, X, Check } from 'lucide-react'
 import { SiteHeader } from '@/components/store/layout/site-header'
 import { CartProvider } from '@/components/store/cart-context'
 import { ProductCard } from '@/components/store/product-card'
-import { products, filters } from '@/components/store/products'
+import { products, filters, type ProductFilter } from '@/components/store/products'
 
 const sortOptions = [
   { id: 'featured', label: 'Featured' },
@@ -15,7 +15,7 @@ const sortOptions = [
 ]
 
 export default function ShopPage() {
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [activeFilter, setActiveFilter] = useState<ProductFilter>('all')
   const [activeSort, setActiveSort] = useState('featured')
   
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
@@ -36,9 +36,9 @@ export default function ShopPage() {
       result = result.filter(p => p.filters.includes(activeFilter))
     }
     if (activeSort === 'price-low') {
-      result.sort((a, b) => a.price - b.price)
+      result.sort((a, b) => a.sizes[0].price - b.sizes[0].price)
     } else if (activeSort === 'price-high') {
-      result.sort((a, b) => b.price - a.price)
+      result.sort((a, b) => b.sizes[0].price - a.sizes[0].price)
     } else if (activeSort === 'rating') {
       result.sort((a, b) => (b.rating || 0) - (a.rating || 0))
     }
