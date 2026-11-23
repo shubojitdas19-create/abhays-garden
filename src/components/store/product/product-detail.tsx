@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Check, ChevronRight, Heart, Leaf, Minus, Plus, ShieldCheck, ShoppingBag, Star } from 'lucide-react'
+import { Check, ChevronRight, Heart, Leaf, Minus, Plus, Share2, ShieldCheck, ShoppingBag, Star } from 'lucide-react'
 import { useCart } from '@/components/store/cart-context'
 import { formatINR, type Product } from '@/components/store/products'
+import { ProductShareDialog } from './product-share-dialog'
 import { NurseryTrustBox, PlantCareDashboard, PlantGuarantee, ProductRecommendations, ProductReviews } from './product-sections'
 
 type ProductDetailProps = {
@@ -28,6 +29,8 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState<DetailTab>('about')
   const [showStickyBar, setShowStickyBar] = useState(false)
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)
+  const [shareUrl, setShareUrl] = useState('')
   const purchaseSectionRef = useRef<HTMLDivElement>(null)
   const { addItem, wishlist, toggleWishlist } = useCart()
 
@@ -51,6 +54,27 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
   const savingsPercent = compareAt ? Math.round((1 - price / compareAt) * 100) : null
   const gallery = product.gallery.length > 0 ? product.gallery : [product.image]
   const category = product.filters.find((filter) => filter !== 'all')?.replaceAll('-', ' ') ?? 'plants'
+
+  async function shareProduct() {
+    const url = window.location.href
+    const shareData = {
+      title: `${product.name} — Abhay's Roof Garden`,
+      text: `Look at this homegrown ${product.name} from ${product.nursery.name}!`,
+      url,
+    }
+
+    if (window.matchMedia('(max-width: 767px)').matches && typeof navigator.share === 'function') {
+      try {
+        await navigator.share(shareData)
+        return
+      } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') return
+      }
+    }
+
+    setShareUrl(url)
+    setShareDialogOpen(true)
+  }
 
   function addToBag() {
     if (!selectedPot) return
@@ -95,9 +119,14 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                 <span className="size-1.5 rounded-full bg-[#527358]" aria-hidden="true" /> Nursery grown
               </div>
               {product.badge && <span className="absolute bottom-4 left-4 rounded-full bg-[#fbfaf6]/90 px-3 py-1.5 text-xs font-semibold text-[#1A3325] backdrop-blur sm:bottom-5 sm:left-5">{product.badge}</span>}
-              <button type="button" onClick={toggleProductWishlist} aria-pressed={isWishlisted} aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`} className="absolute right-4 top-4 inline-flex size-11 items-center justify-center rounded-full bg-[#fbfaf6]/90 text-[#1A3325] backdrop-blur transition-colors hover:bg-white sm:right-5 sm:top-5">
-                <Heart className={`size-5 ${isWishlisted ? 'fill-[#c26743] text-[#c26743]' : ''}`} aria-hidden="true" />
-              </button>
+              <div className="absolute right-4 top-4 flex items-center gap-2 sm:right-5 sm:top-5">
+                <button type="button" onClick={toggleProductWishlist} aria-pressed={isWishlisted} aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`} className="inline-flex size-11 items-center justify-center rounded-full bg-[#fbfaf6]/90 text-[#1A3325] backdrop-blur transition-colors hover:bg-white">
+                  <Heart className={`size-5 ${isWishlisted ? 'fill-[#c26743] text-[#c26743]' : ''}`} aria-hidden="true" />
+                </button>
+                <button type="button" onClick={shareProduct} aria-label={`Share ${product.name}`} className="inline-flex size-11 items-center justify-center rounded-full border border-[#dedfd5] bg-[#fbfaf6]/90 text-[#1A3325] backdrop-blur transition-colors hover:bg-white">
+                  <Share2 className="size-5" aria-hidden="true" />
+                </button>
+              </div>
             </div>
             {gallery.length > 1 && (
               <div className="mt-3 flex gap-3 overflow-x-auto pb-1" aria-label="Choose product image">
@@ -175,6 +204,9 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                 <button type="button" onClick={toggleProductWishlist} aria-pressed={isWishlisted} aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'} className="inline-flex size-12 shrink-0 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]">
                   <Heart className={`size-5 ${isWishlisted ? 'fill-[#c26743] text-[#c26743]' : ''}`} aria-hidden="true" />
                 </button>
+                <button type="button" onClick={shareProduct} aria-label={`Share ${product.name}`} className="inline-flex size-12 shrink-0 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]">
+                  <Share2 className="size-5" aria-hidden="true" />
+                </button>
               </div>
               <button type="button" onClick={addToBag} disabled={!product.inStock} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#1A3325] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#294735] disabled:cursor-not-allowed disabled:bg-[#899087] sm:flex-1">
                 <ShoppingBag className="size-4" aria-hidden="true" /> {product.inStock ? 'Add to plant bag' : 'Out of stock'}
@@ -206,6 +238,8 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
         <ProductReviews product={product} />
         <ProductRecommendations product={product} products={relatedProducts} />
       </main>
+
+      <ProductShareDialog product={product} open={shareDialogOpen} onOpenChange={setShareDialogOpen} url={shareUrl} />
 
       <div className={`fixed inset-x-0 bottom-0 z-40 w-full max-w-full border-t border-[#e4e4da] bg-[#fbfaf6]/95 px-4 py-3 shadow-[0_-8px_30px_rgba(20,40,28,0.08)] backdrop-blur-md transition-all duration-300 sm:px-6 lg:bottom-5 lg:left-1/2 lg:right-auto lg:w-[min(760px,calc(100%-3rem))] lg:-translate-x-1/2 lg:rounded-2xl lg:border lg:px-5 ${showStickyBar ? 'visible translate-y-0 opacity-100' : 'invisible translate-y-full opacity-0 lg:visible lg:translate-y-0 lg:opacity-100'}`}>
         <div className="mx-auto flex min-w-0 max-w-[100rem] items-center gap-3">
