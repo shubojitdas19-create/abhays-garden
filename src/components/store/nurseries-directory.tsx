@@ -56,7 +56,7 @@ export function NurseriesDirectory() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-[100rem] px-4 pb-20 pt-7 sm:px-6 sm:pt-10 lg:px-10 xl:px-14">
+    <main className="mx-auto w-full max-w-[100rem] px-4 pb-6 pt-7 sm:px-6 sm:pb-8 sm:pt-10 lg:px-10 xl:px-14">
       <section className="relative isolate overflow-hidden rounded-[1.75rem] bg-[#1A3325] px-6 py-12 text-white sm:rounded-[2rem] sm:px-10 sm:py-16 lg:px-16 lg:py-20" aria-labelledby="nurseries-heading">
         <Image src="/images/hero-rooftop.png" alt="Lush plants growing in a rooftop nursery" fill priority sizes="100vw" className="-z-20 object-cover object-center" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#10271d]/95 via-[#10271d]/75 to-[#10271d]/25" aria-hidden="true" />

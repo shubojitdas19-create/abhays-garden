@@ -12,8 +12,10 @@ export function ConditionalFooter() {
   }
 
   // On every other page, automatically show the compact SiteFooter
+  const needsMobileFooterClearance = !pathname.startsWith('/nurseries')
+
   return (
-    <div className="pb-[56px] lg:pb-0">
+    <div className={needsMobileFooterClearance ? 'pb-[56px] lg:pb-0' : 'pb-0'}>
       <SiteFooter />
     </div>
   )
