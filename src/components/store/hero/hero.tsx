@@ -112,7 +112,7 @@ export function Hero() {
                 {/* Dynamically loads correct image from cardImages mapping */}
                 <Image 
                   key={plant.id} 
-                  src={cardImages[plant.id] || size?.image || '/images/monstera.png'} 
+                  src={cardImages[plant.id] || plant.image}
                   alt={plant.name} 
                   fill 
                   sizes="(min-width: 1024px) 320px, 288px"
@@ -127,7 +127,7 @@ export function Hero() {
               </div>
               
               <div className="p-2 pt-3">
-                <p className="text-xs text-muted-foreground">{plant.light} · {careLabel[plant.care]}</p>
+                <p className="text-xs text-muted-foreground">{plant.careSummary.light} · {careLabel[plant.careSummary.difficulty]}</p>
                 <h3 className="mt-1 font-serif text-lg font-semibold">{plant.name}</h3>
 
                 <div className="mt-2 flex items-center justify-between">

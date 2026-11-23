@@ -26,7 +26,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#e9dcc8]">
         <Image
           src={product.image}
-          alt={product.alt}
+          alt={product.name}
           fill
           sizes="(min-width: 1024px) 22vw, (min-width: 640px) 33vw, 50vw"
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -80,11 +80,11 @@ export function ProductCard({ product }: { product: Product }) {
         <ul className="mt-3 flex flex-wrap gap-1.5 text-[11px] font-medium text-secondary-foreground sm:text-xs">
           <li className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1">
             <Sun className="size-3" aria-hidden="true" />
-            {product.light}
+            {product.careSummary.light}
           </li>
           <li className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1">
             <Droplets className="size-3" aria-hidden="true" />
-            {careLabel[product.care]}
+            {careLabel[product.careSummary.difficulty]}
           </li>
         </ul>
 

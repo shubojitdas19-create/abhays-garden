@@ -68,10 +68,10 @@ export function PlantFinder() {
   }
 
   const calculateResult = (finalAnswers: Record<string, any>) => {
-    let matches = products.filter(p => p.light === finalAnswers.light)
+    let matches = products.filter(p => p.careSummary.light === finalAnswers.light)
     if (matches.length === 0) matches = products 
     
-    const careMatches = matches.filter(p => p.care === finalAnswers.care)
+    const careMatches = matches.filter(p => p.careSummary.difficulty === finalAnswers.care)
     if (careMatches.length > 0) matches = careMatches
 
     if (finalAnswers.pets === 'pet-friendly') {
@@ -174,7 +174,7 @@ export function PlantFinder() {
                   </div>
                   <Image
                     src={result.image}
-                    alt={result.alt}
+                    alt={result.name}
                     fill
                     className="object-cover object-bottom"
                   />
@@ -190,7 +190,7 @@ export function PlantFinder() {
                   </h3>
                   
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Indoor • {result.light} • Care Level: {result.care}
+                    Indoor • {result.careSummary.light} • Care Level: {result.careSummary.difficulty}
                   </p>
                   
                   <div className="mt-3 flex items-center gap-1.5">
