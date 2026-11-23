@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, BadgeCheck, MapPin, Star } from 'lucide-react'
+import { ArrowDownWideNarrow, ArrowRight, BadgeCheck, ChevronDown, MapPin, SlidersHorizontal, Star } from 'lucide-react'
 import { nurseries, products } from '@/components/store/products'
 
 const categories = [
@@ -16,6 +16,15 @@ const categories = [
 
 type CategoryId = (typeof categories)[number]['id']
 
+type SortId = 'recommended' | 'rating' | 'plants' | 'distance'
+
+const sortOptions: { id: SortId; label: string }[] = [
+  { id: 'recommended', label: 'Recommended' },
+  { id: 'rating', label: 'Top rated' },
+  { id: 'plants', label: 'Most plants' },
+  { id: 'distance', label: 'Nearest first' },
+]
+
 function matchesCategory(category: CategoryId, nursery: (typeof nurseries)[number]) {
   if (category === 'all') return true
   if (category === 'nearby') return nursery.distanceKm !== undefined && nursery.distanceKm < 10
@@ -26,10 +35,25 @@ function matchesCategory(category: CategoryId, nursery: (typeof nurseries)[numbe
 
 export function NurseriesDirectory() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>('all')
-  const visibleNurseries = useMemo(
-    () => nurseries.filter((nursery) => matchesCategory(activeCategory, nursery)),
-    [activeCategory],
-  )
+  const [activeSort, setActiveSort] = useState<SortId>('recommended')
+  const visibleNurseries = useMemo(() => {
+    const filtered = nurseries.filter((nursery) => matchesCategory(activeCategory, nursery))
+    return [...filtered].sort((a, b) => {
+      if (activeSort === 'rating') return b.rating - a.rating || a.name.localeCompare(b.name)
+      if (activeSort === 'plants') {
+        const aCount = products.filter((product) => product.nursery.id === a.id).length
+        const bCount = products.filter((product) => product.nursery.id === b.id).length
+        return bCount - aCount || a.name.localeCompare(b.name)
+      }
+      if (activeSort === 'distance') return (a.distanceKm ?? Number.POSITIVE_INFINITY) - (b.distanceKm ?? Number.POSITIVE_INFINITY)
+      return nurseries.indexOf(a) - nurseries.indexOf(b)
+    })
+  }, [activeCategory, activeSort])
+
+  function resetControls() {
+    setActiveCategory('all')
+    setActiveSort('recommended')
+  }
 
   return (
     <main className="mx-auto w-full max-w-[100rem] px-4 pb-20 pt-7 sm:px-6 sm:pt-10 lg:px-10 xl:px-14">
@@ -51,14 +75,53 @@ export function NurseriesDirectory() {
           <p className="text-sm text-[#68786b]" aria-live="polite">{visibleNurseries.length} {visibleNurseries.length === 1 ? 'nursery' : 'nurseries'}</p>
         </div>
 
-        <div className="-mx-4 mb-7 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0" role="group" aria-label="Filter nurseries">
-          <div className="flex w-max gap-2">
-            {categories.map((category) => {
-              const selected = activeCategory === category.id
-              return <button key={category.id} type="button" aria-pressed={selected} onClick={() => setActiveCategory(category.id)} className={`min-h-10 rounded-full border px-4 text-xs font-semibold transition-colors sm:text-sm ${selected ? 'border-[#1A3325] bg-[#1A3325] text-white' : 'border-[#dedfd7] bg-white text-[#536258] hover:border-[#1A3325]'}`}>{category.label}</button>
-            })}
+        <section aria-label="Filter and sort growers" className="mb-7 rounded-2xl border border-[#e7e5dc] bg-white p-4 shadow-[0_8px_24px_rgba(26,51,37,0.04)] sm:p-5">
+          <div className="mb-3 flex items-center justify-between md:mb-4">
+            <div className="flex items-center gap-2 text-sm font-semibold text-[#304b37]"><SlidersHorizontal className="size-4" aria-hidden="true" /> Refine growers</div>
+            {(activeCategory !== 'all' || activeSort !== 'recommended') && <button type="button" onClick={resetControls} className="rounded-md px-2 py-1 text-xs font-semibold text-[#8b572e] transition-colors hover:bg-[#f7f3eb] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">Reset</button>}
           </div>
-        </div>
+
+          <div className="grid grid-cols-2 gap-3 md:hidden">
+            <label className="min-w-0">
+              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-[#778078]">Grower type</span>
+              <span className="relative block">
+                <select value={activeCategory} onChange={(event) => setActiveCategory(event.target.value as CategoryId)} className="h-11 w-full appearance-none rounded-xl border border-[#dedfd7] bg-[#fbfaf6] px-3 pr-9 text-xs font-semibold text-[#304b37] outline-none transition focus:border-[#527358] focus:ring-2 focus:ring-[#527358]/20">
+                  {categories.map((category) => <option key={category.id} value={category.id}>{category.label}</option>)}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#68786b]" aria-hidden="true" />
+              </span>
+            </label>
+            <label className="min-w-0">
+              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-[#778078]">Sort by</span>
+              <span className="relative block">
+                <select value={activeSort} onChange={(event) => setActiveSort(event.target.value as SortId)} className="h-11 w-full appearance-none rounded-xl border border-[#dedfd7] bg-[#fbfaf6] px-3 pr-9 text-xs font-semibold text-[#304b37] outline-none transition focus:border-[#527358] focus:ring-2 focus:ring-[#527358]/20">
+                  {sortOptions.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#68786b]" aria-hidden="true" />
+              </span>
+            </label>
+          </div>
+
+          <div className="hidden items-center justify-between gap-5 md:flex">
+            <div className="flex min-w-0 flex-wrap gap-2" role="group" aria-label="Filter by grower type">
+              {categories.map((category) => {
+                const selected = activeCategory === category.id
+                return <button key={category.id} type="button" aria-pressed={selected} onClick={() => setActiveCategory(category.id)} className={`min-h-10 rounded-full border px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325] ${selected ? 'border-[#1A3325] bg-[#1A3325] text-white shadow-sm' : 'border-[#dedfd7] bg-[#fbfaf6] text-[#536258] hover:border-[#527358] hover:bg-[#f1f3ed]'}`}>{category.label}</button>
+              })}
+            </div>
+            <label className="flex shrink-0 items-center gap-2 text-sm font-medium text-[#68786b]">
+              <ArrowDownWideNarrow className="size-4" aria-hidden="true" />
+              <span>Sort</span>
+              <span className="relative">
+                <select value={activeSort} onChange={(event) => setActiveSort(event.target.value as SortId)} className="h-11 min-w-40 appearance-none rounded-xl border border-[#dedfd7] bg-[#fbfaf6] py-2 pl-3 pr-9 text-sm font-semibold text-[#304b37] outline-none transition focus:border-[#527358] focus:ring-2 focus:ring-[#527358]/20">
+                  {sortOptions.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#68786b]" aria-hidden="true" />
+              </span>
+            </label>
+          </div>
+          <p className="mt-3 text-xs text-[#778078] md:hidden">Showing {visibleNurseries.length} {visibleNurseries.length === 1 ? 'grower' : 'growers'}</p>
+        </section>
 
         {visibleNurseries.length ? <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
           {visibleNurseries.map((nursery) => {
