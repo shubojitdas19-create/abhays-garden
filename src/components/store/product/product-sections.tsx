@@ -158,9 +158,9 @@ export function ProductRecommendations({ product, products }: { product: Product
       <div className="mt-14 sm:mt-16">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a65f2b]">A good pairing</p>
         <h3 className="mt-1 font-serif text-2xl font-semibold text-[#1A3325]">Frequently bought together</h3>
-        <div className="mt-5 flex snap-x gap-4 overflow-x-auto pb-3">
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {products.slice(0, 3).map((item) => (
-            <Link key={item.id} href={`/shop/${item.slug}`} className="group flex w-[78vw] max-w-[18rem] shrink-0 snap-start items-center gap-3 rounded-2xl border border-[#e7e5dc] bg-white p-3 sm:w-[18rem]">
+            <Link key={item.id} href={`/shop/${item.slug}`} className="group flex min-w-0 items-center gap-3 rounded-2xl border border-[#e7e5dc] bg-white p-3">
               <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-[#edf1e9]">
                 <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
               </div>
