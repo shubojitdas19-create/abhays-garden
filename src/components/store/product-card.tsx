@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Check, Droplets, Heart, ShoppingBag, Star, Sun } from 'lucide-react'
 import { useCart } from './cart-context'
 import { formatINR, type Product } from './products'
@@ -75,7 +76,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="flex flex-1 flex-col pt-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h3 className="truncate font-serif text-lg leading-tight font-medium sm:text-xl">{product.name}</h3>
+            <h3 className="truncate font-serif text-lg leading-tight font-medium sm:text-xl"><Link href={`/shop/${product.slug}`} className="rounded-sm transition-colors hover:text-[#527358] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#527358]">{product.name}</Link></h3>
             <p className="mt-0.5 truncate text-xs text-muted-foreground italic sm:text-sm">{product.botanical}</p>
           </div>
           <span className="flex shrink-0 items-center gap-1 pt-1 text-xs font-semibold sm:text-sm">
