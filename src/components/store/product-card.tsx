@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Check, Droplets, Heart, ShoppingBag, Star, Sun } from 'lucide-react'
+import { Check, Droplets, Heart, Leaf, ShoppingBag, Star, Sun } from 'lucide-react'
 import { useCart } from './cart-context'
 import { formatINR, type Product } from './products'
 
@@ -81,6 +81,9 @@ export function ProductCard({ product }: { product: Product }) {
           <div className="min-w-0">
             <h3 className="truncate font-serif text-lg leading-tight font-medium sm:text-xl"><Link href={`/shop/${product.slug}`} className="rounded-sm transition-colors hover:text-[#527358] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#527358]">{product.name}</Link></h3>
             <p className="mt-0.5 truncate text-xs text-muted-foreground italic sm:text-sm">{product.botanical}</p>
+            <Link href={`/nurseries/${product.nursery.slug}`} className="mt-1 inline-flex max-w-full items-center gap-1 truncate rounded-sm text-[11px] font-medium text-[#527358] transition-colors hover:text-[#1A3325] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#527358] sm:text-xs" aria-label={`Visit ${product.nursery.name}, grower of ${product.name}`}>
+              <Leaf className="size-3 shrink-0" aria-hidden="true" /><span className="truncate">Grown by {product.nursery.name}</span>
+            </Link>
           </div>
           <span className="flex shrink-0 items-center gap-1 pt-1 text-xs font-semibold sm:text-sm">
             <Star className="size-3.5 fill-accent text-accent" aria-hidden="true" />

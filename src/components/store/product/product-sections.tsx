@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { BadgeCheck, Droplets, Leaf, MapPin, PackageCheck, PawPrint, ShieldCheck, Star, Sun } from 'lucide-react'
+import { BadgeCheck, ChevronLeft, ChevronRight, Droplets, Leaf, MapPin, PackageCheck, PawPrint, ShieldCheck, Star, Sun } from 'lucide-react'
+import { useRef } from 'react'
 import { formatINR, type Product } from '@/components/store/products'
 
 const careLevel = { 1: 'Easy', 2: 'Moderate', 3: 'Advanced' } as const
@@ -129,6 +130,40 @@ export function ProductReviews({ product }: { product: Product }) {
   )
 }
 
+function FrequentlyBoughtTogether({ products }: { products: Product[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  function scrollByDirection(direction: -1 | 1) {
+    scrollRef.current?.scrollBy({ left: direction * scrollRef.current.clientWidth * 0.8, behavior: 'smooth' })
+  }
+
+  return (
+    <section className="mt-14 sm:mt-16" aria-labelledby="frequently-bought-heading">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a65f2b]">A good pairing</p>
+          <h3 id="frequently-bought-heading" className="mt-1 font-serif text-2xl font-semibold text-[#1A3325]">Frequently bought together</h3>
+        </div>
+        <div className="hidden gap-2 sm:flex">
+          <button type="button" onClick={() => scrollByDirection(-1)} aria-label="Scroll pairings left" className="inline-flex size-10 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]"><ChevronLeft className="size-5" aria-hidden="true" /></button>
+          <button type="button" onClick={() => scrollByDirection(1)} aria-label="Scroll pairings right" className="inline-flex size-10 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]"><ChevronRight className="size-5" aria-hidden="true" /></button>
+        </div>
+      </div>
+      <div ref={scrollRef} className="no-scrollbar mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-2 touch-pan-x sm:gap-4">
+        {products.slice(0, 6).map((item) => (
+          <Link key={item.id} href={`/shop/${item.slug}`} className="group flex w-[min(82vw,19rem)] shrink-0 snap-start items-center gap-3 rounded-2xl border border-[#e7e5dc] bg-white p-3 sm:w-[19rem]">
+            <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-[#edf1e9]">
+              <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+            </div>
+            <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-[#1A3325]">{item.name}</p><p className="mt-1 text-xs text-[#68786b]">From {formatINR(item.sizes[0].price)}</p></div>
+            <span className="text-xs font-semibold text-[#527358]">View</span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 export function ProductRecommendations({ product, products }: { product: Product; products: Product[] }) {
   const fromNursery = products.filter((item) => item.nursery.id === product.nursery.id)
   const recommendations = [...fromNursery, ...products.filter((item) => item.nursery.id !== product.nursery.id)].slice(0, 4)
@@ -155,21 +190,7 @@ export function ProductRecommendations({ product, products }: { product: Product
           </Link>
         ))}
       </div>
-      <div className="mt-14 sm:mt-16">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a65f2b]">A good pairing</p>
-        <h3 className="mt-1 font-serif text-2xl font-semibold text-[#1A3325]">Frequently bought together</h3>
-        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-          {products.slice(0, 3).map((item) => (
-            <Link key={item.id} href={`/shop/${item.slug}`} className="group flex min-w-0 items-center gap-3 rounded-2xl border border-[#e7e5dc] bg-white p-3">
-              <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-[#edf1e9]">
-                <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-              </div>
-              <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-[#1A3325]">{item.name}</p><p className="mt-1 text-xs text-[#68786b]">From {formatINR(item.sizes[0].price)}</p></div>
-              <span className="text-xs font-semibold text-[#527358]">View</span>
-            </Link>
-          ))}
-        </div>
-      </div>
+      <FrequentlyBoughtTogether products={products} />
     </section>
   )
 }
