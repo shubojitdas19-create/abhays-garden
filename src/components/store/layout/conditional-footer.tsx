@@ -12,7 +12,7 @@ export function ConditionalFooter() {
   }
 
   // On every other page, automatically show the compact SiteFooter
-  const needsMobileFooterClearance = !pathname.startsWith('/nurseries')
+  const needsMobileFooterClearance = pathname === '/shop' || pathname.startsWith('/shop/')
 
   return (
     <div className={needsMobileFooterClearance ? 'pb-[56px] lg:pb-0' : 'pb-0'}>
