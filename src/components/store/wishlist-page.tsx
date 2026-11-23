@@ -22,12 +22,12 @@ export function WishlistPage() {
       </div>
 
       {savedProducts.length ? (
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {savedProducts.map((product) => {
             const size = product.sizes.find((option) => option.label === 'M') ?? product.sizes[0]
             return (
-              <article key={product.id} className="min-w-0 overflow-hidden rounded-2xl border border-[#e7e5dc] bg-white">
-                <div className="relative aspect-[4/4.3] bg-[#edf1e9]">
+              <article key={product.id} className="flex min-w-0 overflow-hidden rounded-2xl border border-[#e7e5dc] bg-white sm:flex-col">
+                <div className="relative aspect-square w-[38%] shrink-0 bg-[#edf1e9] sm:aspect-[4/4.3] sm:w-full">
                   <Link href={`/shop/${product.slug}`} aria-label={`View ${product.name}`} className="absolute inset-0 z-0">
                     <Image src={product.image} alt={product.name} fill sizes="(min-width: 1024px) 22vw, 50vw" className="object-cover transition-transform duration-500 hover:scale-105" />
                   </Link>
@@ -35,13 +35,13 @@ export function WishlistPage() {
                     <Trash2 className="size-4" aria-hidden="true" />
                   </button>
                 </div>
-                <div className="p-3.5 sm:p-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7b897d]">{product.nursery.name}</p>
-                  <h2 className="mt-1 truncate font-serif text-base font-semibold text-[#1A3325] sm:text-lg"><Link href={`/shop/${product.slug}`} className="hover:underline">{product.name}</Link></h2>
-                  <p className="mt-0.5 truncate font-serif text-xs italic text-[#778078]">{product.botanical}</p>
-                  <p className="mt-3 text-sm font-semibold text-[#1A3325]">{formatINR(size.price)}</p>
-                  <button type="button" onClick={() => addItem({ productId: product.id, productName: product.name, size: size.label, pot: product.pots[0]?.name ?? 'Standard Eco Nursery Pot', price: size.price, image: product.image, nurseryName: product.nursery.name })} className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#1A3325] px-3 text-xs font-semibold text-white transition-colors hover:bg-[#294735] sm:text-sm">
-                    <ShoppingBag className="size-4" aria-hidden="true" /> Move to plant bag
+                <div className="flex min-w-0 flex-1 flex-col justify-center p-3 sm:p-4">
+                  <p className="truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-[#7b897d] sm:text-[10px] sm:tracking-[0.14em]">{product.nursery.name}</p>
+                  <h2 className="mt-1 truncate font-serif text-sm font-semibold text-[#1A3325] sm:text-lg"><Link href={`/shop/${product.slug}`} className="hover:underline">{product.name}</Link></h2>
+                  <p className="mt-0.5 truncate font-serif text-[11px] italic text-[#778078] sm:text-xs">{product.botanical}</p>
+                  <p className="mt-2 text-sm font-semibold text-[#1A3325]">{formatINR(size.price)}</p>
+                  <button type="button" onClick={() => addItem({ productId: product.id, productName: product.name, size: size.label, pot: product.pots[0]?.name ?? 'Standard Eco Nursery Pot', price: size.price, image: product.image, nurseryName: product.nursery.name })} className="mt-2 inline-flex min-h-10 w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#1A3325] px-2 text-[11px] font-semibold text-white transition-colors hover:bg-[#294735] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325] sm:mt-3 sm:min-h-11 sm:gap-2 sm:px-3 sm:text-sm">
+                    <ShoppingBag className="size-4 shrink-0" aria-hidden="true" /> <span>Move to plant bag</span>
                   </button>
                 </div>
               </article>
