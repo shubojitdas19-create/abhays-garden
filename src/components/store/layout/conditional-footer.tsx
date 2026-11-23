@@ -7,7 +7,7 @@ export function ConditionalFooter() {
   const pathname = usePathname()
 
   // If we are on the homepage, return nothing (because HomeFooter is already there)
-  if (pathname === '/') {
+  if (pathname === '/' || pathname === '/checkout') {
     return null
   }
 
