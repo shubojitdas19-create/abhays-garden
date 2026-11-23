@@ -21,6 +21,9 @@ type CartStore = {
   shippingFee: number
   isCartOpen: boolean
   couponCode: string | null
+  wishlist: string[]
+  toggleWishlist: (productId: string) => void
+  removeFromWishlist: (productId: string) => void
   addItem: (item: CartItemInput) => void
   applyCouponCode: (code: string) => boolean
   clearCouponCode: () => void
@@ -71,6 +74,14 @@ export const useCartStore = create<CartStore>()(
       shippingFee: 99,
       isCartOpen: false,
       couponCode: null,
+      wishlist: [],
+      toggleWishlist: (productId) => {
+        if (!productId) return
+        set((state) => ({ wishlist: state.wishlist.includes(productId)
+          ? state.wishlist.filter((id) => id !== productId)
+          : [...state.wishlist, productId] }))
+      },
+      removeFromWishlist: (productId) => set((state) => ({ wishlist: state.wishlist.filter((id) => id !== productId) })),
       applyCouponCode: (code) => {
         const normalized = code.trim().toUpperCase()
         if (normalized !== 'ROOFTOP10' && normalized !== 'FIRSTPLANT') return false
@@ -114,13 +125,14 @@ export const useCartStore = create<CartStore>()(
       name: 'abhays-garden-cart',
       storage: createJSONStorage(() => localStorage),
       skipHydration: true,
-      partialize: (state) => ({ items: state.items, couponCode: state.couponCode }) as CartStore,
+      partialize: (state) => ({ items: state.items, couponCode: state.couponCode, wishlist: state.wishlist }) as CartStore,
       merge: (persistedState, currentState) => {
-        const persisted = persistedState as Partial<Pick<CartStore, 'items' | 'couponCode'>> | undefined
+        const persisted = persistedState as Partial<Pick<CartStore, 'items' | 'couponCode' | 'wishlist'>> | undefined
         const items = Array.isArray(persisted?.items) ? persisted.items.filter(isCartItem) : []
+        const wishlist = Array.isArray(persisted?.wishlist) ? persisted.wishlist.filter((id): id is string => typeof id === 'string') : []
         const savedCode = persisted?.couponCode
         const couponCode = items.length > 0 && (savedCode === 'ROOFTOP10' || savedCode === 'FIRSTPLANT') ? savedCode : null
-        return { ...currentState, ...withItems(items), couponCode }
+        return { ...currentState, ...withItems(items), couponCode, wishlist }
       },
     },
   ),

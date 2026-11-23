@@ -10,10 +10,10 @@ import { formatINR, type Product } from './products'
 const careLabel = { 1: 'Easy care', 2: 'Moderate care', 3: 'Needs attention' } as const
 
 export function ProductCard({ product }: { product: Product }) {
-  const { addItem } = useCart()
+  const { addItem, wishlist, toggleWishlist } = useCart()
   const [sizeIndex, setSizeIndex] = useState(1)
   const [added, setAdded] = useState(false)
-  const [saved, setSaved] = useState(false)
+  const saved = wishlist.includes(product.id)
   const size = product.sizes[sizeIndex]
 
   function handleAdd() {
@@ -49,7 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
 
         <button
           type="button"
-          onClick={() => setSaved((s) => !s)}
+          onClick={() => toggleWishlist(product.id)}
           aria-pressed={saved}
           aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
           className="absolute top-2.5 right-2.5 flex size-9 items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card"

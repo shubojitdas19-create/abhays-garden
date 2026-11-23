@@ -18,7 +18,7 @@ const careLabel = { 1: 'Easy care', 2: 'Some care', 3: 'Green thumb' } as const
 const cats = ["Air Purifying", "Low Light", "Pet Friendly", "Bestsellers", "Under ₹499"]
 
 export function Hero() {
-  const { addItem } = useCart()
+  const { addItem, wishlist, toggleWishlist } = useCart()
   const [activeIndex, setActiveIndex] = useState(0)
   const [addedId, setAddedId] = useState<string | null>(null)
 
@@ -130,8 +130,8 @@ export function Hero() {
                 <span className="absolute left-2 top-2 rounded-full bg-[#1A3325] px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm">
                   On the roof this week
                 </span>
-                <button aria-label="Add to wishlist" className="absolute right-2 top-2 grid size-8 place-items-center rounded-full bg-card/90 transition-colors hover:text-red-500 backdrop-blur-sm shadow-sm">
-                  <Heart className="size-4" />
+                <button type="button" onClick={() => toggleWishlist(plant.id)} aria-pressed={wishlist.includes(plant.id)} aria-label={wishlist.includes(plant.id) ? `Remove ${plant.name} from wishlist` : `Add ${plant.name} to wishlist`} className="absolute right-2 top-2 grid size-9 place-items-center rounded-full bg-card/90 transition-colors hover:text-red-500 backdrop-blur-sm shadow-sm">
+                  <Heart className={`size-4 ${wishlist.includes(plant.id) ? 'fill-[#c26743] text-[#c26743]' : ''}`} aria-hidden="true" />
                 </button>
               </div>
               

@@ -30,6 +30,9 @@ export function useCart() {
   const updateQuantity = useCartStore((state) => state.updateQuantity)
   const clearCart = useCartStore((state) => state.clearCart)
   const toggleCart = useCartStore((state) => state.toggleCart)
+  const wishlist = useCartStore((state) => state.wishlist)
+  const toggleWishlist = useCartStore((state) => state.toggleWishlist)
+  const removeFromWishlist = useCartStore((state) => state.removeFromWishlist)
 
   return {
     count,
@@ -47,5 +50,8 @@ export function useCart() {
     updateQuantity,
     clearCart,
     toggleCart,
+    wishlist,
+    toggleWishlist,
+    removeFromWishlist,
   }
 }

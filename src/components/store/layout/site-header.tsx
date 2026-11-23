@@ -119,9 +119,9 @@ export function SiteHeader() {
             <Search className="size-5" />
           </button>
           
-          <button type="button" className="hidden size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted hover:text-[#1A3325] sm:inline-flex" aria-label="Wishlist">
-            <Heart className="size-5" />
-          </button>
+          <Link href="/wishlist" className="hidden size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted hover:text-[#1A3325] sm:inline-flex" aria-label="Wishlist">
+            <Heart className="size-5" aria-hidden="true" />
+          </Link>
           <button type="button" className="hidden size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted hover:text-[#1A3325] sm:inline-flex" aria-label="Account">
             <User className="size-5" />
           </button>

@@ -26,9 +26,10 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
   const [selectedSize, setSelectedSize] = useState(product.sizes.find((size) => size.label === 'M') ?? product.sizes[0])
   const [selectedPotId, setSelectedPotId] = useState(product.pots[0]?.id ?? '')
   const [quantity, setQuantity] = useState(1)
-  const [isWishlisted, setIsWishlisted] = useState(false)
   const [activeTab, setActiveTab] = useState<DetailTab>('about')
-  const { addItem } = useCart()
+  const { addItem, wishlist, toggleWishlist } = useCart()
+  const isWishlisted = wishlist.includes(product.id)
+  const toggleProductWishlist = () => toggleWishlist(product.id)
 
   const selectedPot = product.pots.find((pot) => pot.id === selectedPotId) ?? product.pots[0]
   const price = selectedSize.price + (selectedPot?.price ?? 0)
@@ -80,7 +81,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                 <span className="size-1.5 rounded-full bg-[#527358]" aria-hidden="true" /> Nursery grown
               </div>
               {product.badge && <span className="absolute bottom-4 left-4 rounded-full bg-[#fbfaf6]/90 px-3 py-1.5 text-xs font-semibold text-[#1A3325] backdrop-blur sm:bottom-5 sm:left-5">{product.badge}</span>}
-              <button type="button" onClick={() => setIsWishlisted((value) => !value)} aria-pressed={isWishlisted} aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`} className="absolute right-4 top-4 inline-flex size-11 items-center justify-center rounded-full bg-[#fbfaf6]/90 text-[#1A3325] backdrop-blur transition-colors hover:bg-white sm:right-5 sm:top-5">
+              <button type="button" onClick={toggleProductWishlist} aria-pressed={isWishlisted} aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`} className="absolute right-4 top-4 inline-flex size-11 items-center justify-center rounded-full bg-[#fbfaf6]/90 text-[#1A3325] backdrop-blur transition-colors hover:bg-white sm:right-5 sm:top-5">
                 <Heart className={`size-5 ${isWishlisted ? 'fill-[#c26743] text-[#c26743]' : ''}`} aria-hidden="true" />
               </button>
             </div>
@@ -159,7 +160,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
               <button type="button" onClick={addToBag} disabled={!product.inStock} className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#1A3325] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#294735] disabled:cursor-not-allowed disabled:bg-[#899087]">
                 <ShoppingBag className="size-4" aria-hidden="true" /> {product.inStock ? 'Add to plant bag' : 'Out of stock'}
               </button>
-              <button type="button" onClick={() => setIsWishlisted((value) => !value)} aria-pressed={isWishlisted} aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'} className="inline-flex size-12 shrink-0 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]">
+              <button type="button" onClick={toggleProductWishlist} aria-pressed={isWishlisted} aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'} className="inline-flex size-12 shrink-0 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]">
                 <Heart className={`size-5 ${isWishlisted ? 'fill-[#c26743] text-[#c26743]' : ''}`} aria-hidden="true" />
               </button>
             </div>

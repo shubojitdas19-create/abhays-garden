@@ -67,9 +67,12 @@ export function PlantGuarantee() {
         <h2 className="font-semibold text-[#1A3325]">7-day healthy plant guarantee</h2>
         <p className="mt-1 text-sm leading-6 text-[#68786b]">If your plant arrives unhealthy, our team will help make it right. Send us a photo within 7 days of delivery.</p>
       </div>
-      <a href={`https://wa.me/?text=${whatsappText}`} target="_blank" rel="noreferrer" className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full border border-[#527358]/25 bg-white px-4 text-sm font-semibold text-[#1A3325] transition-colors hover:bg-[#e8eee4]">
-        <PackageCheck className="size-4" aria-hidden="true" /> WhatsApp support
-      </a>
+      <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+        <Link href="/guarantee" className="min-h-10 content-center text-sm font-semibold text-[#1A3325] underline decoration-[#a65f2b]/50 underline-offset-4">Read the full guarantee</Link>
+        <a href={`https://wa.me/919476433880?text=${whatsappText}`} target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[#527358]/25 bg-white px-4 text-sm font-semibold text-[#1A3325] transition-colors hover:bg-[#e8eee4]">
+          <PackageCheck className="size-4" aria-hidden="true" /> WhatsApp support
+        </a>
+      </div>
     </section>
   )
 }
