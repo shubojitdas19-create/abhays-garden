@@ -16,7 +16,15 @@ export function ProductCard({ product }: { product: Product }) {
   const size = product.sizes[sizeIndex]
 
   function handleAdd() {
-    addItem()
+    addItem({
+      productId: product.id,
+      productName: product.name,
+      size: size.label,
+      pot: 'Standard Eco Nursery Pot',
+      price: size.price,
+      image: product.image,
+      nurseryName: product.nursery.name,
+    })
     setAdded(true)
     setTimeout(() => setAdded(false), 1600)
   }

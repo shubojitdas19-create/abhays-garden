@@ -91,7 +91,18 @@ export function PlantFinder() {
   }
 
   const handleAddToCart = () => {
-    addItem()
+    if (!result) return
+    const size = result.sizes[0]
+    if (!size) return
+    addItem({
+      productId: result.id,
+      productName: result.name,
+      size: size.label,
+      pot: 'Standard Eco Nursery Pot',
+      price: size.price,
+      image: result.image,
+      nurseryName: result.nursery.name,
+    })
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)
   }

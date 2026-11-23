@@ -37,7 +37,16 @@ export function Hero() {
 
   function handleAdd() {
     if (!plant) return
-    addItem()
+    if (!size) return
+    addItem({
+      productId: plant.id,
+      productName: plant.name,
+      size: size.label,
+      pot: 'Standard Eco Nursery Pot',
+      price: size.price,
+      image: plant.image,
+      nurseryName: plant.nursery.name,
+    })
     setAddedId(plant.id)
     window.setTimeout(() => setAddedId(null), 1800)
   }

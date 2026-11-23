@@ -44,7 +44,17 @@ export function AccessoriesRow() {
   const [addedId, setAddedId] = useState<string | null>(null)
 
   const handleQuickAdd = (id: string) => {
-    addItem()
+    const item = accessories.find((accessory) => accessory.id === id)
+    if (!item) return
+    addItem({
+      productId: item.id,
+      productName: item.name,
+      size: 'One size',
+      pot: 'No pot',
+      price: item.price,
+      image: item.img,
+      nurseryName: "Abhay's Flagship Nursery",
+    })
     setAddedId(id)
     setTimeout(() => setAddedId(null), 2000)
   }
