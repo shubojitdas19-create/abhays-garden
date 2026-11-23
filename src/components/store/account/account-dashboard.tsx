@@ -20,6 +20,25 @@ function addressFromOrder(order: CustomerOrder): SavedAddress {
   return { ...order.deliveryAddress, id: `order-${order.id}`, label: 'Home', isDefault: true }
 }
 
+function AccountSummary({ orderCount, wishlistCount, addressCount }: { orderCount: number; wishlistCount: number; addressCount: number }) {
+  const stats = [
+    { label: 'Orders', value: orderCount, icon: PackageCheck, tone: 'bg-[#edf1e9] text-[#315a38]' },
+    { label: 'Saved plants', value: wishlistCount, icon: Heart, tone: 'bg-[#fbefe9] text-[#a65f3b]' },
+    { label: 'Addresses', value: addressCount, icon: MapPin, tone: 'bg-[#f5eee2] text-[#8a633a]' },
+  ]
+
+  return (
+    <section aria-label="Account overview" className="mt-4 grid grid-cols-3 gap-2.5 sm:gap-3">
+      {stats.map(({ label, value, icon: Icon, tone }) => (
+        <article key={label} className="flex min-w-0 flex-col gap-2 rounded-2xl border border-[#e5e8df] bg-white p-3.5 shadow-[0_12px_30px_-28px_rgba(26,51,37,0.5)] sm:flex-row sm:items-center sm:gap-3 sm:p-4">
+          <span className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${tone}`}><Icon className="size-4" aria-hidden="true" /></span>
+          <span className="min-w-0"><span className="block text-lg font-semibold leading-5 text-[#1A3325]">{value}</span><span className="mt-1 block truncate text-[10px] font-medium text-[#68786b] sm:text-xs">{label}</span></span>
+        </article>
+      ))}
+    </section>
+  )
+}
+
 function OrderCard({ order }: { order: CustomerOrder }) {
   const delivered = order.status.toLowerCase().includes('deliver')
   return (
@@ -35,6 +54,13 @@ function OrderCard({ order }: { order: CustomerOrder }) {
         </div>
         <div className="shrink-0 text-right"><p className="text-[10px] text-[#778078]">Order total</p><p className="mt-0.5 text-sm font-bold text-[#1A3325]">{formatINR(order.totalAmount)}</p></div>
       </div>
+      <ol aria-label={`Shipment progress: ${order.status}`} className="mt-5 grid grid-cols-4 gap-2">
+        {['Confirmed', 'Picked', 'Packed', 'On the way'].map((stage, index) => {
+          const complete = delivered || index < order.trackingStage
+          const active = !delivered && index === Math.min(order.trackingStage, 3)
+          return <li key={stage} aria-current={active ? 'step' : undefined} className="min-w-0"><span className={`block h-1 rounded-full ${complete || active ? 'bg-[#527358]' : 'bg-[#e6e9df]'}`} aria-hidden="true" /><span className={`mt-2 block truncate text-[9px] font-medium sm:text-[10px] ${complete || active ? 'text-[#315a38]' : 'text-[#899389]'}`}>{stage}</span></li>
+        })}
+      </ol>
       <div className="mt-4 flex flex-col gap-2 border-t border-[#eceee8] pt-3 sm:flex-row sm:items-center sm:justify-between"><p className="flex items-center gap-1.5 text-xs text-[#68786b]"><Truck className="size-3.5 text-[#527358]" aria-hidden="true" /> Estimated arrival {formatDate(order.estimatedDelivery)}</p><Link href={`/order-success/${encodeURIComponent(order.id)}`} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#1A3325] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#294735] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">Track order status <ArrowRight className="size-3.5" aria-hidden="true" /></Link></div>
     </article>
   )
@@ -110,15 +136,17 @@ export function AccountDashboard() {
   }
 
   return (
-    <main className="min-h-[70vh] bg-[#f7f5ef] px-4 pb-14 pt-7 sm:px-6 sm:pb-20 sm:pt-10 lg:px-10">
+    <main className="min-h-[70vh] bg-[#f7f5ef] px-4 pb-14 pt-6 sm:px-6 sm:pb-20 sm:pt-10 lg:px-10">
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-4 rounded-3xl border border-[#e5e8df] bg-white p-5 shadow-[0_18px_50px_-40px_rgba(26,51,37,0.45)] sm:flex-row sm:items-center sm:justify-between sm:p-7">
-          <div className="flex min-w-0 items-center gap-4"><span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-[#edf1e9] text-[#315a38] ring-4 ring-[#f6f7f2]"><UserRound className="size-6" aria-hidden="true" /></span><div className="min-w-0"><p className="text-[10px] font-bold uppercase tracking-[0.17em] text-[#a65f2b]">Your garden account</p><h1 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-[#1A3325] sm:text-3xl">Welcome back, {customerName}</h1><p className="mt-1 flex items-center gap-1.5 text-xs text-[#68786b]"><Sprout className="size-3.5 text-[#527358]" aria-hidden="true" /> Your orders and saved garden, together in one place.</p></div></div>
-          <span className="inline-flex w-fit shrink-0 items-center gap-2 rounded-full bg-[#edf1e9] px-3 py-2 text-xs font-semibold text-[#315a38]"><BadgeCheck className="size-4" aria-hidden="true" /> Botanical Collective Member</span>
-        </div>
+        <section aria-labelledby="account-title" className="relative overflow-hidden rounded-[28px] border border-[#e5e8df] bg-gradient-to-br from-white via-white to-[#f0f3ec] p-5 shadow-[0_18px_50px_-40px_rgba(26,51,37,0.45)] sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-7">
+          <div className="pointer-events-none absolute -right-12 -top-16 size-48 rounded-full border border-[#315a38]/[0.07]" aria-hidden="true" />
+          <div className="relative flex min-w-0 items-center gap-4"><span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-[#edf1e9] text-[#315a38] ring-4 ring-white"><UserRound className="size-6" aria-hidden="true" /></span><div className="min-w-0"><p className="text-[10px] font-bold uppercase tracking-[0.17em] text-[#a65f2b]">Your garden account</p><h1 id="account-title" className="mt-1 font-serif text-2xl font-semibold tracking-tight text-[#1A3325] sm:text-3xl">Welcome back, {customerName}</h1><p className="mt-1 flex items-center gap-1.5 text-xs leading-5 text-[#68786b]"><Sprout className="size-3.5 shrink-0 text-[#527358]" aria-hidden="true" /> Your orders and saved garden, together in one place.</p></div></div>
+          <span className="relative mt-4 inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-[#dce5d8] bg-white/80 px-3 py-2 text-xs font-semibold text-[#315a38] sm:mt-0"><BadgeCheck className="size-4" aria-hidden="true" /> Botanical Collective Member</span>
+        </section>
+        <AccountSummary orderCount={orders.length} wishlistCount={wishlist.length} addressCount={isAddressPreview ? 0 : addresses.length} />
         {addressSaved && <p className="mt-3 text-sm text-[#315a38]" role="status">{addressSaved}</p>}
-        <Tabs defaultValue="orders" className="mt-6 gap-5 sm:mt-8">
-          <TabsList variant="line" className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl border border-[#e5e8df] bg-white p-1.5 group-data-horizontal/tabs:h-auto sm:grid-cols-4">
+        <Tabs defaultValue="orders" className="mt-5 gap-5 sm:mt-8">
+          <TabsList variant="default" className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl border border-[#e5e8df] bg-white p-1.5 group-data-horizontal/tabs:h-auto sm:grid-cols-4">
             <TabsTrigger value="orders" className="min-h-11 h-auto rounded-xl px-2 text-xs font-semibold text-[#68786b] data-active:bg-[#edf1e9] data-active:text-[#1A3325] sm:text-sm"><PackageCheck className="size-4" aria-hidden="true" /> My orders</TabsTrigger>
             <TabsTrigger value="addresses" className="min-h-11 h-auto rounded-xl px-2 text-xs font-semibold text-[#68786b] data-active:bg-[#edf1e9] data-active:text-[#1A3325] sm:text-sm"><MapPin className="size-4" aria-hidden="true" /> Addresses</TabsTrigger>
             <TabsTrigger value="wishlist" className="min-h-11 h-auto rounded-xl px-2 text-xs font-semibold text-[#68786b] data-active:bg-[#edf1e9] data-active:text-[#1A3325] sm:text-sm"><Heart className="size-4" aria-hidden="true" /> My wishlist <span className="rounded-full bg-[#f4f4ed] px-1.5 text-[10px]">{wishlist.length}</span></TabsTrigger>
