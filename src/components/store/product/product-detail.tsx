@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Check, ChevronRight, Heart, Leaf, Minus, Plus, ShieldCheck, ShoppingBag, Star } from 'lucide-react'
@@ -27,7 +27,21 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
   const [selectedPotId, setSelectedPotId] = useState(product.pots[0]?.id ?? '')
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState<DetailTab>('about')
+  const [showStickyBar, setShowStickyBar] = useState(false)
+  const purchaseSectionRef = useRef<HTMLDivElement>(null)
   const { addItem, wishlist, toggleWishlist } = useCart()
+
+  useEffect(() => {
+    const purchaseSection = purchaseSectionRef.current
+    if (!purchaseSection) return
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowStickyBar(!entry.isIntersecting && entry.boundingClientRect.top < 0)
+    })
+
+    observer.observe(purchaseSection)
+    return () => observer.disconnect()
+  }, [])
   const isWishlisted = wishlist.includes(product.id)
   const toggleProductWishlist = () => toggleWishlist(product.id)
 
@@ -54,7 +68,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
 
   return (
     <>
-      <main className="mx-auto w-full max-w-[100rem] px-4 pb-36 pt-5 sm:px-6 sm:pt-8 lg:px-10 lg:pb-40 xl:px-14">
+      <main className="mx-auto w-full max-w-[100rem] px-4 pb-10 pt-5 sm:px-6 sm:pb-14 sm:pt-8 lg:px-10 lg:pb-16 xl:px-14">
         <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-2 text-xs text-[#778078] sm:mb-8 sm:text-sm">
           <Link href="/" className="transition-colors hover:text-[#1A3325]">Home</Link>
           <ChevronRight className="size-3.5" aria-hidden="true" />
@@ -151,17 +165,19 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
               </div>
             </fieldset>
 
-            <div className="mt-6 flex items-center gap-3">
-              <div className="inline-flex h-12 items-center rounded-full border border-[#dedfd5] bg-white" aria-label="Quantity selector">
-                <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} disabled={quantity <= 1} aria-label="Decrease quantity" className="inline-flex size-11 items-center justify-center rounded-full text-[#1A3325] hover:bg-[#f1f4ee] disabled:cursor-not-allowed disabled:opacity-40"><Minus className="size-4" /></button>
-                <span className="min-w-7 text-center text-sm font-semibold text-[#1A3325]" aria-live="polite">{quantity}</span>
-                <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Increase quantity" className="inline-flex size-11 items-center justify-center rounded-full text-[#1A3325] hover:bg-[#f1f4ee]"><Plus className="size-4" /></button>
+            <div ref={purchaseSectionRef} className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="flex items-center gap-3">
+                <div className="inline-flex h-12 items-center rounded-full border border-[#dedfd5] bg-white" aria-label="Quantity selector">
+                  <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} disabled={quantity <= 1} aria-label="Decrease quantity" className="inline-flex size-11 items-center justify-center rounded-full text-[#1A3325] hover:bg-[#f1f4ee] disabled:cursor-not-allowed disabled:opacity-40"><Minus className="size-4" /></button>
+                  <span className="min-w-7 text-center text-sm font-semibold text-[#1A3325]" aria-live="polite">{quantity}</span>
+                  <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Increase quantity" className="inline-flex size-11 items-center justify-center rounded-full text-[#1A3325] hover:bg-[#f1f4ee]"><Plus className="size-4" /></button>
+                </div>
+                <button type="button" onClick={toggleProductWishlist} aria-pressed={isWishlisted} aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'} className="inline-flex size-12 shrink-0 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]">
+                  <Heart className={`size-5 ${isWishlisted ? 'fill-[#c26743] text-[#c26743]' : ''}`} aria-hidden="true" />
+                </button>
               </div>
-              <button type="button" onClick={addToBag} disabled={!product.inStock} className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[#1A3325] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#294735] disabled:cursor-not-allowed disabled:bg-[#899087]">
+              <button type="button" onClick={addToBag} disabled={!product.inStock} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#1A3325] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#294735] disabled:cursor-not-allowed disabled:bg-[#899087] sm:flex-1">
                 <ShoppingBag className="size-4" aria-hidden="true" /> {product.inStock ? 'Add to plant bag' : 'Out of stock'}
-              </button>
-              <button type="button" onClick={toggleProductWishlist} aria-pressed={isWishlisted} aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'} className="inline-flex size-12 shrink-0 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]">
-                <Heart className={`size-5 ${isWishlisted ? 'fill-[#c26743] text-[#c26743]' : ''}`} aria-hidden="true" />
               </button>
             </div>
             <p className="mt-3 flex items-center gap-2 text-xs text-[#68786b]"><ShieldCheck className="size-4 text-[#527358]" aria-hidden="true" />Protected by our 7-day healthy plant guarantee</p>
@@ -191,8 +207,8 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
         <ProductRecommendations product={product} products={relatedProducts} />
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#e4e4da] bg-[#fbfaf6]/95 px-4 py-3 shadow-[0_-8px_30px_rgba(20,40,28,0.08)] backdrop-blur-md sm:px-6 lg:bottom-5 lg:left-1/2 lg:right-auto lg:w-[min(760px,calc(100%-3rem))] lg:-translate-x-1/2 lg:rounded-2xl lg:border lg:px-5">
-        <div className="mx-auto flex max-w-[100rem] items-center gap-3">
+      <div className={`fixed inset-x-0 bottom-0 z-40 w-full max-w-full border-t border-[#e4e4da] bg-[#fbfaf6]/95 px-4 py-3 shadow-[0_-8px_30px_rgba(20,40,28,0.08)] backdrop-blur-md transition-all duration-300 sm:px-6 lg:bottom-5 lg:left-1/2 lg:right-auto lg:w-[min(760px,calc(100%-3rem))] lg:-translate-x-1/2 lg:rounded-2xl lg:border lg:px-5 ${showStickyBar ? 'visible translate-y-0 opacity-100' : 'invisible translate-y-full opacity-0 lg:visible lg:translate-y-0 lg:opacity-100'}`}>
+        <div className="mx-auto flex min-w-0 max-w-[100rem] items-center gap-3">
           <div className="hidden min-w-0 flex-1 sm:block"><p className="truncate text-sm font-semibold text-[#1A3325]">{product.name}</p><p className="mt-0.5 text-xs text-[#68786b]">{selectedSize.label} · {selectedPot?.name}</p></div>
           <span className="shrink-0 text-lg font-semibold text-[#1A3325] sm:mr-2">{formatINR(price * quantity)}</span>
           <button type="button" onClick={addToBag} disabled={!product.inStock} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-[#1A3325] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#294735] disabled:cursor-not-allowed disabled:bg-[#899087] sm:flex-none">
