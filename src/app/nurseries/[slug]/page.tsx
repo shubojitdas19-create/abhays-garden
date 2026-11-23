@@ -2,9 +2,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { BadgeCheck, ChevronRight, MapPin, Star } from 'lucide-react'
+import { BadgeCheck, ChevronRight, MapPin, PackageCheck, ShieldCheck, Sprout, Star } from 'lucide-react'
 import { CartProvider } from '@/components/store/cart-context'
-import { ProductCard } from '@/components/store/product-card'
+import { NurseryCatalog } from '@/components/store/nursery-catalog'
 import { SiteHeader } from '@/components/store/layout/site-header'
 import { nurseries, products } from '@/components/store/products'
 
@@ -64,23 +64,24 @@ export default async function NurseryPage({ params }: NurseryPageProps) {
           </div>
         </section>
 
-        <section className="mt-10 sm:mt-14" aria-labelledby="nursery-products-heading">
-          <div className="mb-6 flex items-end justify-between border-b border-[#e7e5dc] pb-5 sm:mb-8">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a65f2b]">{nursery.specialty}</p>
-              <h2 id="nursery-products-heading" className="mt-1 font-serif text-3xl font-semibold text-[#1A3325] sm:text-4xl">Grown here, for your home</h2>
-              <p className="mt-2 text-sm text-[#68786b]">{nurseryProducts.length} plants from this nursery</p>
-            </div>
-            <Link href="/shop" className="hidden text-sm font-semibold text-[#1A3325] underline decoration-[#a65f2b]/50 underline-offset-4 sm:inline">Explore all plants</Link>
-          </div>
-          {nurseryProducts.length ? (
-            <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 xl:grid-cols-4">
-              {nurseryProducts.map((product) => <ProductCard key={product.id} product={product} />)}
-            </div>
-          ) : (
-            <p className="rounded-2xl border border-dashed border-[#d8ddd4] p-8 text-center text-sm text-[#68786b]">This nursery is getting its plants ready. Check back soon.</p>
-          )}
+        <section aria-label="Grower promises" className="mt-4 grid grid-cols-1 gap-2 rounded-2xl border border-[#e7e5dc] bg-[#fbfaf6] p-4 sm:mt-6 sm:grid-cols-3 sm:gap-3 sm:p-5">
+          <div className="flex items-center gap-3 rounded-xl bg-white px-3 py-3"><Sprout className="size-5 shrink-0 text-[#527358]" aria-hidden="true" /><span className="text-xs font-semibold text-[#304b37] sm:text-sm">100% organic soil</span></div>
+          <div className="flex items-center gap-3 rounded-xl bg-white px-3 py-3"><PackageCheck className="size-5 shrink-0 text-[#527358]" aria-hidden="true" /><span className="text-xs font-semibold text-[#304b37] sm:text-sm">7-day transit warranty</span></div>
+          <div className="flex items-center gap-3 rounded-xl bg-white px-3 py-3"><ShieldCheck className="size-5 shrink-0 text-[#527358]" aria-hidden="true" /><span className="text-xs font-semibold text-[#304b37] sm:text-sm">Verified rooftop grower</span></div>
         </section>
+
+        <section className="mt-6 grid grid-cols-3 divide-x divide-[#e7e5dc] rounded-2xl border border-[#e7e5dc] bg-white py-4 sm:mt-8 sm:py-6" aria-label="Nursery performance">
+          <div className="px-2 text-center"><p className="font-serif text-xl font-semibold text-[#1A3325] sm:text-3xl">{nurseryProducts.length}</p><p className="mt-1 text-[10px] leading-4 text-[#68786b] sm:text-sm">Plants listed</p></div>
+          <div className="px-2 text-center"><p className="flex items-center justify-center gap-1 font-serif text-xl font-semibold text-[#1A3325] sm:text-3xl">{nursery.rating.toFixed(1)} <Star className="size-4 fill-[#d69b43] text-[#d69b43] sm:size-5" aria-hidden="true" /></p><p className="mt-1 text-[10px] leading-4 text-[#68786b] sm:text-sm">Seller rating</p></div>
+          <div className="px-2 text-center"><p className="font-serif text-xl font-semibold text-[#1A3325] sm:text-3xl">99%</p><p className="mt-1 text-[10px] leading-4 text-[#68786b] sm:text-sm">On-time dispatch</p></div>
+        </section>
+
+        <blockquote className="mt-6 rounded-2xl bg-[#f5f2e9] px-5 py-5 sm:mt-8 sm:px-8 sm:py-7">
+          <p className="font-serif text-lg italic leading-relaxed text-[#365440] sm:text-xl">“{nursery.bio}”</p>
+          <cite className="mt-3 block text-xs font-semibold not-italic text-[#68786b]">— A note from {nursery.name}</cite>
+        </blockquote>
+
+        <NurseryCatalog nursery={nursery} products={nurseryProducts} />
       </main>
     </CartProvider>
   )
