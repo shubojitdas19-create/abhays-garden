@@ -42,7 +42,7 @@ export default function TermsPage() {
             title: '4. Delivery and plant care',
             paragraphs: [
               'Delivery estimates are indicative and depend on the destination, courier service, weather, and other conditions outside our reasonable control. See the Shipping & Delivery Policy for the estimates currently displayed on the site.',
-              'Please unpack plants promptly and follow the care card or instructions supplied with them. Our 7-Day Healthy Plant Guarantee explains how to report a plant that arrives damaged or unhealthy.',
+              'Please unpack plants promptly and follow the care card or instructions supplied with them. Our 7-Day Wrong or Damaged Plant Claim Policy explains how to report an incorrect or transit-damaged delivery and the complete 360° unboxing video required for a claim.',
             ],
           },
           {

@@ -35,16 +35,18 @@ export function ProductCard({ product }: { product: Product }) {
     <article className="group flex h-full flex-col">
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#e9dcc8]">
         {!imageLoaded && <div className="absolute inset-0 animate-sage-shimmer bg-gradient-to-r from-[#e5eadf] via-[#f4f5ef] to-[#e5eadf] bg-[length:200%_100%]" aria-hidden="true" />}
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(min-width: 1024px) 22vw, (min-width: 640px) 33vw, 50vw"
-          onLoad={() => setImageLoaded(true)}
-          className={`object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.035] ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-        />
+        <Link href={`/shop/${product.slug}`} className="absolute inset-0 z-0 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary" aria-label={`View ${product.name}`}>
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(min-width: 1024px) 22vw, (min-width: 640px) 33vw, 50vw"
+            onLoad={() => setImageLoaded(true)}
+            className={`object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.035] ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          />
+        </Link>
 
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-md bg-card/90 py-1 pr-2 pl-1.5 font-mono text-[10px] font-medium tracking-wider text-foreground/70 backdrop-blur-sm">
+        <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 rounded-md bg-card/90 py-1 pr-2 pl-1.5 font-mono text-[10px] font-medium tracking-wider text-foreground/70 backdrop-blur-sm">
           <span className="size-1.5 rounded-full border border-foreground/40" aria-hidden="true" />
           {'NO. '}
           {product.tag}
@@ -55,7 +57,7 @@ export function ProductCard({ product }: { product: Product }) {
           onClick={() => toggleWishlist(product.id)}
           aria-pressed={saved}
           aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
-          className="absolute top-2.5 right-2.5 flex size-9 items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card"
+          className="absolute top-2.5 right-2.5 z-10 flex size-9 items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card"
         >
           <Heart className={`size-4 transition-colors ${saved ? 'fill-accent text-accent' : 'text-foreground'}`} aria-hidden="true" />
         </button>
@@ -69,7 +71,7 @@ export function ProductCard({ product }: { product: Product }) {
         <button
           type="button"
           onClick={handleAdd}
-          className="absolute right-3 bottom-3 hidden h-10 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-semibold text-background opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:opacity-100 translate-y-2 lg:inline-flex"
+          className="absolute right-3 bottom-3 z-10 hidden h-10 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-semibold text-background opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:opacity-100 translate-y-2 lg:inline-flex"
         >
           {added ? <Check className="size-4" aria-hidden="true" /> : <ShoppingBag className="size-4" aria-hidden="true" />}
           {added ? 'Added' : 'Quick add'}
@@ -138,7 +140,7 @@ export function ProductCard({ product }: { product: Product }) {
         <button
           type="button"
           onClick={handleAdd}
-          className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-foreground/15 text-sm font-semibold transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground lg:hidden"
+          className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-foreground/15 text-sm font-semibold transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary lg:hidden"
         >
           {added ? <Check className="size-4" aria-hidden="true" /> : <ShoppingBag className="size-4" aria-hidden="true" />}
           {added ? 'Added to cart' : 'Add to cart'}

@@ -20,7 +20,7 @@ export function CartOrderSummary({ compact = false }: { compact?: boolean }) {
         <div className="flex justify-between gap-3 text-[#5c6b60]"><dt>Subtotal</dt><dd className="font-medium text-[#1A3325]">{formatPrice(subtotalPrice)}</dd></div>
         {discountAmount > 0 && <div className="flex justify-between gap-3 text-[#315a38]"><dt>Discount <span className="text-xs">({couponCode})</span></dt><dd className="font-semibold">−{formatPrice(discountAmount)}</dd></div>}
         <div className="flex justify-between gap-3 text-[#5c6b60]"><dt>Nursery safe-transit packaging</dt><dd className="font-semibold text-[#527358]">Free</dd></div>
-        <div className="flex justify-between gap-3 text-[#5c6b60]"><dt>Estimated delivery</dt><dd className="font-medium text-[#1A3325]">{shippingFee === 0 ? 'Free' : formatPrice(shippingFee)}</dd></div>
+        <div className="flex justify-between gap-3 text-[#5c6b60]"><dt>Delivery fee</dt><dd className="font-medium text-[#1A3325]">{formatPrice(shippingFee)}</dd></div>
       </dl>
       <div className="mt-4 flex justify-between gap-3 border-t border-[#e7e4dc] pt-4 text-base font-bold text-[#1A3325]"><span>Total</span><span>{formatPrice(total)}</span></div>
       <p className="mt-1 text-right text-xs text-[#68786b]">Taxes included</p>

@@ -15,7 +15,13 @@ const cardImages: Record<string, string> = {
 
 const featured = products.filter((p) => p.id in cardImages)
 const careLabel = { 1: 'Easy care', 2: 'Some care', 3: 'Green thumb' } as const
-const cats = ["Air Purifying", "Low Light", "Pet Friendly", "Bestsellers", "Under ₹499"]
+const cats = [
+  { label: 'Bestsellers', href: '/#bestsellers' },
+  { label: 'Air Purifying', href: '/shop?filter=air-purifier' },
+  { label: 'Low Light', href: '/shop?filter=low-light' },
+  { label: 'Pet Friendly', href: '/shop?filter=pet-friendly' },
+  { label: 'Under ₹499', href: '/shop?price=under-499' },
+]
 
 export function Hero() {
   const { addItem, wishlist, toggleWishlist } = useCart()
@@ -84,7 +90,7 @@ export function Hero() {
             {/* Fixed Mobile Text Overflow by wrapping naturally on mobile, strict on desktop */}
             <h1 className="mt-5 font-serif text-[2.6rem] font-medium leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
               Grown on our roof.<br />
-              <span className="lg:whitespace-nowrap">
+              <span>
                 <em className="font-normal italic text-[#E5A849]">Delivered</em> to your home.
               </span>
             </h1>
@@ -94,10 +100,10 @@ export function Hero() {
             </p>
             
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <a href="#bestsellers-heading" className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#C26743] px-7 font-semibold text-white shadow-lg transition hover:brightness-110">
+              <a href="/shop" className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#C26743] px-7 font-semibold text-white shadow-lg transition hover:brightness-110">
                 <ShoppingBag className="size-4" /> Shop All Plants
               </a>
-              <a href="#" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-black/40 px-7 font-semibold text-white backdrop-blur-md transition hover:bg-black/60">
+              <a href="/#plant-finder" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-black/40 px-7 font-semibold text-white backdrop-blur-md transition hover:bg-black/60">
                 Find Your Perfect Plant <ArrowRight className="size-4" />
               </a>
             </div>
@@ -162,9 +168,9 @@ export function Hero() {
 
       {/* Quick Categories - Expanded to max-w-[100rem] */}
       <div className="mx-auto mt-5 flex w-full max-w-[100rem] gap-2 overflow-x-auto pb-1 md:hidden [scrollbar-width:none]">
-        {cats.map((c, i) => (
-          <a key={c} href="#" className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${i === 0 ? "border-primary bg-primary text-primary-foreground" : "bg-card hover:border-primary"}`}>
-            {c}
+        {cats.map((category, index) => (
+          <a key={category.label} href={category.href} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${index === 0 ? "border-primary bg-primary text-primary-foreground" : "bg-card hover:border-primary"}`}>
+            {category.label}
           </a>
         ))}
       </div>
@@ -174,7 +180,7 @@ export function Hero() {
         {[
           { i: Truck, t: "Safe Doorstep Delivery", d: "Packed to arrive fresh & healthy" },
           { i: Leaf, t: "Nursery-Grown Quality", d: "Raised on our own rooftop" },
-          { i: ShieldCheck, t: "7-Day Plant Guarantee", d: "Free replacement if damaged" },
+          { i: ShieldCheck, t: "7-Day Claim Window", d: "Wrong/damaged only · 360° video required" },
         ].map(({ i: Icon, t, d }) => (
           <div key={t} className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm transition hover:shadow-md">
             <span className="grid size-11 shrink-0 place-items-center rounded-full bg-secondary text-primary">

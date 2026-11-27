@@ -110,7 +110,7 @@ export function PlantFinder() {
   const CurrentIcon = step <= questions.length ? questions[step - 1].icon : Sun
 
   return (
-    <section className="w-full bg-[#0F291E] px-4 py-10 sm:px-6 lg:px-10 xl:px-14 lg:py-12">
+    <section id="plant-finder" className="w-full scroll-mt-20 bg-[#0F291E] px-4 py-10 sm:px-6 lg:px-10 xl:px-14 lg:py-12">
       <div 
         ref={sectionRef}
         className={`mx-auto w-full max-w-[100rem] transition-all duration-1000 ease-out ${

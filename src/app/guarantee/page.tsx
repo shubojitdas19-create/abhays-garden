@@ -4,8 +4,8 @@ import { SiteHeader } from '@/components/store/layout/site-header'
 import { GuaranteePage } from '@/components/store/guarantee-page'
 
 export const metadata: Metadata = {
-  title: '7-Day Healthy Plant Guarantee | Abhay’s Roof Garden',
-  description: 'Learn about our 7-day healthy plant promise, simple claim steps, and first-week care tips.',
+  title: '7-Day Wrong or Damaged Plant Claim Policy | Abhay’s Roof Garden',
+  description: 'Learn how to claim for a wrong or transit-damaged plant within 7 days, including the required complete 360° unboxing video.'
 }
 
 export default function GuaranteeRoute() {

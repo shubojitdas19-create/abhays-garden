@@ -15,7 +15,7 @@ export default function ShippingPage() {
       <PolicyPage
         title="Shipping & Delivery"
         description="What to expect when a plant leaves our rooftop nursery and makes its way to your home."
-        notice="The online checkout is currently a demo and does not dispatch real orders. Delivery availability, charges, and timing for an actual order must be confirmed directly with the nursery before payment."
+        notice="The online checkout is currently a demo and does not dispatch real orders. It displays an estimated ₹99 delivery fee; actual delivery availability, charges, and timing must be confirmed directly with the nursery before payment. We do not offer free delivery above a cart-value threshold."
         sections={[
           {
             title: '1. Dispatch and delivery estimates',
@@ -35,7 +35,7 @@ export default function ShippingPage() {
             title: '3. Plant packaging and arrival',
             paragraphs: [
               'Plants are living items and can experience some temporary stress during transit. A small amount of leaf movement or drooping can happen. Unpack the plant promptly, remove protective wrapping, and follow the plant’s care card as it settles.',
-              'If a plant appears damaged or unhealthy on arrival, photograph the plant and packaging and contact us within 7 days under our Refund & Replacement Policy.',
+              'If the delivered plant is incorrect or physically damaged in transit, contact us within 7 days under our Refund & Replacement Policy and provide a complete 360° unboxing video. Other plant-health concerns are not covered by this claim policy.'
             ],
           },
           {

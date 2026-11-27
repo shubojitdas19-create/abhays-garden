@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   return {
     title: `${product.name} — ${product.botanical} | Abhay’s Roof Garden`,
-    description: `${product.description} Shop from ${product.nursery.name}, with a 7-day healthy plant guarantee.`,
+    description: `${product.description} Shop from ${product.nursery.name}. Wrong or transit-damaged plant claims are accepted within 7 days with a complete 360° unboxing video.`,
     openGraph: {
       title: `${product.name} | Abhay’s Roof Garden`,
       description: product.description,

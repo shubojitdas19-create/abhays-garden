@@ -59,14 +59,14 @@ export function PlantCareDashboard({ product }: { product: Product }) {
 }
 
 export function PlantGuarantee() {
-  const whatsappText = encodeURIComponent('Hi Abhay’s Roof Garden, I need help with the 7-day healthy plant guarantee.')
+  const whatsappText = encodeURIComponent('Hi Abhay’s Roof Garden, I need help with a wrong or transit-damaged plant claim. I have my complete 360° unboxing video and order details.')
 
   return (
-    <section className="mt-5 flex flex-col gap-4 rounded-2xl border border-[#dfe8dc] bg-[#f1f5ee] p-4 sm:flex-row sm:items-center sm:p-5" aria-label="7-day plant health guarantee">
+    <section className="mt-5 flex flex-col gap-4 rounded-2xl border border-[#dfe8dc] bg-[#f1f5ee] p-4 sm:flex-row sm:items-center sm:p-5" aria-label="7-day wrong or damaged plant claim policy">
       <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white text-[#527358]"><ShieldCheck className="size-6" aria-hidden="true" /></span>
       <div className="flex-1">
-        <h2 className="font-semibold text-[#1A3325]">7-day healthy plant guarantee</h2>
-        <p className="mt-1 text-sm leading-6 text-[#68786b]">If your plant arrives unhealthy, our team will help make it right. Send us a photo within 7 days of delivery.</p>
+        <h2 className="font-semibold text-[#1A3325]">7-day wrong or damaged plant claims</h2>
+        <p className="mt-1 text-sm leading-6 text-[#68786b]">Claims are limited to an incorrect or transit-damaged plant. A complete 360° unboxing video is required within 7 days of delivery for any refund or replacement request.</p>
       </div>
       <div className="flex shrink-0 flex-col gap-2 sm:items-end">
         <Link href="/guarantee" className="min-h-10 content-center text-sm font-semibold text-[#1A3325] underline decoration-[#a65f2b]/50 underline-offset-4">Read the full guarantee</Link>

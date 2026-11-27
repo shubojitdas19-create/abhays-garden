@@ -5,7 +5,7 @@ import { PolicyPage } from '@/components/store/policy-page'
 
 export const metadata: Metadata = {
   title: "Refund & Replacement Policy | Abhay's Roof Garden",
-  description: 'How to request help for a plant that arrives damaged or unhealthy, including replacement and refund steps.',
+  description: 'How to submit a 7-day claim for a wrong or transit-damaged plant, including the required complete 360° unboxing video.'
 }
 
 export default function RefundPolicyPage() {
@@ -14,21 +14,21 @@ export default function RefundPolicyPage() {
       <SiteHeader />
       <PolicyPage
         title="Refund & Replacement Policy"
-        description="Our 7-Day Healthy Plant Guarantee and the steps to request help with a directly confirmed nursery order."
+        description="Eligibility, the required 360° unboxing video, and the steps for a 7-day wrong or transit-damage claim on a directly confirmed nursery order."
         notice="The website checkout is a demo and does not take payment or create a live order. This policy applies to purchases that the nursery has separately confirmed directly with you."
         sections={[
           {
-            title: '1. Our 7-Day Healthy Plant Guarantee',
+            title: '1. 7-Day Wrong or Damaged Plant Claim Window',
             paragraphs: [
-              'If a plant from a directly confirmed order arrives damaged, diseased, or in poor health, contact us within 7 days of delivery. A few drooping or shifted leaves after transit can be normal; unpack the plant promptly and follow its care card while it settles.',
-              'Send your order details and clear photos of the plant and packaging by WhatsApp to +91 94764 33880, or email abhaysroofgarden@gmail.com. Please keep the packaging until we have reviewed the issue, as it can help us understand what happened in transit.',
+              'For a directly confirmed order, the 7-day claim window applies only when the delivered plant is incorrect or has been physically damaged in transit. Contact us within 7 days of delivery; routine settling, care concerns, change of mind, or other plant-health issues are not covered by this guarantee.',
+              'A complete 360° unboxing video is required for every refund or replacement claim. Record one continuous video beginning with the unopened parcel and showing the parcel and plant from all sides as you unpack. Send the video, your order reference, delivery date, and clear photos by WhatsApp to +91 94764 33880 or email abhaysroofgarden@gmail.com. Keep the packaging until our team finishes its review.',
             ],
           },
           {
             title: '2. Review and available remedies',
             paragraphs: [
-              'Our nursery team will review the information and contact you if we need anything else. After review, we will arrange an appropriate remedy—typically a replacement plant or a refund. We aim to confirm the resolution within 48 hours after review, as described in our plant guarantee.',
-              'The remedy depends on the issue, plant availability, and delivery location. We will confirm the agreed remedy and any practical next steps with you before arranging it. This policy does not limit rights that apply under consumer-protection law.',
+              'Our nursery team will review the order details and complete 360° unboxing video and may contact you for more information. A refund or replacement is not automatic; if the wrong-item or transit-damage claim is approved, we will confirm the available remedy and next steps with you.',
+              'Any remedy depends on the review, plant availability, and delivery location. This guarantee does not limit rights that apply under consumer-protection law.'
             ],
           },
           {
@@ -51,7 +51,7 @@ export default function RefundPolicyPage() {
             bullets: [
               'Your name and the order reference supplied by the nursery.',
               'The date the package was delivered and the affected plant name.',
-              'Clear photos of the plant and its packaging, with a short description of the issue.',
+              'A complete 360° unboxing video from the unopened parcel through removal of the plant, plus clear photos of the damage or incorrect item.'
             ],
           },
           {

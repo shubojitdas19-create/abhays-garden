@@ -16,10 +16,18 @@ const sortOptions = [
 
 export default function ShopPage() {
   const [activeFilter, setActiveFilter] = useState<ProductFilter>('all')
+  const [priceUnder499, setPriceUnder499] = useState(false)
   const [activeSort, setActiveSort] = useState('featured')
   
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
   const [isMobileSortOpen, setIsMobileSortOpen] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const requestedFilter = filters.find((filter) => filter.id === params.get('filter'))
+    if (requestedFilter) setActiveFilter(requestedFilter.id)
+    setPriceUnder499(params.get('price') === 'under-499')
+  }, [])
 
   useEffect(() => {
     if (isMobileFilterOpen || isMobileSortOpen) {
@@ -30,10 +38,16 @@ export default function ShopPage() {
     return () => { document.body.style.overflow = 'unset' }
   }, [isMobileFilterOpen, isMobileSortOpen])
 
+  const activeFilterLabel = filters.find((filter) => filter.id === activeFilter)?.label ?? 'All Plants'
+  const pageTitle = priceUnder499 ? 'Plants under ₹499' : activeFilter === 'all' ? 'All Plants' : activeFilterLabel
+
   const displayProducts = useMemo(() => {
     let result = [...products]
     if (activeFilter !== 'all') {
       result = result.filter(p => p.filters.includes(activeFilter))
+    }
+    if (priceUnder499) {
+      result = result.filter((product) => (product.sizes[1] ?? product.sizes[0]).price < 500)
     }
     if (activeSort === 'price-low') {
       result.sort((a, b) => a.sizes[0].price - b.sizes[0].price)
@@ -43,7 +57,7 @@ export default function ShopPage() {
       result.sort((a, b) => (b.rating || 0) - (a.rating || 0))
     }
     return result
-  }, [activeFilter, activeSort])
+  }, [activeFilter, activeSort, priceUnder499])
 
   return (
     <CartProvider>
@@ -54,7 +68,7 @@ export default function ShopPage() {
         <div className="mb-6 flex items-end justify-between border-b border-gray-200 pb-5 sm:mb-8">
           <div>
             <h1 className="font-serif text-3xl font-bold tracking-tight text-[#1A3325] sm:text-4xl lg:text-5xl">
-              All Plants
+              {pageTitle}
             </h1>
             <p className="mt-1.5 text-sm text-muted-foreground sm:text-base">
               Showing {displayProducts.length} {displayProducts.length === 1 ? 'result' : 'results'}
@@ -74,7 +88,7 @@ export default function ShopPage() {
                 {/* All Categories Option */}
                 <li>
                   <button
-                    onClick={() => setActiveFilter('all')}
+                    onClick={() => { setActiveFilter('all'); setPriceUnder499(false) }}
                     className="group flex w-full items-center gap-3 text-left text-sm transition-colors"
                   >
                     <div className={`flex size-4.5 shrink-0 items-center justify-center rounded-[4px] border transition-colors ${
@@ -106,6 +120,14 @@ export default function ShopPage() {
                   </li>
                 ))}
               </ul>
+            </div>
+
+            <div>
+              <h3 className="font-serif text-lg font-bold text-[#1A3325]">Price</h3>
+              <button type="button" aria-pressed={priceUnder499} onClick={() => setPriceUnder499((active) => !active)} className="mt-4 flex w-full items-center gap-3 text-left text-sm">
+                <span className={`flex size-4.5 shrink-0 items-center justify-center rounded-[4px] border ${priceUnder499 ? 'border-[#1A3325] bg-[#1A3325] text-white' : 'border-gray-300 bg-white'}`}>{priceUnder499 && <Check className="size-3.5" />}</span>
+                <span className={priceUnder499 ? 'font-bold text-[#1A3325]' : 'text-gray-600'}>Under ₹499</span>
+              </button>
             </div>
 
             {/* Desktop Sort (Radio Style) */}
@@ -145,7 +167,7 @@ export default function ShopPage() {
               <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50">
                 <p className="font-medium text-gray-500">No plants found for this category.</p>
                 <button 
-                  onClick={() => setActiveFilter('all')} 
+                  onClick={() => { setActiveFilter('all'); setPriceUnder499(false) }}
                   className="mt-4 text-sm font-bold text-[#C26743] hover:underline"
                 >
                   Clear filters
@@ -170,8 +192,8 @@ export default function ShopPage() {
           className="flex flex-1 items-center justify-center gap-2 text-sm font-bold text-[#1A3325] active:bg-gray-50"
         >
           <FilterIcon className="size-4" /> Filter
-          {activeFilter !== 'all' && (
-            <span className="flex size-4 items-center justify-center rounded-full bg-[#C26743] text-[9px] font-bold text-white">1</span>
+          {(activeFilter !== 'all' || priceUnder499) && (
+            <span className="flex size-4 items-center justify-center rounded-full bg-[#C26743] text-[9px] font-bold text-white">{Number(activeFilter !== 'all') + Number(priceUnder499)}</span>
           )}
         </button>
       </div>
@@ -257,6 +279,12 @@ export default function ShopPage() {
                     </button>
                   </li>
                 ))}
+                <li>
+                  <button type="button" aria-pressed={priceUnder499} onClick={() => { setPriceUnder499((active) => !active); setIsMobileFilterOpen(false) }} className="flex w-full items-center gap-4 rounded-xl px-4 py-4 text-left text-sm font-medium transition-colors active:bg-gray-50">
+                    <span className={`flex size-5 shrink-0 items-center justify-center rounded-[4px] border ${priceUnder499 ? 'border-[#1A3325] bg-[#1A3325] text-white' : 'border-gray-300 bg-white'}`}>{priceUnder499 && <Check className="size-3.5" />}</span>
+                    <span className={priceUnder499 ? 'font-bold text-[#1A3325]' : 'text-gray-700'}>Under ₹499</span>
+                  </button>
+                </li>
               </ul>
             </div>
           </div>

@@ -15,6 +15,13 @@ const navLinks = [
   { label: 'Sell With Us', href: '/sell', featured: true },
 ]
 
+const mobileExploreLinks = [
+  { label: 'Bestsellers', href: '/#bestsellers' },
+  { label: 'Shop by category', href: '/#categories' },
+  { label: 'Customer stories', href: '/#customer-reviews' },
+  { label: 'Plant guarantee', href: '/guarantee' },
+]
+
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
@@ -40,14 +47,14 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/95 backdrop-blur-md">
+      <header className={`${menuOpen ? 'fixed inset-x-0 top-0' : 'sticky top-0'} z-50 w-full border-b border-border/70 bg-background/95 backdrop-blur-md lg:sticky lg:top-0`}>
       
       {/* Expanded Max-Width for Full Screen Desktop Support */}
       <div className="relative mx-auto flex h-16 w-full max-w-[100rem] items-center gap-4 px-4 sm:px-6 lg:h-20 lg:px-10 xl:px-14">
         
         <button
           type="button"
-          className="-ml-2 inline-flex size-10 items-center justify-center rounded-full text-foreground hover:bg-muted lg:hidden"
+          className="-ml-2 inline-flex size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325] lg:hidden"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
@@ -182,7 +189,7 @@ export function SiteHeader() {
 
       {/* Mobile Navigation Drawer */}
       {menuOpen && (
-        <nav id="mobile-nav" aria-label="Mobile" className="border-t border-border bg-background lg:hidden">
+        <nav id="mobile-nav" aria-label="Mobile" className="absolute inset-x-0 top-full h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-border bg-background lg:hidden">
           <ul className="mx-auto flex max-w-7xl flex-col px-4 py-2 sm:px-6">
             {navLinks.map((link) => (
               <li key={link.label}>
@@ -195,6 +202,18 @@ export function SiteHeader() {
                 </Link>
               </li>
             ))}
+            <li className="border-b border-border/60 py-3">
+              <p className="px-1 pb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Explore the garden</p>
+              <ul className="grid grid-cols-2 gap-1">
+                {mobileExploreLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} onClick={() => setMenuOpen(false)} className="flex min-h-10 items-center rounded-lg px-2 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
             <li className="flex gap-3 py-4 sm:hidden">
               <button type="button" onClick={() => { setMenuOpen(false); setAuthOpen(true) }} className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-medium" aria-haspopup="dialog">
                 <User className="size-4" aria-hidden="true" /> Account
