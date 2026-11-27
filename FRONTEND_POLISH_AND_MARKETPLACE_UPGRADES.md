@@ -2,7 +2,7 @@
 
 > **DOCUMENT PURPOSE:**  
 > This document is the complete master audit and actionable implementation guide for polishing the entire **Abhay's Roof Garden** frontend.  
-> It covers every bug, layout glitch, missing user flow (User Account, Order Tracking & Login), product-only share feature, and mobile horizontal slider fix.  
+> It covers every bug, layout glitch, missing user flow (User Account, Order Tracking & Login), product-only share feature, mobile horizontal slider fix, and the new **Community, Reviews, Journal, and Navigation Refinements**.  
 > Each section provides **ready-to-copy prompts for Vercel / v0.app**.
 
 ---
@@ -93,7 +93,7 @@ To elevate the site from a standard website to a luxury D2C brand experience:
 | **Category Visual Tiles** | Cards lift upwards by 6px (`hover:-translate-y-1.5`) with an expanded soft shadow. |
 | **Size & Planter Pills** | Subtle radio pop animation with green border ring expansion on click. |
 | **Live Sticky Mobile Bar** | Slides smoothly up from the bottom (`translate-y-0 duration-300`) only when scrolling past the main buy box, and slides down out of view when scrolling back up. |
-| **Announcement Bar** | Smooth vertical fade transition rotating between 2 curated messages every 4 seconds. |
+| **Announcement Bar** | Smooth vertical fade transition rotating between curated brand messages every 4 seconds. |
 | **WhatsApp Direct CTAs** | Floating green pulse animation on WhatsApp support pills. |
 
 ---
@@ -107,14 +107,16 @@ To elevate the site from a standard website to a luxury D2C brand experience:
 | **`/shop/[slug]`** | 216px blank space between content & footer. | Reduce `<main>` padding from `pb-36` to `pb-10 sm:pb-14`. |
 | **`/shop/[slug]`** | Frequently bought together scrollbar ugly. | Add `no-scrollbar` and horizontal touch snap with desktop chevrons. |
 | **`SiteHeader`** | Desktop `User` icon is an unlinked button. | Link to `/account` and open `<AuthModal />` if not logged in. |
-| **`/checkout`** | Orders placed are not saved for later retrieval. | Save placed order into `localStorage` so it appears in `/account`. |
-| **`/nurseries/[slug]`** | Nursery logo is missing from cover banner. | Anchor nursery avatar badge at bottom-left of cover photo. |
-| **`/nurseries/[slug]`** | No way for sellers to share their store URL. | Add "Share Nursery" button with Web Share API and Copy Link toast. |
-| **`product-card.tsx`**| Missing nursery attribution on cards. | Add `🌱 Grown by [Nursery Name]` clickable link below title. |
+| **`SiteHeader`** | Mobile hamburger lost on deep scroll. | Ensure sticky top header has `z-50 backdrop-blur-md` and smooth trigger. |
+| **`bestsellers.tsx`**| Product image clicks do not open product page. | Wrap card image/container in `<Link href="/shop/[slug]">`. |
+| **`bestsellers.tsx`**| Feature card links to `#`. | Link Feature Card to `/shop/fiddle-leaf-fig`. |
+| **Homepage** | Categories appears before Bestsellers. | Reorder: Place `<Bestsellers />` before `<ShopCategories />`. |
+| **Site-wide** | "Free delivery over ₹999" promised. | Remove free delivery claims everywhere; show flat/standard rate. |
+| **`/guarantee`** | Old policy doesn't mention 360° unboxing video. | Update policy: 360° unboxing video mandatory; covers wrong/damaged plants only. |
 
 ---
 
-## 📋 6. READY-TO-COPY VERCEL / V0 PROMPTS
+## 📋 6. READY-TO-COPY VERCEL / V0 PROMPTS (PHASE 1)
 
 ---
 
@@ -258,7 +260,7 @@ Add high-end D2C micro-animations and polish across the entire store:
 
 ---
 
-## 📌 7. RECOMMENDED STEP-BY-STEP EXECUTION ORDER
+## 📌 7. RECOMMENDED STEP-BY-STEP EXECUTION ORDER (PHASE 1)
 
 | Step | Action | Focus Area |
 | :---: | :--- | :--- |
@@ -270,70 +272,303 @@ Add high-end D2C micro-animations and polish across the entire store:
 
 ---
 
-*This blueprint is saved in the root directory as `FRONTEND_POLISH_AND_MARKETPLACE_UPGRADES.md`.*
+## 🌟 8. STEP-BY-STEP SPECIFICATION FOR POINT 8: REFINEMENTS, COMMUNITY, REVIEWS & BLOG
+
+This section breaks down the 8 new client requirements step-by-step with UI/UX specifications, file locations, and ready-to-copy Vercel/v0 prompts (Prompts 6 through 10).
 
 ---
 
-## 🌱 8. MARKETPLACE, COMMUNITY & CONTENT EXPANSION ROADMAP
+### 8.1 Detailed Feature Breakdown of the 8 Refinements
 
-### Product goals and scope
+#### Refinement 1: Homepage Section Reordering (Bestsellers Above Categories)
+* **File:** `src/app/page.tsx`
+* **Change:**  
+  Swap the order of components inside `<main>`.  
+  **New Order:** `<Hero />` $\rightarrow$ `<Bestsellers />` $\rightarrow$ `<ShopCategories />` $\rightarrow$ `<RooftopStory />` ...  
+* **UX Impact:** High-converting bestsellers are placed immediately below the hero fold, capturing buying intent faster before category exploration.
 
-Extend the existing storefront into a trusted plant-care marketplace without changing its established botanical visual language. Build mobile-first, accessible layouts that also scale cleanly to desktop; use consistent typography, spacing, colors, navigation, cards, and page headers already established by the store.
+#### Refinement 2: Bestsellers Full-Card Clickable Navigation Fix
+* **Files:** `src/components/store/bestsellers/bestsellers.tsx` & `src/components/store/product-card.tsx`
+* **Bug Fixed:** Currently, clicking product images in the Bestsellers grid does not navigate to the product page (only the small title text is a link). The Feature Card (`Fiddle Leaf Fig`) links to `#`.
+* **Fix:**
+  * Wrap the product card image container in `<Link href={`/shop/${product.slug}`}>`.
+  * Update `FeatureCard` in `bestsellers.tsx` to link to `/shop/fiddle-leaf-fig`.
+  * Ensure buttons like "Add to cart" and "Wishlist" use `e.stopPropagation()` so they don't accidentally trigger page navigation.
 
-### Existing storefront updates (7 areas)
+#### Refinement 3: Updated 7-Day Guarantee Policy (Strict 360° Unboxing Video Requirement)
+* **Files:** `src/components/store/guarantee-page.tsx`, `src/components/store/product/product-sections.tsx`, `src/components/store/layout/home-footer.tsx`
+* **Updated Policy Rules:**
+  1. **Strict Eligibility:** Claims apply **ONLY in cases of damaged plants during transit or wrong plant delivered**. Normal leaf drooping/transit shock, repotting shock, or buyer overwatering are excluded.
+  2. **Mandatory Proof:** A **continuous, unedited 360° unboxing video** is strictly mandatory. The video must start **before cutting the outer box tape/seal**, showing the shipping label clearly, and capturing the complete unboxing process.
+  3. **Claim Window:** Must be submitted within 7 calendar days of delivery via WhatsApp support.
+  4. **Resolution:** Verified claims receive an instant free replacement dispatched within 24–48 hours or a full refund.
 
-1. **Homepage merchandising:** Move the Bestsellers section above Categories, preserving the current section styling and responsive spacing.
-2. **Product navigation:** Make every Bestseller card and its accessible interactive area navigate to that product's `/shop/[slug]` page. Verify links are real anchors and preserve existing card actions such as wishlist or add-to-bag.
-3. **Plant guarantee and policy wording:** Update `/guarantee` and the relevant refund-policy content to clearly state the limited 7-day claim window, that claims apply only to plants delivered wrong or damaged, and that a complete 360° unboxing video beginning before opening the package is required as evidence. Explain claim submission, review, and eligible refund/replacement outcomes without promising coverage for other cases. Keep the wording consistent everywhere the guarantee is mentioned.
-4. **Delivery messaging:** Remove “Free delivery over ₹999” from the announcement bar, checkout, shipping information, product/cart messaging, and any other storefront surface. Show the applicable delivery charge or a neutral delivery message instead; do not imply free delivery.
-5. **Mobile navigation access:** Keep the hamburger/menu trigger reachable while scrolling on narrow screens (including when the header changes or scrolls away). Preserve desktop navigation behavior, ensure the trigger has a clear accessible name and focus state, and test the open/close menu at mobile portrait width.
-6. **Reviews entry points:** Keep the product-page review summary and preview, but connect it to the reviews hub and add a “Write a review” action in appropriate product/account contexts. Display replies alongside their review and make reply status understandable.
-7. **Global discovery/navigation:** Add clear links to Reviews, Plant Community, and Journal in the mobile menu and sitemap/footer, and check footer links for accurate route targets and sensible grouping.
+#### Refinement 4: Complete Removal of "Free Delivery Over ₹999"
+* **Files:** `src/components/store/layout/announcement-bar.tsx`, `src/components/store/layout/cart-drawer.tsx`, `src/components/store/cart/cart-page-content.tsx`, `src/components/store/checkout/checkout-content.tsx`
+* **Changes:**
+  * **Announcement Bar:** Remove `"Free delivery on orders above ₹999"`. Replace with: `"Safe, breathable eco-packaging on all orders · Nursery-grown with care"`.
+  * **Cart Drawer & Cart Page:** Remove the free delivery progress bar (`FREE_DELIVERY_THRESHOLD = 999`). Replace with a clean trust badge: `"Flat-rate safe botanical delivery · Potted in nutrient-rich organic soil"`.
+  * **Checkout & Summary:** Apply standard transparent delivery charges (e.g., standard eco transit ₹99, or calculated rate) without any false free delivery promises.
 
-### New customer-facing route templates (6)
+#### Refinement 5: Mobile Navigation & Sticky Header Accessibility Fix
+* **File:** `src/components/store/layout/site-header.tsx`
+* **The Problem:** When scrolling down on mobile, the hamburger menu is unreachable or hidden behind overlapping elements.
+* **The Fix:**
+  * Ensure the header is permanently pinned with `sticky top-0 z-50 w-full bg-background/95 backdrop-blur-md border-b border-border/70`.
+  * The hamburger button remains sticky and fully clickable at all scroll positions.
+  * Clicking the hamburger opens a full-height, accessible mobile slide drawer (`fixed inset-0 z-[60]`) with smooth slide-in animation, background dimming, and scroll locking (`overflow-hidden` on body).
+  * Include direct navigation links to all main destinations: **Shop All**, **Bestsellers**, **Nurseries Directory**, **Community Q&A**, **Reviews**, **Journal/Blog**, **Sell With Us**, and **My Account**.
 
-| Route | Purpose and key experience |
-| --- | --- |
-| `/reviews` | Browse/search/filter published reviews, see seller responses, and follow links to reviewed products. Include helpful empty, loading, and error states. |
-| `/reviews/write` | Guided review submission: select an eligible purchased product/order, provide a rating and written feedback, then submit for moderation. Reuse the same form component within product/account flows where appropriate, rather than duplicating UI. |
-| `/community` | Public plant-care Q&A feed with search, topic filters, question previews, reply counts, and a prominent “Ask a question” action. |
-| `/community/[slug]` | Question detail with the full discussion, seller/community replies, accepted or official answers, and a safe reply form. Support report/moderation states. |
-| `/journal` | Editorial blog index with featured article, categories, search, and responsive article cards. |
-| `/journal/[slug]` | Readable article page with author, publish date, cover image, structured content, related articles, and links to relevant products or questions. |
+#### Refinement 6: Community Reviews Hub (`/reviews` & `/reviews/write`) with Seller Replies
+* **New Routes:** `/reviews` (Public Reviews Hub) & `/reviews/write` (or Write a Review Modal)
+* **Features:**
+  * **Rating Overview Header:** Overall platform rating (4.9 ★ based on 1,480+ verified orders) with 5-star breakdown bars.
+  * **Filters:** Filter reviews by Star Rating (5★, 4★, 3★), With Customer Photos Only, or by specific Nursery.
+  * **Review Cards:** Customer photo, verified buyer badge, plant name linked to PDP, date, review text, and **Seller/Nursery Reply Box** (e.g., *"🌱 Response from Abhay's Roof Garden: Thank you Sneha! Keep the soil slightly moist during summer."*).
+  * **"Write a Review" Flow:** Interactive 5-star selector, plant dropdown, review title & description, photo upload preview, and instant simulated submission with success modal.
 
-These are six route templates; submission and ask-question forms can be integrated into the respective hub/detail flows rather than adding redundant standalone pages. Seller/admin authoring and moderation should be role-protected sections in the existing grower/admin experience, not extra public pages.
+#### Refinement 7: Reddit-Style Plant Care Q&A Community (`/community` & `/community/[slug]`)
+* **New Routes:** `/community` (Feed) & `/community/[slug]` (Question Thread)
+* **Purpose:** A public community clinic where gardeners post plant dilemmas and receive answers from other plant parents and verified local nurseries.
+* **Features:**
+  * **Community Feed (`/community`):**
+    * Topic Tabs: `All Discussions`, `Pests & Disease`, `Yellow Leaves`, `Watering & Soil`, `Propagation`, `Bonsai & Exotics`.
+    * Search bar: *"Search questions (e.g. monstera yellow leaves)..."*.
+    * Prominent green CTA: **"Ask the Community"** button opening the question composer modal.
+    * Question Cards: Title, excerpt, plant photo preview, asker name, time ago, helpful upvote counter (`▲ 24`), and reply count (`💬 7 answers`).
+  * **Discussion Thread (`/community/[slug]`):**
+    * Full question with high-res plant image.
+    * **Verified Seller / Expert Answers:** Highlighted in soft green border with badge: *"🌱 Official Answer from Eden Green Nursery"*.
+    * Community Answers with upvotes and reply threads.
+    * Reply submission box with image attachment option.
 
-### Marketplace workflows and content management
+#### Refinement 8: Botanical Journal & Growing Blog (`/journal` & `/journal/[slug]`)
+* **New Routes:** `/journal` (Blog Index) & `/journal/[slug]` (Article Page)
+* **Purpose:** An editorial hub where Abhay and approved partner nurseries publish seasonal tips, care guides, and propagation tricks.
+* **Features:**
+  * **Blog Index (`/journal`):**
+    * Hero Featured Article banner: *"How to Repot Aroids Without Root Shock: A Rooftop Nursery Guide"*.
+    * Category pills: `All Articles`, `Seasonal Care`, `Terrace Gardening`, `Aroid Secrets`, `Organic Fertilizers`.
+    * Grid of editorial cards: High-res photo, reading time (`5 min read`), category tag, title in Fraunces serif, excerpt, and author avatar (*"By Abhay Sen, Master Grower"*).
+  * **Article Detail (`/journal/[slug]`):**
+    * Clean, distraction-free reading typography with Fraunces serif headings and Inter body.
+    * Table of Contents sticky sidebar on desktop.
+    * Embedded **"Plants Mentioned in this Guide"** widget with quick-add cards (e.g. reading about Monsteras gives an instant "Buy Monstera Deliciosa — ₹899" card).
+    * Author bio box + Related Articles carousel.
 
-- **Reviews:** Define eligibility and ownership rules (prefer verified-purchase reviews); validate rating and content server-side; prevent duplicate reviews for the same eligible purchase; support pending/published/rejected states, seller/admin replies, reporting, and moderation. Never present fabricated reviews or replies as real customer content.
-- **Plant Q&A:** Allow visitors/customers to browse public discussions; require an authenticated account to post or reply. Attribute replies to the real user or verified seller, provide reporting/moderation controls, and identify official seller answers. Avoid exposing private order or contact details.
-- **Journal:** Let authorized administrators and approved sellers create drafts, preview, edit, publish, and unpublish articles. Include author attribution, category, SEO title/description, publication dates, and image alt text. Public pages should show published articles only.
-- **Persistence and access control:** Reviews, discussions, replies, and articles are shared marketplace data and must use a real database rather than browser-only storage or hardcoded sample content. Before implementation, inspect/request the project database integration and live schema; establish ownership, authorization, validation, and moderation rules before wiring UI. Do not launch public write endpoints without server-side authorization and input validation.
-- **Responsive/accessibility:** Use semantic headings and landmarks, labeled forms, keyboard-operable dialogs/menus, visible focus, sufficient contrast, descriptive image alternatives, and reduced-motion-aware transitions. At mobile widths, prevent horizontal overflow and keep primary actions reachable.
+---
 
-### Delivery phases and dependencies
+### 8.2 Summary of Modified Files and New Routes
 
-| Phase | Work | Completion criteria |
-| :---: | --- | --- |
-| **1. Trust and navigation fixes** | Reorder homepage sections; repair Bestseller product links; update guarantee/refund/delivery copy; remove free-delivery claim; fix sticky mobile menu; audit footer and sitemap links. | Existing product discovery, claims information, delivery messaging, and navigation are consistent and usable on mobile and desktop. |
-| **2. Data and permissions foundation** | Select/connect the project database; define schemas for review submissions/replies, questions/answers, article content, user attribution, publication/moderation status; implement server-side access and validation rules. | Shared content persists, permissions are enforced, and public reads expose only approved/published records. |
-| **3. Reviews experience** | Build `/reviews` and `/reviews/write`; add product/account entry points; implement moderation and seller responses. | Verified eligible customers can submit feedback; visitors can browse published reviews and replies; no fake fallback content appears. |
-| **4. Plant-care community** | Build `/community` and `/community/[slug]`; add question/reply forms, seller identity, reporting, and moderation. | Public browsing works, authenticated posting is protected, and discussion states are clear and responsive. |
-| **5. Editorial journal** | Build `/journal` and `/journal/[slug]`; add protected seller/admin authoring, preview, publish/unpublish, and SEO metadata. | Only published articles are public; authorized editors can manage content; article pages are readable and discoverable. |
-| **6. Cross-site QA and launch readiness** | Verify all navigation/footer links, policy consistency, permissions, empty/error/loading states, keyboard use, mobile portrait/tablet/desktop layouts, and metadata. | No stale free-delivery or guarantee claims remain; critical discovery and contribution paths pass responsive and accessibility checks. |
+| Action | Route / File | Purpose |
+| :---: | :--- | :--- |
+| **Update** | `src/app/page.tsx` | Move Bestsellers section above Categories. |
+| **Update** | `src/components/store/bestsellers/bestsellers.tsx` | Fix product image click navigation to `/shop/[slug]`. |
+| **Update** | `src/components/store/guarantee-page.tsx` | Update policy with mandatory 360° unboxing video rule. |
+| **Update** | `announcement-bar.tsx` & `cart-drawer.tsx` | Remove "Free delivery over ₹999" claims completely. |
+| **Update** | `src/components/store/layout/site-header.tsx` | Fix mobile sticky header accessibility & add new nav links. |
+| **New Route** | `src/app/reviews/page.tsx` | Public Reviews Hub with nursery replies & rating filters. |
+| **New Route** | `src/app/reviews/write/page.tsx` | Guided "Write a Review" form with star selector & photo upload. |
+| **New Route** | `src/app/community/page.tsx` | Reddit-style Plant Care Q&A discussion feed. |
+| **New Route** | `src/app/community/[slug]/page.tsx` | Question thread with verified nursery expert answers. |
+| **New Route** | `src/app/journal/page.tsx` | Editorial botanical blog index with category filters. |
+| **New Route** | `src/app/journal/[slug]/page.tsx` | Article reader with author bio & linked product cards. |
 
-### Page and change count at a glance
+---
 
-- **6 new public route templates:** reviews hub + review submission; community feed + discussion detail; journal index + article detail.
-- **3 durable content systems:** reviews, plant-care Q&A, and editorial articles, each with appropriate authoring/moderation controls.
-- **7 existing storefront areas to update:** homepage ordering, Bestseller navigation, guarantee/refund policy, delivery messaging, mobile header/menu, review entry points, and footer/sitemap discovery links.
-- **No unnecessary standalone form pages:** ask/reply and reusable review submission flows live within their relevant hub/detail/product/account contexts.
+## 📋 8.3 READY-TO-COPY VERCEL / V0 PROMPTS (PHASE 2)
 
-### Release and acceptance checklist
+---
 
-- The Bestsellers section appears before Categories, and every bestseller opens its matching product detail page.
-- The guarantee and refund pages consistently state the eligibility, 7-day window, evidence requirement, and refund/replacement review process; no broader guarantee is implied.
-- No “Free delivery over ₹999” claim remains; delivery charges are communicated without ambiguity.
-- On mobile, users can open and close the menu after scrolling and can reach all new destinations.
-- Reviews, questions, replies, and articles come from persisted records, have clear real-user attribution, and obey authorization/moderation states.
-- New routes include responsive loading/empty/error states, useful page metadata, and keyboard-accessible interactions; run focused browser checks at the primary mobile viewport as well as desktop.
+### 🟢 PROMPT 6: Homepage Reordering, Bestsellers Link Fix, Guarantee Policy & Free-Delivery Removal
+
+```text
+Perform these 4 essential refinements across 'src/app/page.tsx', 'src/components/store/bestsellers/bestsellers.tsx', 'src/components/store/guarantee-page.tsx', and 'src/components/store/layout/announcement-bar.tsx' for Next.js 16 in TypeScript with Tailwind CSS v4:
+
+1. REORDER HOMEPAGE SECTIONS:
+   - In 'src/app/page.tsx', move the <Bestsellers /> component directly above <ShopCategories /> so visitors see bestsellers right after the Hero section:
+     <Hero />
+     <Bestsellers />
+     <ShopCategories />
+     <RooftopStory />
+     ...
+
+2. FIX BESTSELLERS CLICKABLE LINKS:
+   - In 'src/components/store/bestsellers/bestsellers.tsx' and 'product-card.tsx':
+     * Make sure clicking the product image, badge, or card title navigates smoothly to '/shop/{product.slug}'.
+     * In FeatureCard (Plant of the Month - Fiddle Leaf Fig), replace href="#" with href="/shop/fiddle-leaf-fig".
+     * Ensure internal buttons like "Quick Add" and "Wishlist" call e.stopPropagation() so clicking them does not trigger link navigation.
+
+3. UPDATE 7-DAY PLANT GUARANTEE POLICY (MANDATORY 360° UNBOXING VIDEO):
+   - In 'src/components/store/guarantee-page.tsx' and everywhere the guarantee is referenced:
+     * Clearly state the strict condition: "Claims apply strictly to plants that arrive damaged in transit or if the wrong plant is delivered."
+     * Highlight the evidence requirement: "A continuous, unedited 360° unboxing video starting BEFORE opening the package seal/tape is strictly mandatory to claim replacement or refund."
+     * Update the 3 claim steps:
+       Step 01: Record 360° unboxing video (show shipping label and package opening).
+       Step 02: Send video & order ID to WhatsApp support (+91 94764 33880) within 7 days.
+       Step 03: Free healthy replacement dispatched within 24-48 hours or full refund.
+
+4. REMOVE "FREE DELIVERY OVER ₹999" PROMISES:
+   - In 'announcement-bar.tsx', remove "Free delivery on orders above ₹999". Replace with:
+     "Safe, breathable eco-transit packaging on every plant · Rooted with love in Bengal"
+   - In 'cart-drawer.tsx', 'cart-page-content.tsx', and 'checkout-content.tsx', remove the free delivery progress bar. Display a transparent flat delivery fee (e.g. ₹99) or standard eco-shipping badge.
+
+Preserve all existing Fraunces serif headings and earthy green palette (#1A3325, #0F291E, #F9F8F6).
+```
+
+---
+
+### 🟢 PROMPT 7: Mobile Sticky Header Accessibility & Persistent Navigation
+
+```text
+Upgrade 'src/components/store/layout/site-header.tsx' for Next.js 16 with Tailwind CSS v4 to guarantee permanent mobile accessibility:
+
+1. PERMANENT STICKY HEADER ACCESSIBILITY ON MOBILE:
+   - Ensure the <header> remains permanently anchored at the top of the screen during all scrolling:
+     'sticky top-0 z-50 w-full border-b border-border/70 bg-background/95 backdrop-blur-md'
+   - Ensure the mobile hamburger menu button is always visible, touch-friendly (min-h-[44px] min-w-[44px]), and never obscured by sticky bottom bars or carousels.
+
+2. FULL-HEIGHT MOBILE SLIDE DRAWER:
+   - When menuOpen is true, render a smooth full-height navigation drawer:
+     'fixed inset-0 top-16 z-50 flex flex-col bg-background/98 px-6 py-6 backdrop-blur-lg overflow-y-auto'
+   - Prevent background body scrolling when menu is open.
+   - Include clear, well-spaced navigation links (text-lg font-medium text-foreground hover:text-[#1A3325]):
+     * Shop All Plants (/shop)
+     * Bestsellers (/#bestsellers)
+     * Local Nurseries (/nurseries)
+     * Plant Care Q&A (/community)
+     * Customer Reviews (/reviews)
+     * Botanical Journal (/journal)
+     * Sell With Us (/sell) [Styled as a prominent warm badge]
+   - Bottom Action Row inside drawer: Quick buttons for "My Account" (/account), "Saved Wishlist" (/wishlist), and "WhatsApp Support".
+```
+
+---
+
+### 🟢 PROMPT 8: Verified Customer Reviews Hub (`/reviews` & `/reviews/write`) with Seller Replies
+
+```text
+Create the Customer Reviews system for Next.js 16 in TypeScript with Tailwind CSS v4:
+
+1. PUBLIC REVIEWS HUB ('/reviews'):
+   - Header with Fraunces serif title: "Real Stories from Real Plant Parents".
+   - Rating Summary Box:
+     * Overall 4.9 ★ based on 1,480+ orders.
+     * Progress bars for 5-star (88%), 4-star (9%), 3-star (2%), etc.
+     * "Write a Review" primary button linking to '/reviews/write'.
+   - Filter & Search Bar:
+     * Filter pills: "All Reviews", "With Photos Only", "5 Stars Only", "Nursery Replies".
+   - Review Cards Grid (2 columns desktop, 1 column mobile):
+     * Reviewer name with "Verified Buyer" green checkmark badge.
+     * Star rating, date, and linked plant thumbnail ("Purchased: Monstera Deliciosa").
+     * Review text with customer plant photo preview (clicking expands image).
+     * SELLER / NURSERY REPLY BOX: If a nursery responded, show a nested card with soft green background:
+       "🌱 Response from Abhay's Roof Garden: 'Thank you Sneha! Your monstera looks stunning near that window. Remember to mist the aerial roots!'"
+
+2. GUIDED "WRITE A REVIEW" PAGE ('/reviews/write'):
+   - Clean, friendly submission form:
+     * Step 1: Select Plant Purchased (dropdown of store plants).
+     * Step 2: Star Rating selector (interactive clickable 5 stars).
+     * Step 3: Review Headline & Detailed Experience textarea.
+     * Step 4: Photo Upload box (drag & drop or camera upload with thumbnail preview).
+     * Step 5: Full Name and City (e.g. Kolkata).
+     * Submit button: Displays an animated success dialog "Thank you for sharing your plant journey! Your review has been submitted." with a button back to /reviews.
+
+Match the established brand aesthetic (#1A3325, #F9F8F6, Fraunces serif).
+```
+
+---
+
+### 🟢 PROMPT 9: Reddit-Style Plant Care Q&A Community (`/community` & `/community/[slug]`)
+
+```text
+Build a Reddit-style public Plant Care Q&A Forum for Next.js 16 in TypeScript with Tailwind CSS v4:
+
+1. COMMUNITY CLINIC FEED ('/community'):
+   - Hero Banner: Fraunces heading "The Plant Care Clinic & Community" + subheadline "Ask plant questions, share propagation wins, and get advice from fellow growers and verified nurseries."
+   - Action Bar:
+     * Search input: "Search questions (e.g. why are my pothos leaves yellowing?)..."
+     * "Ask a Question" primary button opening a question submission modal.
+   - Topic Categories (Filter Pills):
+     * All Discussions, Yellow Leaves & Rot, Pests & Bugs, Soil & Potting, Light & Placement, Propagation.
+   - Question Cards Feed (Clean Reddit / StackOverflow style):
+     * Upvote counter button (▲ Upvote with number, e.g. 18).
+     * Question title (font-serif text-lg font-semibold hover:text-[#527358]).
+     * Asker avatar, name, time ago (e.g. "Posted by Rohan D. · 3 hours ago").
+     * Category badge pill (e.g. "Pest Control").
+     * Plant photo thumbnail if attached.
+     * Footer stats: "💬 6 answers", "🌱 1 Verified Nursery response".
+     * Entire card links to '/community/{slug}'.
+
+2. QUESTION DETAIL & DISCUSSION THREAD ('/community/[slug]'):
+   - Breadcrumb: Community > Topic > Question Title.
+   - Main Question Card: Full question text, high-res plant problem photo, upvote button, and share button.
+   - Answers Section:
+     * VERIFIED NURSERY OFFICIAL ANSWER (Pinned at top if present): Highlighted with green border and badge: "🌱 Official Answer by Eden Green Nursery".
+     * Community answers with user name, timestamp, and upvote counters.
+   - Reply Composer: Textarea with "Post your advice" button and image attach button.
+
+3. "ASK A QUESTION" MODAL:
+   - Dialog with inputs: Question Title, Plant Name / Species, Topic Category dropdown, Detailed Problem description, and Photo Upload.
+   - Submits into local state with instant toast notification.
+```
+
+---
+
+### 🟢 PROMPT 10: Editorial Botanical Journal & Growing Blog (`/journal` & `/journal/[slug]`)
+
+```text
+Build an editorial Botanical Journal & Blog for Next.js 16 in TypeScript with Tailwind CSS v4:
+
+1. JOURNAL INDEX PAGE ('/journal'):
+   - Header with Fraunces serif: "The Rooftop Journal: Stories, Guides & Plant Wisdom".
+   - Featured Editorial Article Banner:
+     * Full-width split card with large cover image.
+     * Tag "Master Class · 6 min read".
+     * Headline: "How to Repot Aroids Without Root Shock: A Rooftop Grower's Manual".
+     * Author: "By Abhay Sen, Founder & Master Grower".
+     * Link to '/journal/repotting-aroids-without-root-shock'.
+   - Category Navigation Pills:
+     * All Stories, Seasonal Care, Urban Gardening, Plant Styling, Rare Exotics, Soil & Fertilizers.
+   - Article Cards Grid (3 columns desktop, 1 column mobile):
+     * Cover photo with smooth zoom on hover.
+     * Category tag, reading time, publication date.
+     * Article title in Fraunces serif (text-xl font-medium text-[#1A3325]).
+     * Short excerpt (2 lines).
+     * Author avatar and name.
+
+2. ARTICLE DETAIL PAGE ('/journal/[slug]'):
+   - Header: Category pill, publication date, reading time.
+   - Article Title in Fraunces serif (text-4xl sm:text-6xl font-semibold leading-tight text-[#1A3325]).
+   - Author Byline with avatar: "Written by Abhay Sen · Reviewed by Nursery Specialists".
+   - High-resolution hero photo with botanical caption.
+   - Rich Editorial Body (Prose):
+     * Beautiful typography, drop-caps on first paragraph, pull-quotes, and step-by-step numbered instructions.
+   - EMBEDDED "PLANTS FEATURED IN THIS GUIDE" WIDGET:
+     * Card embedded in the article showing the exact plant discussed (e.g., Monstera Deliciosa) with price (₹899), size picker, and 1-click "Add to Plant Bag" button.
+   - Bottom Author Bio Box: Picture of Abhay on the rooftop nursery with bio and link to his nursery storefront.
+   - "Related Guides" carousel.
+
+Ensure 100% responsiveness on mobile, tablet, and desktop viewports.
+```
+
+---
+
+## 📌 8.4 UPDATED MASTER EXECUTION ROADMAP
+
+| Priority | Step / Prompt | Goal | Files Touched |
+| :---: | :--- | :--- | :--- |
+| **P0** | **Prompt 1** | Fix mobile horizontal slider, section gaps, and duplicate Add-to-Cart buttons. | `globals.css`, `layout.tsx`, `product-detail.tsx` |
+| **P0** | **Prompt 6** | Reorder homepage (Bestsellers first), fix product links, update 360° unboxing guarantee policy, remove free delivery claims. | `page.tsx`, `bestsellers.tsx`, `guarantee-page.tsx`, `announcement-bar.tsx` |
+| **P1** | **Prompt 7** | Make mobile header permanently sticky with full accessible slide drawer. | `site-header.tsx` |
+| **P1** | **Prompt 2** | Add Product-Page-ONLY share button (WhatsApp, copy link with toast). | `product-detail.tsx` |
+| **P2** | **Prompt 3** | User Account (`/account`), persistent order history, and Login Modal (`<AuthModal />`). | `/account/page.tsx`, `checkout-content.tsx`, `site-header.tsx` |
+| **P2** | **Prompt 4** | Public Seller Storefront with Hero Logo Banner & Store Share link. | `/nurseries/[slug]/page.tsx`, `nursery-catalog.tsx` |
+| **P3** | **Prompt 8** | Verified Reviews Hub (`/reviews`) and Review Submission with Nursery Replies. | `/reviews/page.tsx`, `/reviews/write/page.tsx` |
+| **P3** | **Prompt 9** | Reddit-style Plant Care Q&A Community (`/community` & `/community/[slug]`). | `/community/page.tsx`, `/community/[slug]/page.tsx` |
+| **P4** | **Prompt 10** | Botanical Journal & Blog (`/journal` & `/journal/[slug]`) with linked product cards. | `/journal/page.tsx`, `/journal/[slug]/page.tsx` |
+| **P5** | **Prompt 5** | Site-wide micro-animations, floating toasts, and cart badge bounce. | Global components |
+
+---
+
+*This blueprint is saved in the root directory as `FRONTEND_POLISH_AND_MARKETPLACE_UPGRADES.md`.*
