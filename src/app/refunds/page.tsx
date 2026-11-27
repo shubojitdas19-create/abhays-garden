@@ -5,7 +5,7 @@ import { PolicyPage } from '@/components/store/policy-page'
 
 export const metadata: Metadata = {
   title: "Refund & Replacement Policy | Abhay's Roof Garden",
-  description: 'How to request help for a plant that arrives damaged or unhealthy, including replacement and refund steps.',
+  description: 'How to submit a 7-day wrong-plant or transit-damage claim with the mandatory continuous, unedited 360° unboxing video and replacement or refund remedy.'
 }
 
 export default function RefundPolicyPage() {
@@ -14,21 +14,21 @@ export default function RefundPolicyPage() {
       <SiteHeader />
       <PolicyPage
         title="Refund & Replacement Policy"
-        description="Our 7-Day Healthy Plant Guarantee and the steps to request help with a directly confirmed nursery order."
+        description="Eligibility, the required 360° unboxing video, and the steps for a 7-day wrong or transit-damage claim on a directly confirmed nursery order."
         notice="The website checkout is a demo and does not take payment or create a live order. This policy applies to purchases that the nursery has separately confirmed directly with you."
         sections={[
           {
-            title: '1. Our 7-Day Healthy Plant Guarantee',
+            title: '1. 7-Day Wrong or Damaged Plant Claim Window',
             paragraphs: [
-              'If a plant from a directly confirmed order arrives damaged, diseased, or in poor health, contact us within 7 days of delivery. A few drooping or shifted leaves after transit can be normal; unpack the plant promptly and follow its care card while it settles.',
-              'Send your order details and clear photos of the plant and packaging by WhatsApp to +91 94764 33880, or email abhaysroofgarden@gmail.com. Please keep the packaging until we have reviewed the issue, as it can help us understand what happened in transit.',
+              'For a directly confirmed order, claims apply strictly to plants that arrive damaged in transit or if the wrong plant is delivered. Contact us within 7 days of delivery; routine settling, care concerns, change of mind, or other plant-health issues are not covered by this guarantee.',
+              'A continuous, unedited 360° unboxing video starting before opening the package seal or tape is strictly mandatory to claim a replacement or refund. Record the shipping label and package opening, then send the video and your order ID to WhatsApp support at +91 94764 33880 within 7 days of delivery. Keep the packaging until the claim is resolved.',
             ],
           },
           {
-            title: '2. Review and available remedies',
+            title: '2. Replacement and refund remedies',
             paragraphs: [
-              'Our nursery team will review the information and contact you if we need anything else. After review, we will arrange an appropriate remedy—typically a replacement plant or a refund. We aim to confirm the resolution within 48 hours after review, as described in our plant guarantee.',
-              'The remedy depends on the issue, plant availability, and delivery location. We will confirm the agreed remedy and any practical next steps with you before arranging it. This policy does not limit rights that apply under consumer-protection law.',
+              'For an eligible wrong-item or transit-damage claim with the required video and order ID received within 7 days, we dispatch a free healthy replacement within 24–48 hours or issue a full refund.',
+              'This claim remedy applies to directly confirmed nursery orders and does not limit rights that apply under consumer-protection law.'
             ],
           },
           {
@@ -51,7 +51,7 @@ export default function RefundPolicyPage() {
             bullets: [
               'Your name and the order reference supplied by the nursery.',
               'The date the package was delivered and the affected plant name.',
-              'Clear photos of the plant and its packaging, with a short description of the issue.',
+              'A continuous, unedited 360° unboxing video starting before opening the package seal or tape and showing the shipping label and package opening, plus clear photos of the damage or incorrect item.'
             ],
           },
           {

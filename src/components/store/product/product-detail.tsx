@@ -212,7 +212,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                 <ShoppingBag className="size-4" aria-hidden="true" /> {product.inStock ? 'Add to plant bag' : 'Out of stock'}
               </button>
             </div>
-            <p className="mt-3 flex items-center gap-2 text-xs text-[#68786b]"><ShieldCheck className="size-4 text-[#527358]" aria-hidden="true" />Protected by our 7-day healthy plant guarantee</p>
+            <p className="mt-3 flex items-center gap-2 text-xs text-[#68786b]"><ShieldCheck className="size-4 text-[#527358]" aria-hidden="true" />Wrong plant or transit damage only · unedited 360° video from before opening the seal/tape, sent with order ID within 7 days</p>
 
             <div className="mt-7"><NurseryTrustBox nursery={product.nursery} /></div>
           </section>

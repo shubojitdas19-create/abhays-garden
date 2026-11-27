@@ -1,7 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import { ArrowRight, ShieldCheck, Star, MoveRight } from 'lucide-react'
+import Link from 'next/link'
+import { products } from '@/components/store/products'
+import { ArrowRight, MessageCircle, ShieldCheck, Star, MoveRight } from 'lucide-react'
 import { useInView } from '@/hooks/use-in-view'
 
 // Authentic review data including the newly added 5th review to perfect the grid
@@ -58,7 +60,7 @@ export function CustomerReviews() {
 
   return (
     // Tightened top and bottom spacing
-    <section className="w-full overflow-hidden bg-[#F9F8F6] px-4 py-8 sm:px-6 lg:px-10 xl:px-14 lg:py-12">
+    <section id="customer-reviews" aria-labelledby="customer-reviews-heading" className="w-full scroll-mt-20 overflow-hidden bg-[#F9F8F6] px-4 py-8 sm:px-6 lg:px-10 xl:px-14 lg:py-12">
       <div ref={sectionRef} className="mx-auto w-full max-w-[100rem]">
         
         {/* Header Section */}
@@ -67,13 +69,18 @@ export function CustomerReviews() {
             <p className="text-[10px] font-bold uppercase tracking-widest text-[#C26743] sm:text-xs">
               Straight from their homes
             </p>
-            <h2 className="mt-2 font-serif text-3xl font-bold tracking-tight text-[#1A3325] sm:text-4xl lg:text-5xl">
+            <h2 id="customer-reviews-heading" className="mt-2 font-serif text-3xl font-bold tracking-tight text-[#1A3325] sm:text-4xl lg:text-5xl">
               Real plants, real homes
             </h2>
           </div>
-          <a href="#" className="hidden items-center gap-1.5 text-sm font-semibold text-[#1A3325] transition-colors hover:text-[#C26743] sm:inline-flex">
-            See all reviews <ArrowRight className="size-4" />
-          </a>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/#customer-reviews" className="hidden items-center gap-1.5 text-sm font-semibold text-[#1A3325] transition-colors hover:text-[#C26743] sm:inline-flex">
+              Customer stories <ArrowRight className="size-4" />
+            </Link>
+            <a href="https://wa.me/919476433880?text=Hi%20Abhay%E2%80%99s%20Roof%20Garden%2C%20I%E2%80%99d%20like%20to%20share%20feedback%20about%20my%20plant%20order." target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-[#dce5d8] px-4 text-xs font-semibold text-[#1A3325] transition-colors hover:bg-[#edf1e9] sm:text-sm">
+              <MessageCircle className="size-4" aria-hidden="true" /> Share feedback
+            </a>
+          </div>
         </div>
 
         {/* Mobile Swipe Cue */}
@@ -126,9 +133,9 @@ export function CustomerReviews() {
                     <p className="text-sm font-bold text-[#1A3325]">{r.name} · <span className="font-medium text-muted-foreground">{r.city}</span></p>
                     <p className="mt-0.5 text-[11px] font-medium text-muted-foreground sm:text-xs">Bought the {r.plant}</p>
                   </div>
-                  <a href="#" className="shrink-0 rounded-full bg-[#F4F7F5] px-4 py-2 text-[11px] font-bold text-[#1A3325] transition-colors hover:bg-[#1A3325] hover:text-white sm:text-xs">
+                  <Link href={products.find((product) => product.name === r.plant) ? `/shop/${products.find((product) => product.name === r.plant)!.slug}` : '/shop'} className="shrink-0 rounded-full bg-[#F4F7F5] px-4 py-2 text-[11px] font-bold text-[#1A3325] transition-colors hover:bg-[#1A3325] hover:text-white sm:text-xs">
                     Shop this
-                  </a>
+                  </Link>
                 </div>
               </figcaption>
             </figure>
@@ -149,9 +156,9 @@ export function CustomerReviews() {
             <p className="mt-1 text-sm leading-relaxed text-white/80 xl:text-base">
               from 2,400+ verified reviews across India. Every plant is checked by hand the morning it leaves our rooftop.
             </p>
-            <a href="#" className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#1A3325] transition-transform hover:scale-[1.02] active:scale-95">
-              Read all reviews <ArrowRight className="size-4" />
-            </a>
+            <Link href="/#customer-reviews" className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#1A3325] transition-transform hover:scale-[1.02] active:scale-95">
+              Customer stories <ArrowRight className="size-4" />
+            </Link>
           </div>
 
         </div>
@@ -165,9 +172,9 @@ export function CustomerReviews() {
             <p className="text-xs leading-relaxed text-white/80">
               from 2,400+ verified reviews. Hand-checked before leaving our roof.
             </p>
-            <a href="#" className="mt-2 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-[#1A3325] transition-transform active:scale-95">
-              Read all reviews <ArrowRight className="size-3.5" />
-            </a>
+            <Link href="/#customer-reviews" className="mt-2 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-[#1A3325] transition-transform active:scale-95">
+              Customer stories <ArrowRight className="size-3.5" />
+            </Link>
         </div>
 
       </div>

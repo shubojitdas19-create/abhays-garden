@@ -7,11 +7,8 @@ import { useCart } from '@/components/store/cart-context'
 import { CartItemsList } from '@/components/store/cart/cart-items-list'
 import { CartOrderSummary } from '@/components/store/cart/cart-order-summary'
 
-const FREE_DELIVERY_THRESHOLD = 999
-const formatPrice = (value: number) => `₹${value.toLocaleString('en-IN')}`
-
 export function CartDrawer() {
-  const { items, count, subtotalPrice, isCartOpen, toggleCart } = useCart()
+  const { items, count, isCartOpen, toggleCart } = useCart()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -33,9 +30,6 @@ export function CartDrawer() {
   }, [isCartOpen, toggleCart])
 
   if (!isCartOpen) return null
-
-  const amountToFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD - subtotalPrice)
-  const deliveryProgress = Math.min(100, (subtotalPrice / FREE_DELIVERY_THRESHOLD) * 100)
 
   return (
     <div className="fixed inset-0 z-[70] flex justify-end">
@@ -70,16 +64,6 @@ export function CartDrawer() {
           </div>
         ) : (
           <>
-            <div className="border-b border-[#e7e4dc] px-5 py-4 sm:px-7">
-              <div className="flex items-center justify-between gap-3 text-sm">
-                <p className="text-[#34483a]">{amountToFreeDelivery > 0 ? <>Add <strong>{formatPrice(amountToFreeDelivery)}</strong> more to unlock free eco-packaging &amp; delivery</> : <strong className="text-[#1A3325]">You unlocked free eco-packaging &amp; delivery</strong>}</p>
-                <span className="shrink-0 font-semibold text-[#1A3325]">{Math.round(deliveryProgress)}%</span>
-              </div>
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#e5e8df]" role="progressbar" aria-label="Free delivery progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(deliveryProgress)}>
-                <div className="h-full rounded-full bg-[#527358] transition-[width] duration-500" style={{ width: `${deliveryProgress}%` }} />
-              </div>
-            </div>
-
             <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-7">
               <CartItemsList items={items} />
             </div>

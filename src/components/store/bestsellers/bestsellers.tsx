@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import { ProductCard } from '@/components/store/product-card'   
-import { filters, products, type Filter } from '@/components/store/products'
+import { filters, formatINR, products, type Filter } from '@/components/store/products'
 import { useInView } from '@/hooks/use-in-view'
 import Link from 'next/link'
 
@@ -34,7 +34,7 @@ export function Bestsellers() {
 
   return (
     // Added overflow-hidden to prevent scrollbars during the slide animations
-    <section aria-labelledby="bestsellers-heading" className="w-full overflow-hidden border-t border-border bg-card px-4 pt-8 pb-8 sm:px-6 lg:px-10 xl:px-14 lg:pt-12 lg:pb-12">
+    <section id="bestsellers" aria-labelledby="bestsellers-heading" className="w-full scroll-mt-20 overflow-hidden border-t border-border bg-card px-4 pt-8 pb-8 sm:px-6 lg:px-10 xl:px-14 lg:pt-12 lg:pb-12">
       <div className="mx-auto w-full max-w-[100rem]">
         
         {/* Header Animation Trigger */}
@@ -141,7 +141,7 @@ export function Bestsellers() {
             href="/shop"
             className="group inline-flex h-12 min-w-[220px] items-center justify-center gap-2 rounded-full border-2 border-[#1A3325] bg-transparent px-8 text-sm font-bold text-[#1A3325] transition-all hover:bg-[#1A3325] hover:text-white sm:h-14 sm:text-base"
           >
-            Explore all bestsellers
+            Explore all plants
           </Link>
         </div>
       </div>
@@ -150,14 +150,18 @@ export function Bestsellers() {
 }
 
 function FeatureCard() {
+  const featuredProduct = products.find((product) => product.id === 'fiddle-leaf-fig') ?? products[0]
+  const featuredSize = featuredProduct.sizes.find((size) => size.label === 'M') ?? featuredProduct.sizes[0]
+
   return (
-    <a
-      href="#"
+    <Link
+      href={`/shop/${featuredProduct.slug}`}
       className="group relative flex min-h-[460px] h-full w-full shrink-0 flex-col justify-between overflow-hidden rounded-3xl bg-primary p-6 text-primary-foreground sm:min-h-[520px] lg:p-8"
+      aria-label={`Shop ${featuredProduct.name}`}
     >
       <Image
-        src="/images/fiddle-leaf.png"
-        alt="Fiddle leaf fig in a cream planter on a sunlit rooftop terrace"
+        src={featuredProduct.image}
+        alt={`${featuredProduct.name} plant`}
         fill
         sizes="(min-width: 1024px) 34vw, 100vw"
         className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
@@ -168,7 +172,7 @@ function FeatureCard() {
       <div className="relative flex items-start justify-between gap-4 drop-shadow-sm">
         <div>
           <p className="font-mono text-[11px] tracking-widest uppercase opacity-90 text-white">Plant of the month</p>
-          <p className="mt-1 font-serif text-sm italic opacity-90 text-white">October edition</p>
+          <p className="mt-1 font-serif text-sm italic opacity-90 text-white">Loved by plant people</p>
         </div>
         <span className="flex size-11 items-center justify-center rounded-full bg-white text-[#1A3325] shadow-lg transition-transform duration-300 group-hover:rotate-45">
           <ArrowUpRight className="size-5" aria-hidden="true" />
@@ -177,21 +181,21 @@ function FeatureCard() {
 
       <div className="relative drop-shadow-sm">
         <h3 className="font-serif text-4xl leading-none font-medium tracking-tight text-white sm:text-5xl">
-          Fiddle Leaf <em className="font-normal italic">Fig</em>
+          {featuredProduct.name}
         </h3>
         <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/90">
-          Statement foliage, five feet tall, grown for 14 months on our terrace. Only 12 available this season.
+          {featuredProduct.description}
         </p>
         <div className="mt-6 flex items-center justify-between border-t border-white/30 pt-4">
           <div className="flex items-baseline gap-2 text-white">
-            <span className="text-2xl font-semibold">₹2,499</span>
-            <span className="text-sm line-through opacity-70">₹3,199</span>
+            <span className="text-2xl font-semibold">{formatINR(featuredSize.price)}</span>
+            {featuredSize.mrp && <span className="text-sm line-through opacity-70">{formatINR(featuredSize.mrp)}</span>}
           </div>
           <span className="text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 group-hover:decoration-white">
             Shop now
           </span>
         </div>
       </div>
-    </a>
+    </Link>
   )
 }

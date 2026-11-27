@@ -22,7 +22,7 @@ export function ShopCategories() {
 
   return (
     // Added overflow-hidden to prevent scrollbars during slide animations
-    <section aria-labelledby="categories-heading" className="w-full overflow-hidden px-4 pt-8 pb-4 sm:px-6 lg:px-10 xl:px-14 lg:pt-10">
+    <section id="categories" aria-labelledby="categories-heading" className="w-full scroll-mt-20 overflow-hidden px-4 pt-8 pb-4 sm:px-6 lg:px-10 xl:px-14 lg:pt-10">
       
       <div className="mx-auto w-full max-w-[100rem]">
         {/* Header Animation Trigger */}
@@ -33,7 +33,7 @@ export function ShopCategories() {
           <h2 id="categories-heading" className="font-serif text-2xl font-medium tracking-tight sm:text-3xl">
             Shop by category
           </h2>
-          <a href="#" className="group inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-[#1A3325]">
+          <a href="/shop" className="group inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-[#1A3325]">
             View all
             <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
           </a>
@@ -53,7 +53,7 @@ export function ShopCategories() {
               }`}
               style={{ transitionDelay: `${index * 75}ms` }}
             >
-              <a href="#" className="group block">
+              <a href="/shop" className="group block">
                 <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-muted shadow-sm transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-1.5 group-hover:shadow-lg">
                   <Image
                     src={cat.image}

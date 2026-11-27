@@ -2,21 +2,21 @@ import Link from 'next/link'
 import { ArrowRight, Camera, Check, MessageCircle, PackageCheck, ShieldCheck, Sprout } from 'lucide-react'
 
 const claimSteps = [
-  { number: '01', title: 'Take a clear photo', detail: 'Photograph the plant and its packaging as soon as you notice a concern.', icon: Camera },
-  { number: '02', title: 'Message our team', detail: 'Send your order details and photos to our plant specialists on WhatsApp within 7 days of delivery.', icon: MessageCircle },
-  { number: '03', title: 'We make it right', detail: 'After a quick review, we arrange a healthy replacement or refund within 48 hours.', icon: PackageCheck },
+  { number: '01', title: 'Record a continuous 360° unboxing video', detail: 'Start filming before opening the package seal or tape. Keep the video continuous and unedited; show the shipping label, package from every side, and the full opening.', icon: Camera },
+  { number: '02', title: 'Send the video and order ID within 7 days', detail: 'WhatsApp your continuous, unedited 360° unboxing video and order ID to +91 94764 33880 within 7 days of delivery.', icon: MessageCircle },
+  { number: '03', title: 'Receive a replacement or full refund', detail: 'For an eligible wrong-item or transit-damage claim, a free healthy replacement is dispatched within 24–48 hours, or you receive a full refund.', icon: PackageCheck },
 ]
 
 export function GuaranteePage() {
-  const whatsappText = encodeURIComponent('Hi Abhay’s Roof Garden, I need help with the 7-day healthy plant guarantee.')
+  const whatsappText = encodeURIComponent('Hi Abhay’s Roof Garden, I need help with a wrong-plant or transit-damage claim. I have my continuous, unedited 360° unboxing video and order ID.')
 
   return (
     <main className="overflow-hidden">
       <section className="relative bg-[#0F291E] text-white">
         <div className="mx-auto w-full max-w-[100rem] px-4 py-14 sm:px-6 sm:py-20 lg:px-10 lg:py-24 xl:px-14">
           <p className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#f0c780]"><ShieldCheck className="size-4" aria-hidden="true" /> Here for your first week</p>
-          <h1 className="mt-5 max-w-3xl font-serif text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">Our 7-Day Healthy Plant Promise</h1>
-          <p className="mt-5 max-w-2xl text-sm leading-7 text-white/75 sm:text-base sm:leading-8">Every plant is packed with care and backed by real people. If your plant arrives in poor health, we&apos;ll help you find the right solution—without the runaround.</p>
+          <h1 className="mt-5 max-w-3xl font-serif text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">7-Day Wrong or Damaged Plant Claim Policy</h1>
+          <p className="mt-5 max-w-2xl text-sm leading-7 text-white/75 sm:text-base sm:leading-8">Claims apply strictly to plants that arrive damaged in transit or if the wrong plant is delivered. A continuous, unedited 360° unboxing video starting before opening the package seal or tape is strictly mandatory to claim a replacement or refund.</p>
           <Link href="#how-to-claim" className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#E5A849] px-6 text-sm font-semibold text-[#1A3325] transition-colors hover:bg-[#efbc69]">How to make a claim <ArrowRight className="size-4" aria-hidden="true" /></Link>
         </div>
       </section>
@@ -29,7 +29,7 @@ export function GuaranteePage() {
           </div>
           <div className="flex flex-col gap-4 text-sm leading-7 text-[#68786b] sm:text-base">
             <p>A few leaves may droop or shift after a trip. That kind of transit stress is often temporary: unpack your plant, give it a calm spot with suitable light, and let it settle before watering or repotting.</p>
-            <p>If stems are broken, roots are damaged, or your plant arrives in a condition that doesn&apos;t look healthy, contact us within 7 days of delivery. Share your order number and clear photos so our nursery team can help.</p>
+            <p>Claims apply strictly to plants that arrive damaged in transit or if the wrong plant is delivered. A continuous, unedited 360° unboxing video starting before opening the package seal or tape is strictly mandatory to claim a replacement or refund. The video must show the shipping label and package opening, and must be sent with your order ID to WhatsApp support within 7 days of delivery.</p>
           </div>
         </div>
       </section>
@@ -65,7 +65,7 @@ export function GuaranteePage() {
           <ShieldCheck className="size-8 text-[#E5A849]" aria-hidden="true" />
           <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-[#f0c780]">Need a plant specialist?</p>
           <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">We&apos;re one message away.</h2>
-          <p className="mt-3 text-sm leading-6 text-white/70">Share your order number and a photo. Our team will guide you through the next step.</p>
+          <p className="mt-3 text-sm leading-6 text-white/70">Claims are only for plants damaged in transit or the wrong plant delivered. Send your order ID and continuous, unedited 360° unboxing video (starting before the seal or tape is opened) within 7 days. Eligible claims receive a free healthy replacement dispatched within 24–48 hours or a full refund.</p>
           <a href={`https://wa.me/919476433880?text=${whatsappText}`} target="_blank" rel="noreferrer" className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#E5A849] px-5 text-sm font-semibold text-[#1A3325] transition-colors hover:bg-[#efbc69] sm:w-fit"><MessageCircle className="size-4" aria-hidden="true" /> WhatsApp plant support</a>
         </article>
       </section>

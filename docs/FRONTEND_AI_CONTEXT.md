@@ -2973,6 +2973,140 @@ const buttonVariants = cva(
       variant: {
         default: 'bg-primary text-primary-foreground [a]:hover:bg-primary/80',
         outline:
+          'border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input bg-input/30 dark:hover:bg-input/50',
+        secondary:
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
+        ghost:
+          'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
+        destructive:
+          'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
+        link: 'text-primary underline-offset-4 hover:underline',
+      },
+      size: {
+        default:
+          'h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 in-data-[slot=button-group]:rounded-lg',
+        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: 'h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
+        icon: 'size-8',
+        'icon-xs':
+          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
+        'icon-sm':
+          'size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg',
+        'icon-lg': 'size-9',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  },
+)
+
+function Button({
+  className,
+  variant = 'default',
+  size = 'default',
+  ...props
+}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+  return (
+    <ButtonPrimitive
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
+}
+
+export { Button, buttonVariants }
+
+```
+
+
+
+---
+
+## Planned UX Expansion: Reviews, Plant Community & Journal
+
+This section records the approved product direction and implementation sequence. It is a planning specification, not a claim that the routes or backend exist yet. All new screens must reuse the live botanical design system documented above (Fraunces headings, Inter UI, forest green, cream, terracotta), current shared header/footer, responsive containers, accessible 44px touch targets, and mobile-first QA at 381px width.
+
+### Scope and route count
+
+Plan for **7 new public routes** and **1 optional protected content-management route**:
+
+| Area | New routes | Purpose |
+| --- | --- | --- |
+| Reviews | `/reviews`, `/reviews/write` | Browse/filter all reviews and submit product feedback; review details and seller replies are visible in the review feed and account area. |
+| Plant community | `/community`, `/community/ask`, `/community/questions/[slug]` | Public question feed, ask-a-question form, and threaded question/answer detail with seller/community replies. |
+| Growing journal | `/journal`, `/journal/[slug]` | Editorial article index and individual care-guide/article pages with related plants and sharing. |
+| Content operations (optional) | `/admin/content` | Protected drafting, moderation, publishing, and reply tools for authorized admins/sellers; do not expose management actions publicly. |
+
+Existing `/guarantee` is updated in place; no new guarantee route is needed. Homepage, product pages, header navigation, and footers are updated in place. The optional management route is counted separately; public user accounts and role-based access are prerequisites before it is built.
+
+### Existing UI and behavior refinements
+
+1. **Homepage merchandising:** move Bestsellers above Shop Categories, keeping the existing section styling and spacing; ensure every bestseller card, image, title, and CTA navigates to the correct `/shop/[slug]` product detail route and remains keyboard accessible.
+2. **Guarantee accuracy:** update the homepage guarantee claim, product detail guarantee card, and existing `/guarantee` page together. State that a complete 360-degree unboxing video recorded from the moment the delivery package is opened is required to assess a claim, and that refund/replacement consideration applies only to plants that arrive wrong or damaged. Avoid promising coverage for routine care issues or unrelated requests; make claim steps and the seven-day claim window explicit and consistent.
+3. **Delivery messaging:** remove “Free delivery over ₹999” wherever shown (cart, checkout, banners, product copy, or policy content). Replace it only with the actual approved delivery pricing/message; do not invent a threshold or fee.
+4. **Mobile navigation:** make the hamburger/menu trigger persistently accessible while scrolling (sticky header or a reliably visible compact menu control), maintain safe-area spacing and a minimum 44px target, and ensure opening/closing the side panel works with keyboard, focus management, and page scroll locking.
+5. **Reviews entry points:** retain the homepage review preview and link its “Read all reviews” and “Write a review” actions to the new review routes. Add clear review links from product pages and the account area. Show verified-purchase context, rating, text/photos where available, and seller/admin responses; do not fabricate verified status or actual customer replies.
+
+### New page specifications
+
+#### Reviews: `/reviews` and `/reviews/write`
+- `/reviews`: searchable/filterable responsive review feed with rating summary, product filters, verified-purchase labels only when verified, helpful context, and visible seller/admin replies. Include a strong “Write a review” CTA.
+- `/reviews/write`: accessible form to select an eligible purchased product, rate it, submit written feedback and optional photos, review consent, validation, and clear success/error states. Require an authenticated customer and verify purchase eligibility server-side in the production implementation.
+- Replies should be attached to the original review and labeled by responder role. Provide moderation/reporting rules before public launch.
+
+#### Plant Q&A community: `/community`, `/community/ask`, `/community/questions/[slug]`
+- `/community`: public, searchable question feed with categories (plant care, pests, delivery/product help), answered/unanswered status, recent activity, and “Ask a question” CTA.
+- `/community/ask`: concise question composer with title, details, plant/category tags, privacy/community guidelines, validation, and post-submission confirmation. Encourage no personal/order-sensitive details in public posts.
+- `/community/questions/[slug]`: question detail plus threaded answers, seller/admin designation, reply composer for signed-in users, helpful/vote affordances, and report/moderation controls. Clearly distinguish verified seller responses from community answers.
+
+#### Growing journal: `/journal`, `/journal/[slug]`
+- `/journal`: editorial landing page with featured article, topic filters, search, and responsive article cards with real author/date/read-time metadata.
+- `/journal/[slug]`: readable long-form article template with table of contents where useful, author attribution, updated date, related articles, relevant product links, and accessible share controls.
+- Publishing/drafts and attribution belong to an authorized admin/seller workflow, not a public client-only form. Keep editorial, product, and seller content clearly labeled.
+
+### Sitewide placement and navigation
+
+- Main navigation: add Journal and Plant Community links without overcrowding desktop or mobile menus; expose them inside the accessible mobile side panel.
+- Homepage: keep the existing reviews teaser and add restrained entry points for “Plant care journal” and “Ask the community” in relevant sections/footer, not competing with the primary shopping CTA.
+- Product detail: link to relevant care articles, product reviews, and related Q&A where available.
+- Account: add “My reviews” and “My questions” entry points only when account identity and persistence exist.
+- Footer sitemap: group links under Shop, Grow & Learn (Journal, Community, Reviews), and Help/Policies; preserve current footer visual language.
+
+### Data, security, and production-readiness dependencies
+
+The current storefront context describes a frontend/demo-first application. Reviews, public questions/answers, seller replies, photos, moderation, and publishing require shared durable storage for real users; browser-only or hardcoded mock data is not a production substitute. Before implementation, select/connect the project database and authentication approach, define and validate schemas for reviews, review replies, questions, answers, articles, authors/roles, and moderation status, and scope private account data to the authenticated user. Enforce server-side authorization for review eligibility, seller/admin replies, content publishing, uploads, and moderation; validate and sanitize submitted text, rate-limit public posting, and protect file uploads. Render public content safely and provide abuse-reporting/moderation workflows. If the work remains a visual prototype, label seeded examples as sample content and keep submission actions explicitly demo-only.
+
+### Recommended delivery sequence
+
+1. **Trust and navigation fixes:** homepage section order and bestseller navigation; remove unsupported free-delivery claim; correct the guarantee copy across all touchpoints; repair persistent mobile menu access. Validate existing routes and mobile layout first.
+2. **Reviews experience:** build `/reviews` and `/reviews/write`, then connect homepage/product/account entry points. Confirm verified-purchase and reply labels are truthful.
+3. **Community Q&A:** add `/community`, `/community/ask`, and `/community/questions/[slug]`; implement accessible search/filter/form/thread interactions and safety/moderation UX.
+4. **Growing journal:** add `/journal` and `/journal/[slug]`, then connect homepage/product/footer links and a restricted authoring workflow if role infrastructure is ready.
+5. **Backend and release readiness:** connect durable storage/auth, wire all actions to validated server-side operations, test permission boundaries, SEO metadata, loading/empty/error states, and review responsive behavior on mobile and desktop.
+
+### Acceptance checklist
+
+- Bestseller section appears before categories; every bestseller product opens its matching detail page.
+- No unsupported free-delivery threshold remains in visible storefront or checkout copy.
+- Homepage, product detail, and `/guarantee` state the same eligible claim types, video evidence requirement, and claim window.
+- Mobile menu remains reachable after scrolling and supports keyboard/touch access without obscuring content.
+- All 7 public routes have working navigation, metadata, responsive loading/empty/error states, and no dead-end CTAs.
+- Review writing, replies, Q&A, and journal publishing are either backed by authorized persistent flows or clearly marked prototype-only; no fake authentication or misleading verified-buyer claims.
+- Check layouts at mobile portrait (including 381×773) and desktop, keyboard navigation, focus visibility, accessible names, and absence of horizontal overflow.
+
+import { cn } from '@/lib/utils'
+
+const buttonVariants = cva(
+  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground [a]:hover:bg-primary/80',
+        outline:
           'border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',

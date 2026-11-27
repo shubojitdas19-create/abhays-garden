@@ -3,6 +3,9 @@ import Link from 'next/link'
 const exploreLinks = [
   { label: 'Home', href: '/' },
   { label: 'Shop all plants', href: '/shop' },
+  { label: 'Bestsellers', href: '/#bestsellers' },
+  { label: 'Shop by category', href: '/#categories' },
+  { label: 'Customer stories', href: '/#customer-reviews' },
   { label: 'Nurseries', href: '/nurseries' },
   { label: 'Sell with us', href: '/sell' },
   { label: 'Track an order', href: '/track-order' },

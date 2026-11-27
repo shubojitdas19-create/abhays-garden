@@ -38,7 +38,7 @@ function getTotals(items: CartItem[]) {
   return {
     totalItemsCount: items.reduce((total, item) => total + item.quantity, 0),
     subtotalPrice,
-    shippingFee: subtotalPrice >= 999 ? 0 : 99,
+    shippingFee: 99,
   }
 }
 

@@ -2,28 +2,32 @@
 
 import { useEffect, useState, useRef } from 'react'
 
-// Changed default triggerOnce to false so it repeats
-export function useInView(options = { threshold: 0.1, triggerOnce: false }) {
+type UseInViewOptions = {
+  threshold?: number
+  triggerOnce?: boolean
+}
+
+export function useInView(options: UseInViewOptions = {}) {
   const ref = useRef<any>(null)
   const [isInView, setIsInView] = useState(false)
+  const threshold = options.threshold ?? 0.1
+  const triggerOnce = options.triggerOnce ?? false
 
   useEffect(() => {
     const currentRef = ref.current
     if (!currentRef) return
 
     const observer = new IntersectionObserver(([entry]) => {
-      // This line now constantly updates the state to true or false depending on if it's on screen
       setIsInView(entry.isIntersecting)
-      
-      // Only stop observing if triggerOnce is explicitly set to true
-      if (entry.isIntersecting && options.triggerOnce) {
+
+      if (entry.isIntersecting && triggerOnce) {
         observer.unobserve(currentRef)
       }
-    }, { threshold: options.threshold })
+    }, { threshold })
 
     observer.observe(currentRef)
     return () => observer.disconnect()
-  }, [options.threshold, options.triggerOnce])
+  }, [threshold, triggerOnce])
 
   return { ref, isInView }
 }

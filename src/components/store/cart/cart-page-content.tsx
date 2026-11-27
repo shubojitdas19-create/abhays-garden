@@ -6,13 +6,8 @@ import { useCart } from '@/components/store/cart-context'
 import { CartItemsList } from '@/components/store/cart/cart-items-list'
 import { CartOrderSummary } from '@/components/store/cart/cart-order-summary'
 
-const FREE_DELIVERY_THRESHOLD = 999
-const formatPrice = (value: number) => `₹${value.toLocaleString('en-IN')}`
-
 export function CartPageContent() {
-  const { items, count, subtotalPrice } = useCart()
-  const amountToFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD - subtotalPrice)
-  const deliveryProgress = Math.min(100, (subtotalPrice / FREE_DELIVERY_THRESHOLD) * 100)
+  const { items, count } = useCart()
 
   return (
     <main className="min-h-[70vh] bg-[#f7f5ef] px-4 pb-12 pt-7 sm:px-6 sm:pt-10 lg:px-10 lg:pb-20">
@@ -40,15 +35,6 @@ export function CartPageContent() {
           </section>
         ) : (
           <>
-            <section className="mt-5 rounded-2xl border border-[#e4e6dc] bg-[#edf1e9] px-4 py-4 sm:mt-7 sm:px-5" aria-label="Free delivery progress">
-              <div className="flex items-start justify-between gap-3 text-sm">
-                <p className="leading-5 text-[#34483a]">{amountToFreeDelivery > 0 ? <>Add <strong>{formatPrice(amountToFreeDelivery)}</strong> more to unlock free eco-packaging &amp; delivery</> : <strong className="text-[#1A3325]">Your order qualifies for free delivery</strong>}</p>
-                <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-xs font-bold text-[#1A3325]">{Math.round(deliveryProgress)}%</span>
-              </div>
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-white" role="progressbar" aria-label="Free delivery progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(deliveryProgress)}>
-                <div className="h-full rounded-full bg-[#527358] transition-[width] duration-500" style={{ width: `${deliveryProgress}%` }} />
-              </div>
-            </section>
             <div className="mt-6 grid items-start gap-6 lg:mt-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-8">
               <section aria-labelledby="cart-items-heading">
                 <h2 id="cart-items-heading" className="sr-only">Items in your bag</h2>

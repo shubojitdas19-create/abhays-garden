@@ -10,7 +10,7 @@ const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces' })
 export const metadata: Metadata = {
   title: "Abhay's Roof Garden — Homegrown Plants, Delivered",
   description:
-    'Shop healthy, homegrown indoor plants, flowering plants, succulents and herbs from our rooftop nursery. Delivered to your door with a 7-day plant guarantee.',
+    'Shop healthy, homegrown indoor plants, flowering plants, succulents and herbs from our rooftop nursery. Claims for wrong or transit-damaged plants require a continuous, unedited 360° unboxing video starting before the package seal is opened, within 7 days.',
   generator: 'v0.app',
   // The 'icons' block has been removed so Next.js automatically uses your favicon.ico
 }
