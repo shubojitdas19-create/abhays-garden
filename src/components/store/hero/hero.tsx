@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ArrowRight, Check, Heart, Plus, ShieldCheck, Truck, Leaf, Star, StarHalf, ShoppingBag } from 'lucide-react'
 import { useCart } from '@/components/store/cart-context'
 import { formatINR, products } from '@/components/store/products'
@@ -10,7 +11,7 @@ import { formatINR, products } from '@/components/store/products'
 const cardImages: Record<string, string> = {
   monstera: '/images/monstera.png',
   'peace-lily': '/images/peace-lily.png',
-  areca: '/images/areca.png',
+  areca: '/images/areca-palm.png',
 }
 
 const featured = products.filter((p) => p.id in cardImages)
@@ -100,12 +101,12 @@ export function Hero() {
             </p>
             
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <a href="/shop" className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#C26743] px-7 font-semibold text-white shadow-lg transition hover:brightness-110">
+              <Link href="/shop" className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#C26743] px-7 font-semibold text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.98]">
                 <ShoppingBag className="size-4" /> Shop All Plants
-              </a>
-              <a href="/#plant-finder" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-black/40 px-7 font-semibold text-white backdrop-blur-md transition hover:bg-black/60">
+              </Link>
+              <Link href="/#plant-finder" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-black/40 px-7 font-semibold text-white backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-black/60 active:scale-[0.98]">
                 Find Your Perfect Plant <ArrowRight className="size-4" />
-              </a>
+              </Link>
             </div>
 
             <div className="mt-6 flex items-center gap-3 text-sm text-white/85">
@@ -122,37 +123,43 @@ export function Hero() {
 
           {/* Right Column: Exact Lovable Floating Card */}
           <div className="hidden justify-end md:col-span-5 md:flex lg:col-span-6 animate-in slide-in-from-bottom-8 duration-700 delay-300">
-            <div className="w-[18rem] rounded-2xl bg-card p-3 text-card-foreground shadow-2xl transition-all duration-500 xl:w-[20rem]">
+            <div className="group/hero-card w-[18rem] rounded-2xl bg-card p-3 text-card-foreground shadow-2xl transition-all duration-500 hover:-translate-y-1 xl:w-[20rem]">
               <div className="relative aspect-square overflow-hidden rounded-xl bg-muted">
-                {/* Dynamically loads correct image from cardImages mapping */}
-                <Image 
-                  key={plant.id} 
-                  src={cardImages[plant.id] || plant.image}
-                  alt={plant.name} 
-                  fill 
-                  sizes="(min-width: 1024px) 320px, 288px"
-                  className="object-cover animate-in fade-in duration-700" 
-                />
-                <span className="absolute left-2 top-2 rounded-full bg-[#1A3325] px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm">
+                <Link href={`/shop/${plant.slug}`} aria-label={`View ${plant.name}`} className="absolute inset-0 z-0">
+                  <Image 
+                    key={plant.id} 
+                    src={cardImages[plant.id] || plant.image}
+                    alt={plant.name} 
+                    fill 
+                    sizes="(min-width: 1024px) 320px, 288px"
+                    className="object-cover transition-transform duration-700 group-hover/hero-card:scale-105 animate-in fade-in" 
+                  />
+                </Link>
+                <span className="pointer-events-none absolute left-2 top-2 z-10 rounded-full bg-[#1A3325] px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm">
                   On the roof this week
                 </span>
-                <button type="button" onClick={() => toggleWishlist(plant.id)} aria-pressed={wishlist.includes(plant.id)} aria-label={wishlist.includes(plant.id) ? `Remove ${plant.name} from wishlist` : `Add ${plant.name} to wishlist`} className="absolute right-2 top-2 grid size-9 place-items-center rounded-full bg-card/90 transition-colors hover:text-red-500 backdrop-blur-sm shadow-sm">
+                <button type="button" onClick={() => toggleWishlist(plant.id)} aria-pressed={wishlist.includes(plant.id)} aria-label={wishlist.includes(plant.id) ? `Remove ${plant.name} from wishlist` : `Add ${plant.name} to wishlist`} className="absolute right-2 top-2 z-10 grid size-9 place-items-center rounded-full bg-card/90 transition-all hover:scale-105 hover:text-[#C26743] active:scale-95 backdrop-blur-sm shadow-sm">
                   <Heart className={`size-4 ${wishlist.includes(plant.id) ? 'fill-[#c26743] text-[#c26743]' : ''}`} aria-hidden="true" />
                 </button>
               </div>
               
               <div className="p-2 pt-3">
                 <p className="text-xs text-muted-foreground">{plant.careSummary.light} · {careLabel[plant.careSummary.difficulty]}</p>
-                <h3 className="mt-1 font-serif text-lg font-semibold">{plant.name}</h3>
+                <h3 className="mt-1 font-serif text-lg font-semibold">
+                  <Link href={`/shop/${plant.slug}`} className="transition-colors hover:text-[#527358]">
+                    {plant.name}
+                  </Link>
+                </h3>
 
                 <div className="mt-2 flex items-center justify-between">
                   <div>
-                    <span className="text-lg font-bold">{formatINR(size.price)}</span>
+                    <span className="text-lg font-bold tabular-nums">{formatINR(size.price)}</span>
                     {size.mrp && (
-                      <span className="ml-2 text-sm text-muted-foreground line-through">{formatINR(size.mrp)}</span>
+                      <span className="ml-2 text-sm text-muted-foreground line-through tabular-nums">{formatINR(size.mrp)}</span>
                     )}
                   </div>
                   <button
+                    type="button"
                     onClick={handleAdd}
                     aria-label={`Add ${plant.name} to cart`}
                     className="grid size-10 place-items-center rounded-full bg-[#1A3325] text-white transition hover:scale-105 hover:bg-primary active:scale-95 shadow-sm"
@@ -167,30 +174,30 @@ export function Hero() {
       </div>
 
       {/* Quick Categories - Expanded to max-w-[100rem] */}
-      <div className="mx-auto mt-5 flex w-full max-w-[100rem] gap-2 overflow-x-auto pb-1 md:hidden [scrollbar-width:none]">
+      <div className="no-scrollbar mx-auto mt-5 flex w-full max-w-[100rem] gap-2 overflow-x-auto pb-1 md:hidden">
         {cats.map((category, index) => (
-          <a key={category.label} href={category.href} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${index === 0 ? "border-primary bg-primary text-primary-foreground" : "bg-card hover:border-primary"}`}>
+          <Link key={category.label} href={category.href} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-all active:scale-95 ${index === 0 ? "border-primary bg-primary text-primary-foreground" : "bg-card hover:border-primary"}`}>
             {category.label}
-          </a>
+          </Link>
         ))}
       </div>
 
       {/* Trust Bar - Expanded to max-w-[100rem] */}
       <div className="mx-auto mt-5 grid w-full max-w-[100rem] grid-cols-1 gap-3 pb-2 sm:grid-cols-3">
         {[
-          { i: Truck, t: "Safe Doorstep Delivery", d: "Packed to arrive fresh & healthy" },
-          { i: Leaf, t: "Nursery-Grown Quality", d: "Raised on our own rooftop" },
-          { i: ShieldCheck, t: "7-Day Claim Window", d: "Wrong plant or transit damage · unedited 360° video before opening" },
-        ].map(({ i: Icon, t, d }) => (
-          <div key={t} className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm transition hover:shadow-md">
-            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-secondary text-primary">
+          { i: Truck, t: "Safe Doorstep Delivery", d: "Packed to arrive fresh & healthy", href: "/shipping" },
+          { i: Leaf, t: "Nursery-Grown Quality", d: "Raised on our own rooftop", href: "/nurseries" },
+          { i: ShieldCheck, t: "7-Day Claim Window", d: "Wrong plant or transit damage · unedited 360° video before opening", href: "/guarantee" },
+        ].map(({ i: Icon, t, d, href }) => (
+          <Link key={t} href={href} className="group flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#cfd8cc] hover:shadow-md">
+            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-secondary text-primary transition-colors group-hover:bg-[#1A3325] group-hover:text-white">
               <Icon className="size-5" />
             </span>
             <div>
-              <p className="text-sm font-semibold">{t}</p>
+              <p className="text-sm font-semibold text-foreground">{t}</p>
               <p className="mt-0.5 text-xs text-muted-foreground">{d}</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

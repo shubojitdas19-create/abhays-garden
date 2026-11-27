@@ -1,18 +1,19 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { useInView } from '@/hooks/use-in-view'
 
 const categories = [
-  { name: 'Indoor Plants', count: 120, image: '/images/cat-indoor.png', alt: 'Snake plant in terracotta pot' },
-  { name: 'Outdoor Plants', count: 85, image: '/images/cat-outdoor1.png', alt: 'Lush outdoor foliage plants' },
-  { name: 'Flowering', count: 64, image: '/images/cat-flowering.png', alt: 'Pink bougainvillea in terracotta pot' },
-  { name: 'Succulents', count: 48, image: '/images/cat-succulents.png', alt: 'Succulents in small ceramic pots' },
-  { name: 'Herbs & Edibles', count: 36, image: '/images/cat-herbs.png', alt: 'Basil, tulsi and mint in terracotta pots' },
-  { name: 'Climbers & Creepers', count: 24, image: '/images/cat-climbers1.png', alt: 'Money plant trailing from a hanging pot' },
-  { name: 'Pots & Planters', count: 150, image: '/images/cat-pots1.png', alt: 'Various ceramic and terracotta pots' },
-  { name: 'Gifting Sets', count: 18, image: '/images/cat-gifting1.png', alt: 'Plant wrapped in kraft paper with a ribbon' },
+  { name: 'Indoor Plants', count: 120, image: '/images/cat-indoor.png', alt: 'Snake plant in terracotta pot', href: '/shop?filter=air-purifier' },
+  { name: 'Outdoor Plants', count: 85, image: '/images/cat-outdoor1.png', alt: 'Lush outdoor foliage plants', href: '/shop?filter=flowering' },
+  { name: 'Flowering', count: 64, image: '/images/cat-flowering.png', alt: 'Pink bougainvillea in terracotta pot', href: '/shop?filter=flowering' },
+  { name: 'Succulents', count: 48, image: '/images/cat-succulents.png', alt: 'Succulents in small ceramic pots', href: '/shop?q=jade' },
+  { name: 'Herbs & Edibles', count: 36, image: '/images/cat-herbs.png', alt: 'Basil, tulsi and mint in terracotta pots', href: '/shop?filter=pet-friendly' },
+  { name: 'Climbers & Creepers', count: 24, image: '/images/cat-climbers1.png', alt: 'Money plant trailing from a hanging pot', href: '/shop?q=pothos' },
+  { name: 'Pots & Planters', count: 150, image: '/images/cat-pots1.png', alt: 'Various ceramic and terracotta pots', href: '/shop' },
+  { name: 'Gifting Sets', count: 18, image: '/images/cat-gifting1.png', alt: 'Plant wrapped in kraft paper with a ribbon', href: '/shop?filter=gifting' },
 ]
 
 export function ShopCategories() {
@@ -33,10 +34,10 @@ export function ShopCategories() {
           <h2 id="categories-heading" className="font-serif text-2xl font-medium tracking-tight sm:text-3xl">
             Shop by category
           </h2>
-          <a href="/shop" className="group inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-[#1A3325]">
+          <Link href="/shop" className="group inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-[#1A3325]">
             View all
             <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-          </a>
+          </Link>
         </div>
         
         {/* Grid Animation Trigger */}
@@ -53,7 +54,7 @@ export function ShopCategories() {
               }`}
               style={{ transitionDelay: `${index * 75}ms` }}
             >
-              <a href="/shop" className="group block">
+              <Link href={cat.href} className="group block">
                 <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-muted shadow-sm transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-1.5 group-hover:shadow-lg">
                   <Image
                     src={cat.image}
@@ -72,7 +73,7 @@ export function ShopCategories() {
                     <ArrowRight className="size-4" aria-hidden="true" />
                   </span>
                 </div>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

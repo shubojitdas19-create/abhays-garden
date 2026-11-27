@@ -17,6 +17,7 @@ const sortOptions = [
 export default function ShopPage() {
   const [activeFilter, setActiveFilter] = useState<ProductFilter>('all')
   const [priceUnder499, setPriceUnder499] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const [activeSort, setActiveSort] = useState('featured')
   
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
@@ -27,6 +28,7 @@ export default function ShopPage() {
     const requestedFilter = filters.find((filter) => filter.id === params.get('filter'))
     if (requestedFilter) setActiveFilter(requestedFilter.id)
     setPriceUnder499(params.get('price') === 'under-499')
+    setSearchQuery((params.get('q') ?? '').trim())
   }, [])
 
   useEffect(() => {
@@ -39,7 +41,13 @@ export default function ShopPage() {
   }, [isMobileFilterOpen, isMobileSortOpen])
 
   const activeFilterLabel = filters.find((filter) => filter.id === activeFilter)?.label ?? 'All Plants'
-  const pageTitle = priceUnder499 ? 'Plants under ₹499' : activeFilter === 'all' ? 'All Plants' : activeFilterLabel
+  const pageTitle = searchQuery
+    ? `Results for "${searchQuery}"`
+    : priceUnder499
+      ? 'Plants under ₹499'
+      : activeFilter === 'all'
+        ? 'All Plants'
+        : activeFilterLabel
 
   const displayProducts = useMemo(() => {
     let result = [...products]
@@ -49,6 +57,13 @@ export default function ShopPage() {
     if (priceUnder499) {
       result = result.filter((product) => (product.sizes[1] ?? product.sizes[0]).price < 500)
     }
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase()
+      result = result.filter((product) => {
+        const haystack = `${product.name} ${product.botanical} ${product.nursery.name} ${product.careSummary.light} ${product.filters.join(' ')} ${product.description}`.toLowerCase()
+        return haystack.includes(q)
+      })
+    }
     if (activeSort === 'price-low') {
       result.sort((a, b) => a.sizes[0].price - b.sizes[0].price)
     } else if (activeSort === 'price-high') {
@@ -57,7 +72,7 @@ export default function ShopPage() {
       result.sort((a, b) => (b.rating || 0) - (a.rating || 0))
     }
     return result
-  }, [activeFilter, activeSort, priceUnder499])
+  }, [activeFilter, activeSort, priceUnder499, searchQuery])
 
   return (
     <CartProvider>
@@ -65,15 +80,29 @@ export default function ShopPage() {
       
       <main className="mx-auto w-full max-w-[100rem] px-4 pt-6 pb-20 sm:px-6 lg:px-10 xl:px-14 lg:pt-10 lg:pb-12">
         
-        <div className="mb-6 flex items-end justify-between border-b border-gray-200 pb-5 sm:mb-8">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-gray-200 pb-5 sm:mb-8">
           <div>
             <h1 className="font-serif text-3xl font-bold tracking-tight text-[#1A3325] sm:text-4xl lg:text-5xl">
               {pageTitle}
             </h1>
-            <p className="mt-1.5 text-sm text-muted-foreground sm:text-base">
+            <p className="mt-1.5 text-sm text-muted-foreground sm:text-base tabular-nums">
               Showing {displayProducts.length} {displayProducts.length === 1 ? 'result' : 'results'}
             </p>
           </div>
+          {(searchQuery || priceUnder499 || activeFilter !== 'all') && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('')
+                setPriceUnder499(false)
+                setActiveFilter('all')
+                window.history.replaceState({}, '', '/shop')
+              }}
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[#dce4d9] bg-white px-4 text-xs font-semibold text-[#1A3325] transition-colors hover:bg-[#edf1e9]"
+            >
+              <X className="size-3.5" aria-hidden="true" /> Clear filters
+            </button>
+          )}
         </div>
 
         <div className="flex flex-col lg:flex-row lg:gap-10 xl:gap-14">

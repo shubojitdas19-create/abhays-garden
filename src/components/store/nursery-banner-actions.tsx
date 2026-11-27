@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { Check, Copy, Share2 } from 'lucide-react'
+import { showStoreToast } from '@/components/store/cart-context'
 import type { Nursery } from '@/components/store/products'
 
 export function NurseryBannerActions({ nursery }: { nursery: Nursery }) {
@@ -23,6 +24,7 @@ export function NurseryBannerActions({ nursery }: { nursery: Nursery }) {
     try {
       await navigator.clipboard.writeText(url)
       setNotice('Nursery link copied.')
+      showStoreToast({ kind: 'copy', title: 'Store link copied to clipboard', description: nursery.name })
     } catch {
       setNotice('Copy this nursery link from your browser address bar.')
     }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Check, Copy, Mail, MessageCircle, X } from 'lucide-react'
+import { showStoreToast } from '@/components/store/cart-context'
 import type { Product } from '@/components/store/products'
 
 type ProductShareDialogProps = {
@@ -34,6 +35,7 @@ export function ProductShareDialog({ product, open, onOpenChange, url }: Product
     try {
       await navigator.clipboard.writeText(url)
       setFeedback('Plant link copied to clipboard!')
+      showStoreToast({ kind: 'copy', title: 'Plant link copied to clipboard', description: product.name })
     } catch {
       setFeedback('Copy was unavailable. Select the link above to copy it.')
     }

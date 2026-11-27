@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { BadgeCheck, ChevronLeft, ChevronRight, Droplets, Leaf, MapPin, PackageCheck, PawPrint, ShieldCheck, Star, Sun } from 'lucide-react'
+import { ArrowRight, BadgeCheck, ChevronLeft, ChevronRight, Droplets, Leaf, MapPin, PackageCheck, PawPrint, PenLine, ShieldCheck, Star, Sun } from 'lucide-react'
 import { useRef } from 'react'
 import { formatINR, type Product } from '@/components/store/products'
 
@@ -94,14 +94,22 @@ export function ProductReviews({ product }: { product: Product }) {
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a65f2b]">From our plant community</p>
           <h2 id="reviews-heading" className="mt-1 font-serif text-2xl font-semibold text-[#1A3325] sm:text-3xl">Growing stories</h2>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="font-serif text-4xl font-semibold text-[#1A3325]">{product.rating.toFixed(1)}</span>
-          <div>
-            <div className="flex gap-0.5 text-[#d69a43]" aria-label={`${product.rating} out of 5 stars`}>
-              {Array.from({ length: 5 }, (_, index) => <Star key={index} className="size-4 fill-current" aria-hidden="true" />)}
+        <div className="flex flex-wrap items-center justify-between gap-4 sm:justify-end">
+          <div className="flex items-center gap-3">
+            <span className="font-serif text-4xl font-semibold tabular-nums text-[#1A3325]">{product.rating.toFixed(1)}</span>
+            <div>
+              <div className="flex gap-0.5 text-[#d69a43]" aria-label={`${product.rating} out of 5 stars`}>
+                {Array.from({ length: 5 }, (_, index) => <Star key={index} className="size-4 fill-current" aria-hidden="true" />)}
+              </div>
+              <p className="mt-1 text-xs text-[#68786b]">Based on {product.reviews.toLocaleString('en-IN')} reviews</p>
             </div>
-            <p className="mt-1 text-xs text-[#68786b]">Based on {product.reviews.toLocaleString('en-IN')} reviews</p>
           </div>
+          <Link
+            href={`/reviews/write?plant=${product.slug}`}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-[#1A3325] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#294735]"
+          >
+            <PenLine className="size-3.5" aria-hidden="true" /> Write a review
+          </Link>
         </div>
       </div>
       <div className="grid gap-4 pt-6 md:grid-cols-3">
@@ -126,6 +134,14 @@ export function ProductReviews({ product }: { product: Product }) {
           </article>
         ))}
       </div>
+      <div className="mt-5 flex justify-end">
+        <Link
+          href="/reviews"
+          className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-[#1A3325] transition-colors hover:text-[#a65f2b]"
+        >
+          Read all verified reviews <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
+      </div>
     </section>
   )
 }
@@ -145,18 +161,18 @@ function FrequentlyBoughtTogether({ products }: { products: Product[] }) {
           <h3 id="frequently-bought-heading" className="mt-1 font-serif text-2xl font-semibold text-[#1A3325]">Frequently bought together</h3>
         </div>
         <div className="hidden gap-2 sm:flex">
-          <button type="button" onClick={() => scrollByDirection(-1)} aria-label="Scroll pairings left" className="inline-flex size-10 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]"><ChevronLeft className="size-5" aria-hidden="true" /></button>
-          <button type="button" onClick={() => scrollByDirection(1)} aria-label="Scroll pairings right" className="inline-flex size-10 items-center justify-center rounded-full border border-[#dedfd5] text-[#1A3325] transition-colors hover:bg-[#f1f4ee]"><ChevronRight className="size-5" aria-hidden="true" /></button>
+          <button type="button" onClick={() => scrollByDirection(-1)} aria-label="Scroll pairings left" className="inline-flex size-10 items-center justify-center rounded-full border border-[#dedfd5] bg-white text-[#1A3325] shadow-xs transition-all hover:scale-105 hover:border-[#1A3325] hover:bg-[#1A3325] hover:text-white active:scale-95"><ChevronLeft className="size-5" aria-hidden="true" /></button>
+          <button type="button" onClick={() => scrollByDirection(1)} aria-label="Scroll pairings right" className="inline-flex size-10 items-center justify-center rounded-full border border-[#dedfd5] bg-white text-[#1A3325] shadow-xs transition-all hover:scale-105 hover:border-[#1A3325] hover:bg-[#1A3325] hover:text-white active:scale-95"><ChevronRight className="size-5" aria-hidden="true" /></button>
         </div>
       </div>
       <div ref={scrollRef} className="no-scrollbar mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-2 touch-pan-x sm:gap-4">
         {products.slice(0, 6).map((item) => (
-          <Link key={item.id} href={`/shop/${item.slug}`} className="group flex w-[min(82vw,19rem)] shrink-0 snap-start items-center gap-3 rounded-2xl border border-[#e7e5dc] bg-white p-3 sm:w-[19rem]">
+          <Link key={item.id} href={`/shop/${item.slug}`} className="group flex w-[min(82vw,19rem)] shrink-0 snap-start items-center gap-3 rounded-2xl border border-[#e7e5dc] bg-white p-3 shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-[#c9d6c6] hover:shadow-md sm:w-[19rem]">
             <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-[#edf1e9]">
               <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
             </div>
-            <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-[#1A3325]">{item.name}</p><p className="mt-1 text-xs text-[#68786b]">From {formatINR(item.sizes[0].price)}</p></div>
-            <span className="text-xs font-semibold text-[#527358]">View</span>
+            <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-[#1A3325] transition-colors group-hover:text-[#446a4d]">{item.name}</p><p className="mt-1 text-xs text-[#68786b] tabular-nums">From {formatINR(item.sizes[0].price)}</p></div>
+            <span className="text-xs font-semibold text-[#527358] transition-colors group-hover:text-[#1A3325]">View</span>
           </Link>
         ))}
       </div>

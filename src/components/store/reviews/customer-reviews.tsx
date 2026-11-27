@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { products } from '@/components/store/products'
-import { ArrowRight, MessageCircle, ShieldCheck, Star, MoveRight } from 'lucide-react'
+import { ArrowRight, PenLine, ShieldCheck, Star, MoveRight } from 'lucide-react'
 import { useInView } from '@/hooks/use-in-view'
 
 // Authentic review data including the newly added 5th review to perfect the grid
@@ -73,23 +73,23 @@ export function CustomerReviews() {
               Real plants, real homes
             </h2>
           </div>
-          <div className="flex flex-wrap items-center gap-4">
-            <Link href="/#customer-reviews" className="hidden items-center gap-1.5 text-sm font-semibold text-[#1A3325] transition-colors hover:text-[#C26743] sm:inline-flex">
-              Customer stories <ArrowRight className="size-4" />
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            <Link href="/reviews" className="hidden items-center gap-1.5 text-sm font-semibold text-[#1A3325] transition-colors hover:text-[#C26743] sm:inline-flex">
+              All verified reviews <ArrowRight className="size-4" />
             </Link>
-            <a href="https://wa.me/919476433880?text=Hi%20Abhay%E2%80%99s%20Roof%20Garden%2C%20I%E2%80%99d%20like%20to%20share%20feedback%20about%20my%20plant%20order." target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-[#dce5d8] px-4 text-xs font-semibold text-[#1A3325] transition-colors hover:bg-[#edf1e9] sm:text-sm">
-              <MessageCircle className="size-4" aria-hidden="true" /> Share feedback
-            </a>
+            <Link href="/reviews/write" className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-[#dce5d8] bg-white px-4 text-xs font-semibold text-[#1A3325] transition-colors hover:bg-[#edf1e9] sm:text-sm">
+              <PenLine className="size-3.5" aria-hidden="true" /> Write a review
+            </Link>
           </div>
         </div>
 
         {/* Mobile Swipe Cue */}
         <div className={`mt-5 flex items-center gap-2 text-xs font-semibold text-muted-foreground sm:hidden transition-all duration-700 delay-200 ease-out ${isInView ? 'opacity-100' : 'opacity-0'}`}>
-          Swipe to read more <MoveRight className="size-3.5 animate-pulse" />
+          Swipe to read more <MoveRight className="size-3.5" aria-hidden="true" />
         </div>
 
         {/* Grid / Mobile Slider Layout */}
-        <div className="no-scrollbar -mx-4 mt-3 flex snap-x snap-mandatory overflow-x-auto px-4 pb-4 gap-4 sm:mx-0 sm:mt-8 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-6 lg:gap-8 sm:overflow-visible sm:px-0 sm:pb-0">
+        <div className="no-scrollbar -mx-4 mt-3 flex snap-x snap-mandatory scroll-smooth touch-pan-x overflow-x-auto px-4 pb-4 gap-4 sm:mx-0 sm:mt-8 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-6 lg:gap-8 sm:overflow-visible sm:px-0 sm:pb-0">
           
           {reviews.map((r, index) => (
             <figure 
@@ -156,8 +156,8 @@ export function CustomerReviews() {
             <p className="mt-1 text-sm leading-relaxed text-white/80 xl:text-base">
               from 2,400+ verified reviews across India. Every plant is checked by hand the morning it leaves our rooftop.
             </p>
-            <Link href="/#customer-reviews" className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#1A3325] transition-transform hover:scale-[1.02] active:scale-95">
-              Customer stories <ArrowRight className="size-4" />
+            <Link href="/reviews" className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#1A3325] transition-transform hover:scale-[1.02] active:scale-95">
+              Read all reviews <ArrowRight className="size-4" />
             </Link>
           </div>
 
@@ -172,8 +172,8 @@ export function CustomerReviews() {
             <p className="text-xs leading-relaxed text-white/80">
               from 2,400+ verified reviews. Hand-checked before leaving our roof.
             </p>
-            <Link href="/#customer-reviews" className="mt-2 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-[#1A3325] transition-transform active:scale-95">
-              Customer stories <ArrowRight className="size-3.5" />
+            <Link href="/reviews" className="mt-2 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-[#1A3325] transition-transform active:scale-95">
+              Read all reviews <ArrowRight className="size-3.5" />
             </Link>
         </div>
 

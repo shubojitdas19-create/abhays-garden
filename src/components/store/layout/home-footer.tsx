@@ -109,7 +109,7 @@ export function HomeFooter() {
           {/* Brand & Socials (Col 1) */}
           <div className="flex flex-col items-start gap-6 lg:col-span-4">
             
-            <a href="/" className="flex shrink-0 items-center gap-2.5">
+            <Link href="/" className="flex shrink-0 items-center gap-2.5 transition-opacity hover:opacity-90">
               <div className="relative flex size-12 shrink-0 overflow-hidden rounded-full border border-white/20 shadow-sm sm:size-14 bg-white">
                 <Image 
                   src="/images/logo2.png" 
@@ -127,7 +127,7 @@ export function HomeFooter() {
                   Homegrown Nursery
                 </span>
               </span>
-            </a>
+            </Link>
 
             <div className="max-w-sm text-sm text-white/70">
               <p>Nursery-grown plants, hardened on our rooftop and delivered fresh to your door in eco-friendly packaging.</p>

@@ -61,9 +61,13 @@ export function ProductCard({ product }: { product: Product }) {
           }}
           aria-pressed={saved}
           aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
-          className="absolute top-2.5 right-2.5 z-10 flex size-9 items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card"
+          className="absolute top-2.5 right-2.5 z-10 flex size-9 items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-all hover:bg-card hover:scale-105 active:scale-90"
         >
-          <Heart className={`size-4 transition-colors ${saved ? 'fill-accent text-accent' : 'text-foreground'}`} aria-hidden="true" />
+          <Heart
+            key={saved ? 'saved' : 'unsaved'}
+            className={`size-4 transition-colors ${saved ? 'fill-accent text-accent animate-heart-pop' : 'text-foreground'}`}
+            aria-hidden="true"
+          />
         </button>
 
         {product.badge && (
@@ -79,7 +83,7 @@ export function ProductCard({ product }: { product: Product }) {
         <button
           type="button"
           onClick={handleAdd}
-          className="absolute right-3 bottom-3 z-10 hidden h-10 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-semibold text-background opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:opacity-100 translate-y-2 lg:inline-flex"
+          className="absolute right-3 bottom-3 z-10 hidden h-10 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-semibold text-background opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:opacity-100 translate-y-2 hover:bg-primary active:scale-95 lg:inline-flex"
         >
           {added ? <Check className="size-4" aria-hidden="true" /> : <ShoppingBag className="size-4" aria-hidden="true" />}
           {added ? 'Added' : 'Quick add'}
@@ -148,7 +152,7 @@ export function ProductCard({ product }: { product: Product }) {
         <button
           type="button"
           onClick={handleAdd}
-          className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-foreground/15 text-sm font-semibold transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary lg:hidden"
+          className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-foreground/15 text-sm font-semibold transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary lg:hidden"
         >
           {added ? <Check className="size-4" aria-hidden="true" /> : <ShoppingBag className="size-4" aria-hidden="true" />}
           {added ? 'Added to cart' : 'Add to cart'}

@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Check, Clock, RefreshCcw, ShieldCheck, Sun, Star, ShoppingBag } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, Check, Clock, RefreshCcw, ShieldCheck, Sun, Star, ShoppingBag } from 'lucide-react'
 import { products } from '@/components/store/products'
 import { useCart } from '@/components/store/cart-context'
 import { useInView } from '@/hooks/use-in-view'
@@ -178,27 +179,32 @@ export function PlantFinder() {
             )}
 
             {step === 4 && result && (
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10">
-                <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl bg-[#F3EFEA] sm:w-[40%]">
-                  <div className="absolute left-3 top-3 z-10 rounded-full bg-[#D47E5B] px-3 py-1 text-[10px] font-bold text-white sm:left-4 sm:top-4">
+              <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-10 animate-in fade-in duration-300">
+                <Link
+                  href={`/shop/${result.slug}`}
+                  className="group relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl bg-[#F3EFEA] sm:w-[40%]"
+                >
+                  <div className="absolute left-3 top-3 z-10 rounded-full bg-[#D47E5B] px-3 py-1 text-[10px] font-bold text-white shadow-xs sm:left-4 sm:top-4">
                     Your match
                   </div>
                   <Image
                     src={result.image}
                     alt={result.name}
                     fill
-                    className="object-cover object-bottom"
+                    className="object-cover object-bottom transition-transform duration-500 ease-out group-hover:scale-105"
                   />
-                </div>
+                </Link>
                 
                 <div className="flex flex-1 flex-col text-left">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-[#D47E5B] sm:text-xs">
                     We Recommend
                   </p>
                   
-                  <h3 className="mt-1 font-serif text-2xl font-bold text-[#0F291E] sm:text-3xl lg:text-4xl">
-                    {result.name}
-                  </h3>
+                  <Link href={`/shop/${result.slug}`} className="group/title inline-block w-fit">
+                    <h3 className="mt-1 font-serif text-2xl font-bold text-[#0F291E] transition-colors group-hover/title:text-[#C26743] sm:text-3xl lg:text-4xl">
+                      {result.name}
+                    </h3>
+                  </Link>
                   
                   <p className="mt-2 text-sm text-muted-foreground">
                     Indoor • {result.careSummary.light} • Care Level: {result.careSummary.difficulty}
@@ -210,11 +216,20 @@ export function PlantFinder() {
                     <span className="text-sm text-muted-foreground">({result.reviews} reviews)</span>
                   </div>
                   
-                  <div className="mt-4 flex items-end gap-2 sm:mt-6">
-                    <span className="text-2xl font-bold text-[#0F291E] sm:text-3xl">₹{result.sizes[0].price}</span>
-                    {result.sizes[0].mrp && (
-                      <span className="mb-1 text-sm font-medium text-muted-foreground line-through">₹{result.sizes[0].mrp}</span>
-                    )}
+                  <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2 sm:mt-6">
+                    <div className="flex items-end gap-2">
+                      <span className="text-2xl font-bold tabular-nums text-[#0F291E] sm:text-3xl">₹{result.sizes[0].price}</span>
+                      {result.sizes[0].mrp && (
+                        <span className="mb-1 text-sm font-medium tabular-nums text-muted-foreground line-through">₹{result.sizes[0].mrp}</span>
+                      )}
+                    </div>
+                    <Link
+                      href={`/shop/${result.slug}`}
+                      className="group/link inline-flex items-center gap-1 text-xs font-semibold text-[#C26743] transition-colors hover:text-[#0F291E] sm:text-sm"
+                    >
+                      View plant details
+                      <ArrowRight className="size-3.5 transition-transform duration-200 group-hover/link:translate-x-0.5" />
+                    </Link>
                   </div>
                   
                   {/* MOBILE FIX: Buttons now sit side-by-side on phone (flex-row instead of flex-col) */}

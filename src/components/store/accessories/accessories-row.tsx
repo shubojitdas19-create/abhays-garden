@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { ArrowRight, Plus } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, Check, Plus } from 'lucide-react'
 import { useInView } from '@/hooks/use-in-view'
 import { useCart } from '@/components/store/cart-context'
 import { useState } from 'react'
@@ -73,9 +74,9 @@ export function AccessoriesRow() {
               Pots & Gift Sets
             </h2>
           </div>
-          <a href="#" className="hidden items-center gap-1.5 text-sm font-semibold text-[#1A3325] transition-colors hover:text-[#C26743] sm:inline-flex">
-            Shop all accessories <ArrowRight className="size-4" />
-          </a>
+          <Link href="/shop" className="hidden items-center gap-1.5 text-sm font-semibold text-[#1A3325] transition-colors hover:text-[#C26743] sm:inline-flex">
+            Shop all plants &amp; pots <ArrowRight className="size-4" />
+          </Link>
         </div>
 
         {/* 
@@ -118,7 +119,7 @@ export function AccessoriesRow() {
                   }`}
                   aria-label={`Add ${item.name} to cart`}
                 >
-                  <Plus className={`size-4 sm:size-5 transition-transform ${addedId === item.id ? 'rotate-45' : ''}`} />
+                  {addedId === item.id ? <Check className="size-4 sm:size-5" aria-hidden="true" /> : <Plus className="size-4 sm:size-5" aria-hidden="true" />}
                 </button>
               </div>
 
@@ -138,9 +139,9 @@ export function AccessoriesRow() {
 
         {/* Mobile-only View All Link */}
         <div className="mt-8 flex justify-center sm:hidden">
-          <a href="#" className="inline-flex items-center gap-1.5 text-sm font-bold text-[#1A3325]">
-            Shop all accessories <ArrowRight className="size-4" />
-          </a>
+          <Link href="/shop" className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-[#1A3325]/20 px-5 text-sm font-bold text-[#1A3325] transition-colors hover:bg-[#edf1e9]">
+            Shop all plants &amp; pots <ArrowRight className="size-4" />
+          </Link>
         </div>
 
       </div>
