@@ -271,3 +271,69 @@ Add high-end D2C micro-animations and polish across the entire store:
 ---
 
 *This blueprint is saved in the root directory as `FRONTEND_POLISH_AND_MARKETPLACE_UPGRADES.md`.*
+
+---
+
+## 🌱 8. MARKETPLACE, COMMUNITY & CONTENT EXPANSION ROADMAP
+
+### Product goals and scope
+
+Extend the existing storefront into a trusted plant-care marketplace without changing its established botanical visual language. Build mobile-first, accessible layouts that also scale cleanly to desktop; use consistent typography, spacing, colors, navigation, cards, and page headers already established by the store.
+
+### Existing storefront updates (7 areas)
+
+1. **Homepage merchandising:** Move the Bestsellers section above Categories, preserving the current section styling and responsive spacing.
+2. **Product navigation:** Make every Bestseller card and its accessible interactive area navigate to that product's `/shop/[slug]` page. Verify links are real anchors and preserve existing card actions such as wishlist or add-to-bag.
+3. **Plant guarantee and policy wording:** Update `/guarantee` and the relevant refund-policy content to clearly state the limited 7-day claim window, that claims apply only to plants delivered wrong or damaged, and that a complete 360° unboxing video beginning before opening the package is required as evidence. Explain claim submission, review, and eligible refund/replacement outcomes without promising coverage for other cases. Keep the wording consistent everywhere the guarantee is mentioned.
+4. **Delivery messaging:** Remove “Free delivery over ₹999” from the announcement bar, checkout, shipping information, product/cart messaging, and any other storefront surface. Show the applicable delivery charge or a neutral delivery message instead; do not imply free delivery.
+5. **Mobile navigation access:** Keep the hamburger/menu trigger reachable while scrolling on narrow screens (including when the header changes or scrolls away). Preserve desktop navigation behavior, ensure the trigger has a clear accessible name and focus state, and test the open/close menu at mobile portrait width.
+6. **Reviews entry points:** Keep the product-page review summary and preview, but connect it to the reviews hub and add a “Write a review” action in appropriate product/account contexts. Display replies alongside their review and make reply status understandable.
+7. **Global discovery/navigation:** Add clear links to Reviews, Plant Community, and Journal in the mobile menu and sitemap/footer, and check footer links for accurate route targets and sensible grouping.
+
+### New customer-facing route templates (6)
+
+| Route | Purpose and key experience |
+| --- | --- |
+| `/reviews` | Browse/search/filter published reviews, see seller responses, and follow links to reviewed products. Include helpful empty, loading, and error states. |
+| `/reviews/write` | Guided review submission: select an eligible purchased product/order, provide a rating and written feedback, then submit for moderation. Reuse the same form component within product/account flows where appropriate, rather than duplicating UI. |
+| `/community` | Public plant-care Q&A feed with search, topic filters, question previews, reply counts, and a prominent “Ask a question” action. |
+| `/community/[slug]` | Question detail with the full discussion, seller/community replies, accepted or official answers, and a safe reply form. Support report/moderation states. |
+| `/journal` | Editorial blog index with featured article, categories, search, and responsive article cards. |
+| `/journal/[slug]` | Readable article page with author, publish date, cover image, structured content, related articles, and links to relevant products or questions. |
+
+These are six route templates; submission and ask-question forms can be integrated into the respective hub/detail flows rather than adding redundant standalone pages. Seller/admin authoring and moderation should be role-protected sections in the existing grower/admin experience, not extra public pages.
+
+### Marketplace workflows and content management
+
+- **Reviews:** Define eligibility and ownership rules (prefer verified-purchase reviews); validate rating and content server-side; prevent duplicate reviews for the same eligible purchase; support pending/published/rejected states, seller/admin replies, reporting, and moderation. Never present fabricated reviews or replies as real customer content.
+- **Plant Q&A:** Allow visitors/customers to browse public discussions; require an authenticated account to post or reply. Attribute replies to the real user or verified seller, provide reporting/moderation controls, and identify official seller answers. Avoid exposing private order or contact details.
+- **Journal:** Let authorized administrators and approved sellers create drafts, preview, edit, publish, and unpublish articles. Include author attribution, category, SEO title/description, publication dates, and image alt text. Public pages should show published articles only.
+- **Persistence and access control:** Reviews, discussions, replies, and articles are shared marketplace data and must use a real database rather than browser-only storage or hardcoded sample content. Before implementation, inspect/request the project database integration and live schema; establish ownership, authorization, validation, and moderation rules before wiring UI. Do not launch public write endpoints without server-side authorization and input validation.
+- **Responsive/accessibility:** Use semantic headings and landmarks, labeled forms, keyboard-operable dialogs/menus, visible focus, sufficient contrast, descriptive image alternatives, and reduced-motion-aware transitions. At mobile widths, prevent horizontal overflow and keep primary actions reachable.
+
+### Delivery phases and dependencies
+
+| Phase | Work | Completion criteria |
+| :---: | --- | --- |
+| **1. Trust and navigation fixes** | Reorder homepage sections; repair Bestseller product links; update guarantee/refund/delivery copy; remove free-delivery claim; fix sticky mobile menu; audit footer and sitemap links. | Existing product discovery, claims information, delivery messaging, and navigation are consistent and usable on mobile and desktop. |
+| **2. Data and permissions foundation** | Select/connect the project database; define schemas for review submissions/replies, questions/answers, article content, user attribution, publication/moderation status; implement server-side access and validation rules. | Shared content persists, permissions are enforced, and public reads expose only approved/published records. |
+| **3. Reviews experience** | Build `/reviews` and `/reviews/write`; add product/account entry points; implement moderation and seller responses. | Verified eligible customers can submit feedback; visitors can browse published reviews and replies; no fake fallback content appears. |
+| **4. Plant-care community** | Build `/community` and `/community/[slug]`; add question/reply forms, seller identity, reporting, and moderation. | Public browsing works, authenticated posting is protected, and discussion states are clear and responsive. |
+| **5. Editorial journal** | Build `/journal` and `/journal/[slug]`; add protected seller/admin authoring, preview, publish/unpublish, and SEO metadata. | Only published articles are public; authorized editors can manage content; article pages are readable and discoverable. |
+| **6. Cross-site QA and launch readiness** | Verify all navigation/footer links, policy consistency, permissions, empty/error/loading states, keyboard use, mobile portrait/tablet/desktop layouts, and metadata. | No stale free-delivery or guarantee claims remain; critical discovery and contribution paths pass responsive and accessibility checks. |
+
+### Page and change count at a glance
+
+- **6 new public route templates:** reviews hub + review submission; community feed + discussion detail; journal index + article detail.
+- **3 durable content systems:** reviews, plant-care Q&A, and editorial articles, each with appropriate authoring/moderation controls.
+- **7 existing storefront areas to update:** homepage ordering, Bestseller navigation, guarantee/refund policy, delivery messaging, mobile header/menu, review entry points, and footer/sitemap discovery links.
+- **No unnecessary standalone form pages:** ask/reply and reusable review submission flows live within their relevant hub/detail/product/account contexts.
+
+### Release and acceptance checklist
+
+- The Bestsellers section appears before Categories, and every bestseller opens its matching product detail page.
+- The guarantee and refund pages consistently state the eligibility, 7-day window, evidence requirement, and refund/replacement review process; no broader guarantee is implied.
+- No “Free delivery over ₹999” claim remains; delivery charges are communicated without ambiguity.
+- On mobile, users can open and close the menu after scrolling and can reach all new destinations.
+- Reviews, questions, replies, and articles come from persisted records, have clear real-user attribution, and obey authorization/moderation states.
+- New routes include responsive loading/empty/error states, useful page metadata, and keyboard-accessible interactions; run focused browser checks at the primary mobile viewport as well as desktop.
