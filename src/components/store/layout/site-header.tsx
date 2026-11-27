@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Heart, Menu, Search, ShoppingBag, User, X } from 'lucide-react'
@@ -16,14 +17,19 @@ const navLinks = [
 ]
 
 const mobileExploreLinks = [
+  { label: 'Shop All', href: '/shop' },
   { label: 'Bestsellers', href: '/#bestsellers' },
-  { label: 'Shop by category', href: '/#categories' },
-  { label: 'Customer stories', href: '/#customer-reviews' },
-  { label: 'Plant guarantee', href: '/guarantee' },
+  { label: 'Nurseries Directory', href: '/nurseries' },
+  { label: 'Community Q&A', href: '/community' },
+  { label: 'Reviews', href: '/reviews' },
+  { label: 'Journal / Blog', href: '/journal' },
+  { label: 'Sell With Us', href: '/sell' },
 ]
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLElement>(null)
+  const menuTriggerRef = useRef<HTMLButtonElement>(null)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const [authOpen, setAuthOpen] = useState(false)
   const { count, isCartOpen, toggleCart } = useCart()
@@ -40,19 +46,44 @@ export function SiteHeader() {
     if (!menuOpen) return
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    menuRef.current?.querySelector<HTMLElement>('button, a')?.focus()
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false)
+        menuTriggerRef.current?.focus()
+        return
+      }
+
+      if (event.key !== 'Tab' || !menuRef.current) return
+      const focusable = Array.from(menuRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'))
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last?.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first?.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
     return () => {
       document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', handleKeyDown)
     }
   }, [menuOpen])
 
   return (
     <>
-      <header className={`${menuOpen ? 'fixed inset-x-0 top-0' : 'sticky top-0'} z-50 w-full border-b border-border/70 bg-background/95 backdrop-blur-md lg:sticky lg:top-0`}>
+      <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/95 backdrop-blur-md">
       
       {/* Expanded Max-Width for Full Screen Desktop Support */}
       <div className="relative mx-auto flex h-16 w-full max-w-[100rem] items-center gap-4 px-4 sm:px-6 lg:h-20 lg:px-10 xl:px-14">
         
         <button
+          ref={menuTriggerRef}
           type="button"
           className="-ml-2 inline-flex size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325] lg:hidden"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -187,44 +218,81 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
-      {menuOpen && (
-        <nav id="mobile-nav" aria-label="Mobile" className="absolute inset-x-0 top-full h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-border bg-background lg:hidden">
-          <ul className="mx-auto flex max-w-7xl flex-col px-4 py-2 sm:px-6">
-            {navLinks.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.href}
-                  className={`block border-b border-border/60 py-3.5 text-base font-medium last:border-0 ${link.featured ? 'text-[#A65F2B]' : ''}`}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {link.label}
+      {menuOpen && typeof document !== 'undefined' && createPortal((
+        <div className="fixed inset-0 z-[60] lg:hidden">
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            className="absolute inset-0 bg-[#10251b]/55 backdrop-blur-[2px]"
+            onClick={() => {
+              setMenuOpen(false)
+              menuTriggerRef.current?.focus()
+            }}
+          />
+          <nav
+            ref={menuRef}
+            id="mobile-nav"
+            aria-label="Mobile navigation"
+            aria-modal="true"
+            role="dialog"
+            className="absolute inset-y-0 left-0 flex w-[min(88vw,24rem)] flex-col overflow-y-auto overscroll-contain border-r border-border bg-background px-5 pb-6 pt-[max(1.25rem,env(safe-area-inset-top))] shadow-2xl motion-safe:animate-in motion-safe:slide-in-from-left motion-safe:duration-300"
+          >
+            <div className="mb-5 flex items-center justify-between border-b border-border/70 pb-4">
+              <div>
+                <p className="font-serif text-xl font-semibold text-foreground">Explore the garden</p>
+                <p className="mt-1 text-xs text-muted-foreground">A little more green, every day</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false)
+                  menuTriggerRef.current?.focus()
+                }}
+                className="inline-flex size-11 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]"
+                aria-label="Close navigation menu"
+              >
+                <X className="size-5" aria-hidden="true" />
+              </button>
+            </div>
+            <ul className="flex flex-col">
+              {mobileExploreLinks.map((link) => (
+                <li key={link.href} className="border-b border-border/60">
+                  <Link
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="flex min-h-12 items-center rounded-md px-2 text-base font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+              <li className="border-b border-border/60">
+                <Link href="/guarantee" onClick={() => setMenuOpen(false)} className="flex min-h-12 items-center rounded-md px-2 text-base font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">
+                  Plant Guarantee
                 </Link>
               </li>
-            ))}
-            <li className="border-b border-border/60 py-3">
-              <p className="px-1 pb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Explore the garden</p>
-              <ul className="grid grid-cols-2 gap-1">
-                {mobileExploreLinks.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} onClick={() => setMenuOpen(false)} className="flex min-h-10 items-center rounded-lg px-2 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-            <li className="flex gap-3 py-4 sm:hidden">
-              <button type="button" onClick={() => { setMenuOpen(false); setAuthOpen(true) }} className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-medium" aria-haspopup="dialog">
-                <User className="size-4" aria-hidden="true" /> Account
-              </button>
-              <Link href="/wishlist" className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-medium">
-                <Heart className="size-4" aria-hidden="true" /> Wishlist
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      )}
+              <li className="border-b border-border/60">
+                <Link href="/wishlist" onClick={() => setMenuOpen(false)} className="flex min-h-12 items-center rounded-md px-2 text-base font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]">
+                  Wishlist
+                </Link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    setAuthOpen(true)
+                  }}
+                  className="flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-left text-base font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A3325]"
+                  aria-haspopup="dialog"
+                >
+                  <User className="size-5" aria-hidden="true" /> My Account
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      ), document.body)}
       </header>
       <CartDrawer />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
