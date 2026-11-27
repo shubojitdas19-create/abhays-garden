@@ -68,7 +68,7 @@ export default async function NurseryPage({ params }: NurseryPageProps) {
 
         <section aria-label="Grower promises" className="mt-4 grid grid-cols-1 gap-2 rounded-2xl border border-[#e7e5dc] bg-[#fbfaf6] p-4 sm:mt-6 sm:grid-cols-3 sm:gap-3 sm:p-5">
           <div className="flex items-center gap-3 rounded-xl bg-white px-3 py-3"><Sprout className="size-5 shrink-0 text-[#527358]" aria-hidden="true" /><span className="text-xs font-semibold text-[#304b37] sm:text-sm">100% organic soil</span></div>
-          <div className="flex items-center gap-3 rounded-xl bg-white px-3 py-3"><PackageCheck className="size-5 shrink-0 text-[#527358]" aria-hidden="true" /><span className="text-xs font-semibold text-[#304b37] sm:text-sm">7-day wrong/damaged claims</span></div>
+          <div className="flex items-center gap-3 rounded-xl bg-white px-3 py-3"><PackageCheck className="size-5 shrink-0 text-[#527358]" aria-hidden="true" /><span className="text-xs font-semibold text-[#304b37] sm:text-sm">7-day wrong-plant or transit-damage claims · unedited video required</span></div>
           <div className="flex items-center gap-3 rounded-xl bg-white px-3 py-3"><ShieldCheck className="size-5 shrink-0 text-[#527358]" aria-hidden="true" /><span className="text-xs font-semibold text-[#304b37] sm:text-sm">Verified rooftop grower</span></div>
         </section>
 

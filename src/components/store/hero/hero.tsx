@@ -180,7 +180,7 @@ export function Hero() {
         {[
           { i: Truck, t: "Safe Doorstep Delivery", d: "Packed to arrive fresh & healthy" },
           { i: Leaf, t: "Nursery-Grown Quality", d: "Raised on our own rooftop" },
-          { i: ShieldCheck, t: "7-Day Claim Window", d: "Wrong/damaged only · 360° video required" },
+          { i: ShieldCheck, t: "7-Day Claim Window", d: "Wrong plant or transit damage · unedited 360° video before opening" },
         ].map(({ i: Icon, t, d }) => (
           <div key={t} className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm transition hover:shadow-md">
             <span className="grid size-11 shrink-0 place-items-center rounded-full bg-secondary text-primary">

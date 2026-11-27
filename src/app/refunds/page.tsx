@@ -5,7 +5,7 @@ import { PolicyPage } from '@/components/store/policy-page'
 
 export const metadata: Metadata = {
   title: "Refund & Replacement Policy | Abhay's Roof Garden",
-  description: 'How to submit a 7-day claim for a wrong or transit-damaged plant, including the required complete 360° unboxing video.'
+  description: 'How to submit a 7-day wrong-plant or transit-damage claim with the mandatory continuous, unedited 360° unboxing video and replacement or refund remedy.'
 }
 
 export default function RefundPolicyPage() {
@@ -20,15 +20,15 @@ export default function RefundPolicyPage() {
           {
             title: '1. 7-Day Wrong or Damaged Plant Claim Window',
             paragraphs: [
-              'For a directly confirmed order, the 7-day claim window applies only when the delivered plant is incorrect or has been physically damaged in transit. Contact us within 7 days of delivery; routine settling, care concerns, change of mind, or other plant-health issues are not covered by this guarantee.',
-              'A complete 360° unboxing video is required for every refund or replacement claim. Record one continuous video beginning with the unopened parcel and showing the parcel and plant from all sides as you unpack. Send the video, your order reference, delivery date, and clear photos by WhatsApp to +91 94764 33880 or email abhaysroofgarden@gmail.com. Keep the packaging until our team finishes its review.',
+              'For a directly confirmed order, claims apply strictly to plants that arrive damaged in transit or if the wrong plant is delivered. Contact us within 7 days of delivery; routine settling, care concerns, change of mind, or other plant-health issues are not covered by this guarantee.',
+              'A continuous, unedited 360° unboxing video starting before opening the package seal or tape is strictly mandatory to claim a replacement or refund. Record the shipping label and package opening, then send the video and your order ID to WhatsApp support at +91 94764 33880 within 7 days of delivery. Keep the packaging until the claim is resolved.',
             ],
           },
           {
-            title: '2. Review and available remedies',
+            title: '2. Replacement and refund remedies',
             paragraphs: [
-              'Our nursery team will review the order details and complete 360° unboxing video and may contact you for more information. A refund or replacement is not automatic; if the wrong-item or transit-damage claim is approved, we will confirm the available remedy and next steps with you.',
-              'Any remedy depends on the review, plant availability, and delivery location. This guarantee does not limit rights that apply under consumer-protection law.'
+              'For an eligible wrong-item or transit-damage claim with the required video and order ID received within 7 days, we dispatch a free healthy replacement within 24–48 hours or issue a full refund.',
+              'This claim remedy applies to directly confirmed nursery orders and does not limit rights that apply under consumer-protection law.'
             ],
           },
           {
@@ -51,7 +51,7 @@ export default function RefundPolicyPage() {
             bullets: [
               'Your name and the order reference supplied by the nursery.',
               'The date the package was delivered and the affected plant name.',
-              'A complete 360° unboxing video from the unopened parcel through removal of the plant, plus clear photos of the damage or incorrect item.'
+              'A continuous, unedited 360° unboxing video starting before opening the package seal or tape and showing the shipping label and package opening, plus clear photos of the damage or incorrect item.'
             ],
           },
           {

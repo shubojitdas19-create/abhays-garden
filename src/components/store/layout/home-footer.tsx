@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 
 const faqs = [
-  { q: "How does the 7-day plant claim window work?", a: "Claims are limited to plants delivered incorrectly or physically damaged in transit. Contact us within 7 days and provide a complete 360° unboxing video from the unopened parcel through unpacking. Refunds or replacements are considered after review and are not automatic." },
+  { q: "How does the 7-day plant claim window work?", a: "Claims apply strictly to plants damaged in transit or the wrong plant delivered. A continuous, unedited 360° unboxing video starting before opening the package seal or tape is mandatory. Send it with your order ID to WhatsApp support within 7 days; an eligible claim receives a free healthy replacement dispatched within 24–48 hours or a full refund." },
   { q: "How are the plants packaged for safe transit?", a: "We use custom-engineered, eco-friendly corrugated boxes that lock the pot in place. The soil is covered with biodegradable coco-fiber mats to prevent spillage, ensuring the plant breathes while staying perfectly secure." },
   { q: "What if I don't know how to care for my plant?", a: "Every plant comes with a detailed, beginner-friendly physical care card. You can also message our WhatsApp support line anytime for personalized advice from our nursery experts." },
   { q: "Are the pots included with the plants?", a: "Yes! All our plants come potted in nutrient-rich organic soil in a standard nursery pot. You can also upgrade to our premium ceramic or terracotta planters before adding to cart." },

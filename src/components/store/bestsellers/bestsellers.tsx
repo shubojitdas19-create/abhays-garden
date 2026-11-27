@@ -150,7 +150,7 @@ export function Bestsellers() {
 }
 
 function FeatureCard() {
-  const featuredProduct = products.find((product) => product.id === 'monstera') ?? products[0]
+  const featuredProduct = products.find((product) => product.id === 'fiddle-leaf-fig') ?? products[0]
   const featuredSize = featuredProduct.sizes.find((size) => size.label === 'M') ?? featuredProduct.sizes[0]
 
   return (
@@ -171,7 +171,7 @@ function FeatureCard() {
 
       <div className="relative flex items-start justify-between gap-4 drop-shadow-sm">
         <div>
-          <p className="font-mono text-[11px] tracking-widest uppercase opacity-90 text-white">Rooftop favourite</p>
+          <p className="font-mono text-[11px] tracking-widest uppercase opacity-90 text-white">Plant of the month</p>
           <p className="mt-1 font-serif text-sm italic opacity-90 text-white">Loved by plant people</p>
         </div>
         <span className="flex size-11 items-center justify-center rounded-full bg-white text-[#1A3325] shadow-lg transition-transform duration-300 group-hover:rotate-45">

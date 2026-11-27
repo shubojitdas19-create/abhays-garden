@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { Leaf, Truck } from 'lucide-react'
 
 const messages = [
-  { icon: Truck, content: <>Thoughtful doorstep delivery <span className="hidden sm:inline">·</span> Estimated delivery fee ₹99</> },
-  { icon: Leaf, content: <>Wrong or damaged plant? Claim within 7 days with a complete 360° unboxing video</> },
+  { icon: Truck, content: <>Safe, breathable eco-transit packaging on every plant · Rooted with love in Bengal</> },
+  { icon: Leaf, content: <>Wrong plant or transit damage? Claim within 7 days with an unedited 360° video from before opening</> },
 ]
 
 export function AnnouncementBar() {

@@ -35,7 +35,7 @@ export default function ShippingPage() {
             title: '3. Plant packaging and arrival',
             paragraphs: [
               'Plants are living items and can experience some temporary stress during transit. A small amount of leaf movement or drooping can happen. Unpack the plant promptly, remove protective wrapping, and follow the plant’s care card as it settles.',
-              'If the delivered plant is incorrect or physically damaged in transit, contact us within 7 days under our Refund & Replacement Policy and provide a complete 360° unboxing video. Other plant-health concerns are not covered by this claim policy.'
+              'Claims apply strictly to plants that arrive damaged in transit or if the wrong plant is delivered. A continuous, unedited 360° unboxing video starting before opening the package seal or tape, showing the shipping label and package opening, is mandatory. Send the video and order ID to WhatsApp support within 7 days; eligible claims receive a free healthy replacement dispatched within 24–48 hours or a full refund.'
             ],
           },
           {

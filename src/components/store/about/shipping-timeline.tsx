@@ -93,7 +93,7 @@ export function ShippingTimeline() {
             <div>
               <p className="text-sm font-bold text-[#1A3325] sm:text-base">7-Day Wrong or Damaged Plant Claim Policy</p>
               <p className="mt-0.5 text-xs text-[#1A3325]/70 sm:text-sm">
-                Incorrect or transit-damaged plants only. A complete 360° unboxing video is required for refund or replacement review.
+                Wrong plant or transit damage only. A continuous, unedited 360° unboxing video starting before opening the seal or tape is mandatory; send it with your order ID within 7 days.
               </p>
               <Link href="/guarantee" className="mt-2 inline-flex min-h-8 items-center text-xs font-semibold text-[#1A3325] underline underline-offset-4">Read claim requirements</Link>
             </div>

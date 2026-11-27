@@ -5,7 +5,7 @@ import { GuaranteePage } from '@/components/store/guarantee-page'
 
 export const metadata: Metadata = {
   title: '7-Day Wrong or Damaged Plant Claim Policy | Abhay’s Roof Garden',
-  description: 'Learn how to claim for a wrong or transit-damaged plant within 7 days, including the required complete 360° unboxing video.'
+  description: 'Learn how to claim for a wrong or transit-damaged plant within 7 days, including the mandatory continuous, unedited 360° unboxing video and claim remedies.'
 }
 
 export default function GuaranteeRoute() {

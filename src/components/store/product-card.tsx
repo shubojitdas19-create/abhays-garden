@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type MouseEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Check, Droplets, Heart, Leaf, ShoppingBag, Star, Sun } from 'lucide-react'
@@ -17,7 +17,8 @@ export function ProductCard({ product }: { product: Product }) {
   const saved = wishlist.includes(product.id)
   const size = product.sizes[sizeIndex]
 
-  function handleAdd() {
+  function handleAdd(event: MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation()
     addItem({
       productId: product.id,
       productName: product.name,
@@ -54,7 +55,10 @@ export function ProductCard({ product }: { product: Product }) {
 
         <button
           type="button"
-          onClick={() => toggleWishlist(product.id)}
+          onClick={(event) => {
+            event.stopPropagation()
+            toggleWishlist(product.id)
+          }}
           aria-pressed={saved}
           aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
           className="absolute top-2.5 right-2.5 z-10 flex size-9 items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card"
@@ -63,9 +67,13 @@ export function ProductCard({ product }: { product: Product }) {
         </button>
 
         {product.badge && (
-          <span className="absolute bottom-3 left-3 rounded-full bg-primary px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground sm:text-[11px]">
+          <Link
+            href={`/shop/${product.slug}`}
+            aria-label={`Shop ${product.name}: ${product.badge}`}
+            className="absolute bottom-3 left-3 z-10 rounded-full bg-primary px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground sm:text-[11px]"
+          >
             {product.badge}
-          </span>
+          </Link>
         )}
 
         <button
