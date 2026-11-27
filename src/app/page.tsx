@@ -18,8 +18,8 @@ export default function Home() {
       <SiteHeader />
       <main>
         <Hero />
-        <ShopCategories />
         <Bestsellers />
+        <ShopCategories />
         <RooftopStory />
         <PlantFinder />
         <ShippingTimeline />
